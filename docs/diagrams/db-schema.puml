@@ -1,0 +1,240 @@
+@startuml db-schema
+' ============================================================================
+' arsnova.click V3 – Datenbankschema (ER-Diagramm)
+' Quelle: prisma/schema.prisma
+' ============================================================================
+
+!theme plain
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+
+hide circle
+hide methods
+
+title arsnova.click V3 – Datenbankschema\n(Prisma / PostgreSQL)
+
+package "Quiz-Verwaltung" <<Rectangle>> {
+
+  entity "User" as user {
+    * **id** : UUID <<PK>>
+    --
+    email : String <<UNIQUE>>
+    password : String
+    createdAt : DateTime
+  }
+
+  entity "Quiz" as quiz {
+    * **id** : UUID <<PK>>
+    --
+    name : String
+    description : String?
+    isPublic : Boolean = false
+    showLeaderboard : Boolean = true
+    allowCustomNicknames : Boolean = true
+    defaultTimer : Int?
+    enableSoundEffects : Boolean = true
+    enableRewardEffects : Boolean = true
+    enableMotivationMessages : Boolean = true
+    enableEmojiReactions : Boolean = true
+    anonymousMode : Boolean = false
+    teamMode : Boolean = false
+    teamCount : Int?
+    teamAssignment : TeamAssignment = AUTO
+    backgroundMusic : String?
+    nicknameTheme : NicknameTheme = NOBEL_LAUREATES
+    creatorId : UUID? <<FK>>
+    createdAt : DateTime
+    updatedAt : DateTime
+  }
+
+  entity "Question" as question {
+    * **id** : UUID <<PK>>
+    --
+    text : String
+    type : QuestionType
+    timer : Int?
+    difficulty : Difficulty = MEDIUM
+    ratingMin : Int?
+    ratingMax : Int?
+    ratingLabelMin : String?
+    ratingLabelMax : String?
+    quizId : UUID <<FK>>
+    order : Int
+  }
+
+  entity "AnswerOption" as answer {
+    * **id** : UUID <<PK>>
+    --
+    text : String
+    isCorrect : Boolean ⚠️
+    questionId : UUID <<FK>>
+  }
+}
+
+package "Live-Session" <<Rectangle>> {
+
+  entity "Session" as session {
+    * **id** : UUID <<PK>>
+    --
+    code : String <<UNIQUE>>
+    type : SessionType = QUIZ
+    status : SessionStatus = LOBBY
+    title : String?
+    moderationMode : Boolean = false
+    currentQuestion : Int?
+    quizId : UUID? <<FK>>
+    startedAt : DateTime
+    endedAt : DateTime?
+  }
+
+  entity "Participant" as participant {
+    * **id** : UUID <<PK>>
+    --
+    nickname : String
+    sessionId : UUID <<FK>>
+    teamId : UUID? <<FK>>
+    joinedAt : DateTime
+    ..
+    <<UNIQUE>> sessionId + nickname
+  }
+
+  entity "Team" as team {
+    * **id** : UUID <<PK>>
+    --
+    name : String
+    color : String?
+    sessionId : UUID <<FK>>
+    ..
+    <<UNIQUE>> sessionId + name
+  }
+
+  entity "Vote" as vote {
+    * **id** : UUID <<PK>>
+    --
+    sessionId : UUID <<FK>>
+    participantId : UUID <<FK>>
+    questionId : UUID <<FK>>
+    freeText : String?
+    ratingValue : Int?
+    responseTimeMs : Int?
+    score : Int = 0
+    streakCount : Int = 0
+    streakBonus : Float = 1.0
+    votedAt : DateTime
+    ..
+    <<UNIQUE>> sessionId + participantId + questionId
+  }
+
+  entity "VoteAnswer" as voteanswer {
+    * **id** : UUID <<PK>>
+    --
+    voteId : UUID <<FK>>
+    answerOptionId : UUID <<FK>>
+    ..
+    <<UNIQUE>> voteId + answerOptionId
+  }
+}
+
+package "Q&A-Modus" <<Rectangle>> {
+
+  entity "QaQuestion" as qaquestion {
+    * **id** : UUID <<PK>>
+    --
+    text : String
+    upvoteCount : Int = 0
+    status : QaQuestionStatus = ACTIVE
+    sessionId : UUID <<FK>>
+    participantId : UUID <<FK>>
+    createdAt : DateTime
+  }
+
+  entity "QaUpvote" as qaupvote {
+    * **id** : UUID <<PK>>
+    --
+    qaQuestionId : UUID <<FK>>
+    participantId : UUID <<FK>>
+    ..
+    <<UNIQUE>> qaQuestionId + participantId
+  }
+}
+
+' ─── Enums ───────────────────────────────────────────────────────────────────
+
+package "Enums" <<Rectangle>> #f5f5f5 {
+  enum QuestionType {
+    MULTIPLE_CHOICE
+    SINGLE_CHOICE
+    FREETEXT
+    SURVEY
+    RATING
+  }
+
+  enum Difficulty {
+    EASY   (×1)
+    MEDIUM (×2)
+    HARD   (×3)
+  }
+
+  enum SessionStatus {
+    LOBBY
+    ACTIVE
+    PAUSED
+    RESULTS
+    FINISHED
+  }
+
+  enum SessionType {
+    QUIZ
+    Q_AND_A
+  }
+
+  enum NicknameTheme {
+    NOBEL_LAUREATES
+    KINDERGARTEN
+    PRIMARY_SCHOOL
+    MIDDLE_SCHOOL
+    HIGH_SCHOOL
+  }
+
+  enum TeamAssignment {
+    AUTO
+    MANUAL
+  }
+
+  enum QaQuestionStatus {
+    PENDING
+    ACTIVE
+    PINNED
+    ARCHIVED
+    DELETED
+  }
+}
+
+' ─── Relationen ──────────────────────────────────────────────────────────────
+
+user        ||--o{  quiz         : "erstellt"
+quiz        ||--o{  question     : "enthält"
+question    ||--o{  answer       : "hat Optionen"
+quiz        ||--o{  session      : "wird live als"
+session     ||--o{  participant  : "hat Teilnehmer"
+session     ||--o{  team         : "hat Teams"
+session     ||--o{  vote         : "sammelt Votes"
+session     ||--o{  qaquestion   : "hat Q&A-Fragen"
+participant ||--o{  vote         : "stimmt ab"
+participant |o--o{  qaquestion   : "reicht ein"
+participant |o--o{  qaupvote     : "upvotet"
+question    ||--o{  vote         : "wird beantwortet"
+vote        ||--o{  voteanswer   : "wählt Optionen"
+answer      ||--o{  voteanswer   : "wird gewählt"
+team        |o--o{  participant  : "gruppiert"
+qaquestion  ||--o{  qaupvote     : "wird gevotet"
+
+note bottom of answer
+  ⚠️ isCorrect wird NIEMALS
+  im Status ACTIVE an
+  Studenten gesendet!
+  (Data-Stripping, Story 2.4)
+end note
+
+@enduml

@@ -1,0 +1,154 @@
+@startuml frontend-components
+' ============================================================================
+' arsnova.click V3 – Frontend-Komponentendiagramm (Angular)
+' Technologie: Angular 19, Standalone Components, Signals, Tailwind CSS
+' ============================================================================
+
+!theme plain
+skinparam shadowing false
+skinparam componentStyle uml2
+
+title arsnova.click V3 – Frontend-Architektur\n(Angular Standalone Components)
+
+package "Angular App" as app {
+
+  component "AppComponent" as root <<Root>> #e8f5e9 {
+    portin " " as rootIn
+  }
+
+  package "Shared / Layout" as shared #f5f5f5 {
+    component "HeaderComponent" as header
+    component "FooterComponent" as footer
+    component "ThemeSwitcherComponent" as theme
+    component "LanguageSwitcherComponent" as lang
+    component "CountdownComponent" as countdown
+    component "MarkdownKatexComponent" as mdkatex
+  }
+
+  package "📄 Routing (app.routes.ts)" as routing #fffde7 {
+
+    package "/ (Startseite)" as home {
+      component "HomeComponent" as homeComp
+      component "ServerStatusWidget" as serverStatus
+      component "JoinSessionInput" as joinInput
+    }
+
+    package "/quiz (Dozent)" as quizMgmt {
+      component "QuizListComponent" as quizList
+      component "QuizEditorComponent" as quizEditor
+      component "QuestionFormComponent" as questionForm
+      component "AnswerOptionEditor" as answerEditor
+      component "QuizConfigComponent" as quizConfig
+      component "PresetSelectorComponent" as presetSelector
+      component "ImportExportComponent" as importExport
+    }
+
+    package "/session/:code/control (Dozent)" as sessionControl {
+      component "LobbyViewComponent" as lobby
+      component "QuizControlComponent" as control
+      component "ParticipantListComponent" as partList
+      component "QaModeratorComponent" as qaMod
+    }
+
+    package "/session/:code/present (Beamer)" as presenter {
+      component "PresenterViewComponent" as beamer
+      component "QuestionDisplayComponent" as questionDisplay
+      component "ResultChartComponent" as resultChart
+      component "LeaderboardComponent" as leaderboard
+      component "TeamLeaderboardComponent" as teamLeaderboard
+      component "EmojiOverlayComponent" as emojiOverlay
+    }
+
+    package "/join/:code (Student)" as student {
+      component "NicknameSelectComponent" as nickSelect
+      component "VotingViewComponent" as voting
+      component "AnswerButtonComponent" as answerBtn
+      component "RatingScaleComponent" as ratingScale
+      component "FreetextInputComponent" as freetextInput
+      component "PersonalScorecardComponent" as scorecard
+      component "EmojiReactionBarComponent" as emojiBar
+      component "QaStudentComponent" as qaStudent
+    }
+
+    package "/legal (Öffentlich)" as legal {
+      component "ImprintComponent" as imprint
+      component "PrivacyComponent" as privacy
+    }
+  }
+
+  package "Services (DI)" as services #e3f2fd {
+    component "trpc.client.ts" as trpcClient <<tRPC Proxy>>
+    component "YjsService" as yjs <<Yjs + IndexedDB>>
+    component "ThemeService" as themeSvc <<localStorage>>
+    component "I18nService" as i18nSvc <<ngx-translate>>
+    component "AudioService" as audioSvc <<Web Audio API>>
+    component "MotivationService" as motivSvc <<Clientseitig>>
+  }
+}
+
+' ─── Externe Abhängigkeiten ──────────────────────────────────────────────────
+
+cloud "Backend\n(tRPC API)" as backend #fff3e0
+database "IndexedDB\n(Yjs CRDT)" as indexeddb #fce4ec
+node "WebSocket\n(tRPC Subscriptions)" as ws #e8eaf6
+
+' ─── Verbindungen ────────────────────────────────────────────────────────────
+
+trpcClient  --> backend     : HTTP Batch\n(Queries / Mutations)
+trpcClient  --> ws          : WebSocket\n(Subscriptions)
+yjs         --> indexeddb   : Local-First\nCRDT Sync
+yjs         --> ws          : y-websocket\nMulti-Device Sync
+
+root --> header
+root --> footer
+header --> theme
+header --> lang
+
+homeComp --> serverStatus
+homeComp --> joinInput
+
+quizEditor --> questionForm
+quizEditor --> quizConfig
+quizConfig --> presetSelector
+questionForm --> answerEditor
+questionForm --> mdkatex
+
+voting --> answerBtn
+voting --> ratingScale
+voting --> freetextInput
+voting --> countdown
+voting --> scorecard
+voting --> emojiBar
+answerBtn --> mdkatex
+
+beamer --> questionDisplay
+beamer --> resultChart
+beamer --> leaderboard
+beamer --> teamLeaderboard
+beamer --> emojiOverlay
+beamer --> countdown
+questionDisplay --> mdkatex
+
+lobby --> partList
+
+note right of trpcClient
+  100% End-to-End Typsicherheit:
+  importiert **AppRouter** direkt
+  aus dem Backend-Monorepo
+  via tsconfig path alias.
+end note
+
+note right of yjs
+  Quizzes leben primär
+  in IndexedDB (Local-First).
+  Server = dummer Relay
+  für Multi-Device-Sync.
+end note
+
+note bottom of answerBtn
+  △ A / ○ B / □ C / ◇ D
+  Vollbreite Buttons, Thumb Zone,
+  Debounce 300ms, optimistisches UI
+end note
+
+@enduml

@@ -6,7 +6,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 // Der Dozent / Ersteller (Optional, falls Accounts genutzt werden)
@@ -20,27 +19,47 @@ model User {
 
 // Das Meta-Dokument für den Server
 model Quiz {
-  id          String     @id @default(uuid())
-  name        String
-  description String?
-  isPublic    Boolean    @default(false)
-  creatorId   String?    // Optional wegen Local-First USP
-  creator     User?      @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-  questions   Question[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id                   String     @id @default(uuid())
+  name                 String
+  description          String?
+  isPublic             Boolean    @default(false)
+  showLeaderboard      Boolean    @default(true)   // Story 1.4: Leaderboard an/aus
+  allowCustomNicknames Boolean    @default(true)   // Story 1.4: Eigene Pseudonyme erlauben
+  defaultTimer         Int?                         // Story 1.4: Standard-Countdown in Sekunden
+  enableSoundEffects   Boolean    @default(true)   // Story 5.1: Sound-Effekte an/aus
+  enableRewardEffects  Boolean    @default(true)   // Story 5.4: Belohnungseffekte an/aus
+  enableMotivationMessages Boolean @default(true) // Story 5.7: Motivationsmeldungen an/aus
+  enableEmojiReactions Boolean    @default(true)   // Story 5.8: Emoji-Reaktionen an/aus
+  anonymousMode        Boolean    @default(false)  // Story 3.6: Anonymer Modus (keine Nicknames)
+  teamMode             Boolean    @default(false)  // Story 7.1: Team-Modus an/aus
+  teamCount            Int?                         // Story 7.1: Anzahl Teams (2–8, null = kein Team-Modus)
+  teamAssignment       TeamAssignment @default(AUTO) // Story 7.1: Teamzuweisung
+  backgroundMusic      String?                      // Story 5.3: Track-Name (null = aus)
+  nicknameTheme        NicknameTheme @default(NOBEL_LAUREATES) // Story 3.2: Nickname-Liste
+  creatorId            String?                      // Optional wegen Local-First USP
+  creator              User?      @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  questions            Question[]
+  sessions             Session[]
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime   @updatedAt
 }
 
 // Eine einzelne Frage
 model Question {
-  id       String         @id @default(uuid())
-  text     String
-  type     QuestionType
-  timer    Int?           // Optionaler Countdown in Sekunden
-  quizId   String
-  quiz     Quiz           @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  answers  AnswerOption[]
-  order    Int            // Sortierung
+  id         String         @id @default(uuid())
+  text       String
+  type       QuestionType
+  timer      Int?           // Optionaler Countdown in Sekunden (überschreibt Quiz.defaultTimer)
+  difficulty Difficulty     @default(MEDIUM) // Schwierigkeitsgrad für Punkteberechnung
+  ratingMin  Int?           // Story 1.2c: Untere Skalengrenze (nur bei RATING, default: 1)
+  ratingMax  Int?           // Story 1.2c: Obere Skalengrenze (nur bei RATING, default: 5)
+  ratingLabelMin String?    // Story 1.2c: Label für Minimum (z.B. "Stimme gar nicht zu")
+  ratingLabelMax String?    // Story 1.2c: Label für Maximum (z.B. "Stimme voll zu")
+  quizId     String
+  quiz       Quiz           @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answers    AnswerOption[]
+  votes      Vote[]
+  order      Int            // Sortierung
 }
 
 // Die Antwortmöglichkeiten
@@ -50,11 +69,163 @@ model AnswerOption {
   isCorrect  Boolean  // WICHTIG: Darf im Live-Quiz niemals an Studenten geleakt werden!
   questionId String
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  voteAnswers VoteAnswer[] // MC: mehrere Votes pro Option möglich
 }
+
+// ─── Live-Session (Story 2.1–2.3) ───────────────────────────────────────────
+
+// Eine gestartete Quiz-Sitzung mit 6-stelligem Code
+model Session {
+  id              String        @id @default(uuid())
+  code            String        @unique // 6-stelliger Beitrittscode
+  type            SessionType   @default(QUIZ)    // Story 8.1: Quiz oder Q&A
+  status          SessionStatus @default(LOBBY)
+  title           String?                          // Story 8.1: Titel für Q&A-Runden
+  moderationMode  Boolean       @default(false)   // Story 8.4: Q&A-Fragen vorab moderieren
+  currentQuestion Int?                             // Index der aktuell aktiven Frage (0-basiert)
+  quizId          String?                          // null bei Q&A-Sessions
+  quiz            Quiz?         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  participants    Participant[]
+  teams           Team[]
+  votes           Vote[]
+  qaQuestions     QaQuestion[]  // Story 8: Q&A-Fragen
+  startedAt       DateTime      @default(now())
+  endedAt         DateTime?
+}
+
+// Ein Teilnehmer in einer Live-Session (Story 3.1, 3.2)
+model Participant {
+  id        String   @id @default(uuid())
+  nickname  String
+  sessionId String
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  teamId    String?                                  // Story 7.1: Team-Zugehörigkeit (optional)
+  team      Team?    @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  votes      Vote[]
+  qaQuestions QaQuestion[] // Story 8.2: Eingereichte Q&A-Fragen
+  qaUpvotes  QaUpvote[]   // Story 8.3: Q&A-Upvotes
+  joinedAt   DateTime @default(now())
+
+  @@unique([sessionId, nickname]) // Kein doppelter Nickname pro Session
+}
+
+// Ein Team in einer Live-Session (Story 7.1)
+model Team {
+  id           String        @id @default(uuid())
+  name         String                                // z.B. "Team A", "Team Blau"
+  color        String?                               // Optionale Farbcodierung (Hex)
+  sessionId    String
+  session      Session       @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  participants Participant[]
+
+  @@unique([sessionId, name]) // Kein doppelter Teamname pro Session
+}
+
+// Eine abgegebene Stimme (Story 3.3)
+model Vote {
+  id             String       @id @default(uuid())
+  sessionId      String
+  session        Session      @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  participantId  String
+  participant    Participant  @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  questionId     String
+  question       Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  selectedAnswers VoteAnswer[] // MC: mehrere, SC: genau eine, FREETEXT/RATING: keine
+  freeText       String?      // Freitext-Antwort (nur bei QuestionType.FREETEXT)
+  ratingValue    Int?         // Story 1.2c: Gewählter Skalenwert (nur bei QuestionType.RATING)
+  responseTimeMs Int?         // Antwortzeit in Millisekunden (für Zeitbonus)
+  score          Int          @default(0) // Berechnete Punkte (Schwierigkeit × Zeitbonus)
+  streakCount    Int          @default(0) // Story 5.5: Aktuelle Antwort-Serie (0 = kein Streak)
+  streakBonus    Float        @default(1.0) // Story 5.5: Angewandter Streak-Multiplikator
+  votedAt        DateTime     @default(now())
+
+  @@unique([sessionId, participantId, questionId]) // Nur eine Stimme pro Frage
+}
+
+// Zuordnung Vote ↔ ausgewählte Antwortoptionen (n:m für MC-Mehrfachauswahl)
+model VoteAnswer {
+  id             String       @id @default(uuid())
+  voteId         String
+  vote           Vote         @relation(fields: [voteId], references: [id], onDelete: Cascade)
+  answerOptionId String
+  answerOption   AnswerOption @relation(fields: [answerOptionId], references: [id], onDelete: Cascade)
+
+  @@unique([voteId, answerOptionId]) // Jede Option maximal einmal pro Vote
+}
+
+// ─── Enums ──────────────────────────────────────────────────────────────────
 
 enum QuestionType {
   MULTIPLE_CHOICE
   SINGLE_CHOICE
   FREETEXT
   SURVEY
+  RATING       // Story 1.2c: Bewertungsskala (1–5 oder 1–10)
+}
+
+enum Difficulty {
+  EASY       // Multiplikator ×1
+  MEDIUM     // Multiplikator ×2
+  HARD       // Multiplikator ×3
+}
+
+enum SessionStatus {
+  LOBBY      // Warten auf Teilnehmer
+  ACTIVE     // Frage läuft
+  PAUSED     // Zwischen Fragen
+  RESULTS    // Ergebnisse werden angezeigt
+  FINISHED   // Session beendet
+}
+
+enum NicknameTheme {
+  NOBEL_LAUREATES  // Nobelpreisträger (default, Hochschule)
+  KINDERGARTEN     // Tiere & Farben (z.B. "Blauer Elefant")
+  PRIMARY_SCHOOL   // Märchenfiguren (z.B. "Rotkäppchen")
+  MIDDLE_SCHOOL    // Superhelden & Entdecker (z.B. "Kolumbus")
+  HIGH_SCHOOL      // Wissenschaftler & Philosophen (z.B. "Kant")
+}
+
+enum TeamAssignment {
+  AUTO    // Round-Robin: System verteilt Studenten gleichmäßig
+  MANUAL  // Studenten wählen ihr Team selbst
+}
+
+enum SessionType {
+  QUIZ       // Reguläres Quiz mit Fragen
+  Q_AND_A    // Q&A-Modus (Story 8.1)
+}
+
+// ─── Q&A-Modus (Epic 8) ────────────────────────────────────────────────────
+
+// Eine eingereichte Frage in einer Q&A-Session (Story 8.2–8.4)
+model QaQuestion {
+  id            String           @id @default(uuid())
+  text          String           // Fragetext (max. 500 Zeichen, Markdown erlaubt)
+  upvoteCount   Int              @default(0)
+  status        QaQuestionStatus @default(ACTIVE)
+  sessionId     String
+  session       Session          @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  participantId String           // Story 8.2: Autor (für 3-Fragen-Limit pro Student)
+  participant   Participant      @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  upvotes       QaUpvote[]       // Story 8.3: Einzelne Upvotes
+  createdAt     DateTime         @default(now())
+}
+
+// Upvote-Tracking für Q&A-Fragen (Story 8.3)
+model QaUpvote {
+  id            String      @id @default(uuid())
+  qaQuestionId  String
+  qaQuestion    QaQuestion  @relation(fields: [qaQuestionId], references: [id], onDelete: Cascade)
+  participantId String
+  participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@unique([qaQuestionId, participantId]) // Max. 1 Upvote pro Student pro Frage
+}
+
+enum QaQuestionStatus {
+  PENDING    // Wartet auf Moderation (bei moderationMode=true)
+  ACTIVE     // Sichtbar und votebar
+  PINNED     // Vom Dozenten hervorgehoben ("Wird gerade beantwortet")
+  ARCHIVED   // Als beantwortet markiert
+  DELETED    // Vom Dozenten entfernt
 }

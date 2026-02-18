@@ -1,0 +1,171 @@
+@startuml backend-components
+' ============================================================================
+' arsnova.click V3 – Backend-Komponentendiagramm
+' Technologie: Node.js, Express, tRPC, Prisma, Redis, Yjs
+' ============================================================================
+
+!theme plain
+skinparam shadowing false
+skinparam componentStyle uml2
+
+title arsnova.click V3 – Backend-Architektur\n(Node.js / tRPC / Prisma)
+
+package "Express Server (Port 3000)" as server {
+
+  component "index.ts" as entry <<Entrypoint>> #e8f5e9
+  component "CORS Middleware" as cors
+
+  package "tRPC Layer" as trpc #fffde7 {
+    component "trpc.ts" as trpcInit <<initTRPC>>
+    component "appRouter" as appRouter <<Root Router>>
+
+    package "Router: health" as healthRouter #f5f5f5 {
+      component "health.check" as healthCheck <<Query>>
+      component "health.stats" as healthStats <<Query>>
+      component "health.ping" as healthPing <<Subscription>>
+    }
+
+    package "Router: quiz" as quizRouter #f5f5f5 {
+      component "quiz.create" as quizCreate <<Mutation>>
+      component "quiz.upload" as quizUpload <<Mutation>>
+      component "quiz.getById" as quizGet <<Query>>
+    }
+
+    package "Router: session" as sessionRouter #f5f5f5 {
+      component "session.create" as sessCreate <<Mutation>>
+      component "session.join" as sessJoin <<Mutation>>
+      component "session.nextQuestion" as sessNext <<Mutation>>
+      component "session.revealResults" as sessReveal <<Mutation>>
+      component "session.end" as sessEnd <<Mutation>>
+      component "session.react" as sessReact <<Mutation>>
+      component "session.onParticipantJoined" as subPartJoin <<Subscription>>
+      component "session.onQuestionRevealed" as subQuestion <<Subscription>>
+      component "session.onResultsRevealed" as subResults <<Subscription>>
+      component "session.onPersonalResult" as subPersonal <<Subscription>>
+      component "session.onStatusChanged" as subStatus <<Subscription>>
+    }
+
+    package "Router: vote" as voteRouter #f5f5f5 {
+      component "vote.submit" as voteSubmit <<Mutation>>
+    }
+
+    package "Router: qa" as qaRouter #f5f5f5 {
+      component "qa.submit" as qaSubmit <<Mutation>>
+      component "qa.upvote" as qaUpvote <<Mutation>>
+      component "qa.moderate" as qaModerate <<Mutation>>
+      component "qa.onQuestionsUpdated" as subQa <<Subscription>>
+    }
+  }
+
+  package "Services / Business-Logic" as services #e3f2fd {
+    component "ScoringService" as scoring
+    component "StreakService" as streak
+    component "SessionCodeService" as codeGen
+    component "CleanupService" as cleanup
+    component "RateLimitService" as rateLimit
+  }
+
+  package "DTO Layer (Data-Stripping)" as dtos #ffebee {
+    component "QuestionStudentDTO" as dtoStudent <<kein isCorrect!>>
+    component "QuestionRevealedDTO" as dtoRevealed <<mit isCorrect>>
+    component "AnswerOptionStudentDTO" as dtoAnsStudent
+    component "AnswerOptionRevealedDTO" as dtoAnsRevealed
+    component "PersonalScorecardDTO" as dtoScorecard
+    component "LeaderboardEntryDTO" as dtoLeaderboard
+    component "TeamLeaderboardEntryDTO" as dtoTeamLb
+    component "RatingResultDTO" as dtoRating
+    component "QaQuestionDTO" as dtoQa
+    component "SessionInfoDTO" as dtoSession
+    component "ServerStatsDTO" as dtoStats
+  }
+
+  package "Validation (Zod)" as validation #f3e5f5 {
+    component "@arsnova/shared-types" as sharedTypes <<npm workspace>>
+  }
+}
+
+' ─── Externe Systeme ─────────────────────────────────────────────────────────
+
+database "PostgreSQL 16" as postgres #e8f5e9
+database "Redis 7" as redis #ffebee
+node "WebSocket Server" as wsServer #e8eaf6
+node "y-websocket" as ywsServer #fce4ec
+
+' ─── Infrastruktur-Verbindungen ──────────────────────────────────────────────
+
+entry --> cors
+cors --> appRouter
+
+appRouter --> healthRouter
+appRouter --> quizRouter
+appRouter --> sessionRouter
+appRouter --> voteRouter
+appRouter --> qaRouter
+
+trpcInit --> appRouter
+
+' Services
+sessionRouter --> scoring
+sessionRouter --> streak
+sessionRouter --> codeGen
+voteSubmit --> scoring
+voteSubmit --> streak
+sessEnd --> cleanup
+sessionRouter --> rateLimit
+voteSubmit --> rateLimit
+
+' DTO-Nutzung
+sessionRouter --> dtoStudent  : Status ACTIVE
+sessionRouter --> dtoRevealed : Status RESULTS
+sessionRouter --> dtoScorecard
+sessionRouter --> dtoLeaderboard
+sessionRouter --> dtoTeamLb
+sessionRouter --> dtoSession
+sessionRouter --> dtoRating
+qaRouter --> dtoQa
+healthRouter --> dtoStats
+
+' Validierung
+quizRouter --> sharedTypes
+sessionRouter --> sharedTypes
+voteRouter --> sharedTypes
+qaRouter --> sharedTypes
+
+' Datenbanken
+quizRouter --> postgres   : Prisma ORM
+sessionRouter --> postgres
+voteRouter --> postgres
+qaRouter --> postgres
+healthRouter --> postgres  : COUNT queries
+scoring --> postgres
+
+sessionRouter --> redis : Pub/Sub\n(Echtzeit-Events)
+voteSubmit --> redis     : Rate-Limiting
+sessReact --> redis      : Emoji (flüchtig)
+rateLimit --> redis      : Sliding Window
+cleanup --> redis        : Key-Deletion
+
+entry --> wsServer       : tRPC Subscriptions
+entry --> ywsServer      : Yjs CRDT Sync
+
+note right of dtoStudent
+  ⚠️ KRITISCH:
+  isCorrect wird SERVERSEITIG
+  entfernt, bevor Daten an
+  Studenten gesendet werden!
+end note
+
+note right of scoring
+  score = difficultyMultiplier × timeBonus
+  finalScore = score × streakMultiplier
+  FREETEXT/SURVEY/RATING = 0 Punkte
+end note
+
+note bottom of rateLimit
+  • Session-Code: 5 Versuche / 5 Min
+  • Vote: 1 Req/s (Token Bucket)
+  • Session-Create: 10/h pro IP
+  via Redis Sliding Window
+end note
+
+@enduml

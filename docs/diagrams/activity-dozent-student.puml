@@ -1,0 +1,228 @@
+@startuml activity-dozent-student
+' ============================================================================
+' arsnova.click V3 – Activity-Diagramm: Dozent ↔ Student Interaktion
+' Zeigt den kompletten Ablauf von Quiz-Erstellung bis Session-Ende
+' ============================================================================
+
+!theme plain
+skinparam shadowing false
+skinparam ActivityBackgroundColor #ffffff
+skinparam ActivityBorderColor #333333
+skinparam PartitionBackgroundColor #f5f5f5
+
+title arsnova.click V3 – Ablauf einer Quiz-Session\n(Dozent ↔ Student)
+
+|#e8f5e9| 🎓 Dozent |
+|#e3f2fd| 📱 Student |
+|#fff3e0| ⚙️ Server |
+
+' ═══════════════════════════════════════════════════════════════════════
+' Phase 1: Quiz-Erstellung (Local-First)
+' ═══════════════════════════════════════════════════════════════════════
+
+|🎓 Dozent|
+start
+:Quiz erstellen\n(Name, Beschreibung);
+note right
+  Lokal in IndexedDB (Yjs CRDT)
+  Kein Server-Roundtrip!
+end note
+
+:Preset wählen\n🎮 Spielerisch / 🎓 Seriös;
+
+:Fragen hinzufügen\n(MC / SC / Freitext / Umfrage / Rating);
+
+:Antwortoptionen definieren\n& korrekte markieren ✓;
+
+:Konfiguration anpassen\n(Timer, Nickname-Theme,\nLeaderboard, Sounds, …);
+
+:Quiz lokal gespeichert ✅;
+
+' ═══════════════════════════════════════════════════════════════════════
+' Phase 2: Session starten
+' ═══════════════════════════════════════════════════════════════════════
+
+:Quiz live schalten 🚀;
+
+|⚙️ Server|
+:session.create()\n→ 6-stelliger Code generiert;
+:Quiz-Daten + isCorrect\nin PostgreSQL speichern;
+:Session-Status = **LOBBY**;
+
+|🎓 Dozent|
+:Session-Code + QR-Code\nanzeigen (Beamer);
+
+' ═══════════════════════════════════════════════════════════════════════
+' Phase 3: Studenten treten bei
+' ═══════════════════════════════════════════════════════════════════════
+
+|📱 Student|
+:Session-Code eingeben\n(oder QR-Code scannen);
+
+|⚙️ Server|
+:session.join()\n→ Code validieren;
+
+if (Code gültig?) then (ja)
+  |📱 Student|
+
+  if (Anonymer Modus?) then (ja)
+    :Automatische ID zuweisen\n"Teilnehmer #7";
+  else (nein)
+    :Nickname aus Themenliste\nwählen oder frei eingeben;
+  endif
+
+  |⚙️ Server|
+  :Participant in DB speichern\n(Unique: Session + Nickname);
+  :WS-Event: onParticipantJoined\nan Dozent pushen;
+
+  |🎓 Dozent|
+  :Teilnehmer in Lobby\nlive anzeigen 👥;
+
+else (nein)
+  |📱 Student|
+  :Fehlermeldung\n"Code ungültig" ❌;
+  stop
+endif
+
+' ═══════════════════════════════════════════════════════════════════════
+' Phase 4: Quiz-Durchführung (Schleife pro Frage)
+' ═══════════════════════════════════════════════════════════════════════
+
+|🎓 Dozent|
+:Auf "Nächste Frage"\nklicken ▶️;
+
+|⚙️ Server|
+:Session-Status = **ACTIVE**\ncurrentQuestion++;
+:QuestionStudentDTO erstellen\n⚠️ isCorrect ENTFERNT!;
+:WS-Event: onQuestionRevealed\nan alle Studenten;
+
+repeat
+
+  |📱 Student|
+  :Frage + Antwortoptionen\nempfangen & anzeigen;
+  note right
+    △ A  ○ B  □ C  ◇ D
+    Vollbreite Buttons
+    Thumb Zone (unten)
+  end note
+
+  if (Timer gesetzt?) then (ja)
+    |📱 Student|
+    :⏱️ Countdown anzeigen\n(synchron via Server-Timestamp);
+  else (nein)
+    :Offene Antwortphase\n(Dozent beendet manuell);
+  endif
+
+  |📱 Student|
+
+  switch (Fragentyp?)
+    case ( MC )
+      :Mehrere Optionen\ntogglen + Absenden;
+    case ( SC )
+      :Eine Option antippen\n→ sofort abgesendet;
+    case ( Freitext )
+      :Text eingeben\n+ Absenden;
+    case ( Rating )
+      :Skalenwert wählen\n(1–5 oder 1–10);
+    case ( Umfrage )
+      :Option wählen\n(kein richtig/falsch);
+  endswitch
+
+  :Optimistisches UI-Update\n"Antwort gesendet ✓";
+
+  |⚙️ Server|
+  :vote.submit()\n→ Antwort validieren & speichern;
+  :Score berechnen\nscore = difficulty × timeBonus;
+  :Streak aktualisieren\nfinalScore = score × streakMultiplier;
+
+  |🎓 Dozent|
+  :Live-Abstimmungsbalken\nauf Beamer aktualisieren 📊;
+
+  :Auf "Ergebnis zeigen"\nklicken 📈;
+
+  |⚙️ Server|
+  :Session-Status = **RESULTS**;
+  :QuestionRevealedDTO erstellen\n✅ isCorrect JETZT enthalten;
+  :PersonalScorecardDTO\npro Participant berechnen;
+  :WS-Events pushen:\n• onResultsRevealed (alle)\n• onPersonalResult (individuell);
+
+  |📱 Student|
+  :Eigene Antwort markiert\n✓ grün / ✗ rot;
+  :Persönliche Scorecard\nals Bottom-Sheet:\n• Punkte + Streak 🔥\n• Rang + Veränderung ↑↓\n• Motivationsmeldung 💪;
+
+  if (Emoji-Reaktionen aktiv?) then (ja)
+    :Emoji-Leiste anzeigen\n👏 🎉 😮 😂 😢;
+    :Emoji antippen → Server;
+    |⚙️ Server|
+    :session.react()\n→ Emoji via Redis pushen;
+    |🎓 Dozent|
+    :Emoji-Blasen auf\nBeamer animieren 🎉;
+  else (nein)
+  endif
+
+  |🎓 Dozent|
+  :Ergebnis-Visualisierung\nauf Beamer anzeigen;
+
+  if (Leaderboard aktiv?) then (ja)
+    :Leaderboard-Zwischenstand\nTop 5 anzeigen 🏆;
+  else (nein)
+  endif
+
+  if (Weitere Fragen?) then (ja)
+    |⚙️ Server|
+    :Session-Status = **PAUSED**;
+    |🎓 Dozent|
+    :Auf "Nächste Frage"\nklicken ▶️;
+    |⚙️ Server|
+    :Session-Status = **ACTIVE**\ncurrentQuestion++;
+    :QuestionStudentDTO pushen\n⚠️ isCorrect ENTFERNT;
+  else (nein)
+  endif
+
+repeat while (Weitere Fragen?) is (ja) not (nein)
+
+' ═══════════════════════════════════════════════════════════════════════
+' Phase 5: Session beenden
+' ═══════════════════════════════════════════════════════════════════════
+
+|🎓 Dozent|
+:Auf "Quiz beenden"\nklicken 🏁;
+
+|⚙️ Server|
+:session.end()\nSession-Status = **FINISHED**;
+:Finales Leaderboard berechnen\n(Sortierung: Score → Antwortzeit);
+:Redis-Keys löschen\n(flüchtige Daten entfernt);
+
+|🎓 Dozent|
+:Finales Leaderboard\nauf Beamer anzeigen 🏆;
+
+if (Belohnungseffekte aktiv?) then (ja)
+  :🥇 Platz 1: Konfetti + Gold-Pokal\n🥈 Platz 2: Silber-Medaille\n🥉 Platz 3: Bronze-Medaille;
+else (nein)
+endif
+
+|📱 Student|
+:Finales Ranking\nauf Smartphone sehen;
+:Session-Teilnahme beendet 👋;
+
+|⚙️ Server|
+:Auto-Cleanup nach 24h\nfür nicht beendete Sessions ♻️;
+
+|🎓 Dozent|
+:Quiz bleibt lokal\nin IndexedDB erhalten 💾;
+stop
+
+' ═══════════════════════════════════════════════════════════════════════
+' Legende
+' ═══════════════════════════════════════════════════════════════════════
+
+legend bottom
+  | Symbol | Bedeutung |
+  | ⚠️ | Sicherheitsrelevante Aktion (Data-Stripping) |
+  | 🔥 | Streak-Indikator (≥ 3 richtige in Folge) |
+  | 📊 | Echtzeit-Aktualisierung via WebSocket |
+  | 💾 | Local-First (IndexedDB / Yjs) |
+  | ♻️ | Automatisches Cleanup |
+endlegend
+
+@enduml

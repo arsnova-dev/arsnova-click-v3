@@ -1,0 +1,176 @@
+@startuml comm-dozent-client
+' ============================================================================
+' arsnova.click V3 – Kommunikationsdiagramm: Dozent-Client ↔ Backend
+' Protokolle: HTTP (tRPC Queries/Mutations), WebSocket (tRPC Subscriptions)
+' ============================================================================
+
+!theme plain
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 220
+
+title Dozent-Client ↔ Backend – Kommunikation\n(tRPC HTTP + WebSocket)
+
+actor "🎓 Dozent" as dozent
+box "Browser (Angular)" #e8f5e9
+  participant "QuizEditor\n(Local-First)" as editor
+  participant "tRPC Client\n(httpBatchLink)" as http
+  participant "tRPC Client\n(wsLink)" as ws
+  participant "Yjs\n(IndexedDB)" as yjs
+end box
+
+box "Backend (Node.js)" #fff3e0
+  participant "tRPC Router\n(Express)" as router
+  participant "WebSocket\nServer" as wss
+  participant "y-websocket\nRelay" as yws
+end box
+
+database "PostgreSQL" as pg
+database "Redis" as redis
+
+== Phase 1: Quiz erstellen (Local-First — kein Server!) ==
+
+dozent -> editor : Quiz anlegen &\nFragen hinzufügen
+editor -> yjs : Yjs-Doc speichern
+yjs -> yjs : IndexedDB persistieren
+note right of yjs : Kein Server-Roundtrip!\nAlles lokal im Browser.
+
+opt Multi-Device-Sync (Story 0.3 / 1.6)
+  yjs -> yws : CRDT-Deltas\n(WebSocket)
+  yws -> yjs : Sync zurück\nan Gerät B
+end
+
+== Phase 2: Quiz live schalten ==
+
+dozent -> editor : "Live schalten" klicken
+editor -> yjs : Quiz-Daten\naus IndexedDB lesen
+editor -> http : **quiz.upload()**\n//QuizUploadInputSchema//\n(Name, Config, Fragen,\nAntworten inkl. isCorrect)
+http -> router : HTTP POST /trpc
+router -> pg : Quiz + Questions +\nAnswerOptions INSERT
+router --> http : { quizId }
+
+editor -> http : **session.create()**\n//CreateSessionInputSchema//\n{ quizId, type: 'QUIZ' }
+http -> router : HTTP POST /trpc
+router -> pg : Session INSERT\n(Code generieren, Status=LOBBY)
+router --> http : { sessionId, code: "A3F7K2" }
+
+editor -> ws : **Subscribe:**\nsession.onParticipantJoined\nsession.onStatusChanged
+ws -> wss : WebSocket CONNECT
+note over ws, wss : Persistente WS-Verbindung\nfür alle Echtzeit-Events
+
+dozent -> editor : Beamer-Ansicht öffnen\n(/session/A3F7K2/present)
+
+== Phase 3: Lobby — Teilnehmer treten bei ==
+
+wss -> ws : **Event: onParticipantJoined**\n//ParticipantDTO//\n{ id, nickname: "Marie Curie" }
+ws -> editor : Signal update
+editor -> dozent : 👤 "Marie Curie"\nin Lobby anzeigen
+
+wss -> ws : **Event: onParticipantJoined**\n//ParticipantDTO//\n{ id, nickname: "Albert Einstein" }
+ws -> editor : Signal update
+editor -> dozent : 👤 +1 Teilnehmer\n(Live-Counter)
+
+== Phase 4: Frage freigeben ==
+
+dozent -> editor : "Nächste Frage" klicken ▶️
+editor -> http : **session.nextQuestion()**\n{ sessionId }
+http -> router : HTTP POST /trpc
+router -> pg : currentQuestion++\nStatus = ACTIVE
+router -> redis : PUBLISH session:A3F7K2\n{ event: "questionRevealed" }
+router --> http : ok
+
+note over router
+  Server erstellt **QuestionStudentDTO**:
+  ⚠️ isCorrect wird ENTFERNT!
+  Nur id, text, type, timer, answers[{id, text}]
+end note
+
+router -> wss : Push an alle Clients
+note right of wss : Broadcast via Redis Pub/Sub\nan Dozent + alle Studenten
+
+== Phase 5: Live-Voting beobachten ==
+
+wss -> ws : **Event: voteCountUpdate**\n{ questionId, totalVotes: 12 }
+ws -> editor : Signal update
+editor -> dozent : Abstimmungsbalken\nlive aktualisieren 📊
+
+== Phase 6: Ergebnis auflösen ==
+
+dozent -> editor : "Ergebnis zeigen" klicken 📈
+editor -> http : **session.revealResults()**\n{ sessionId }
+http -> router : HTTP POST /trpc
+router -> pg : Status = RESULTS
+router -> pg : Scores berechnen\n(Difficulty × TimeBonus × Streak)
+
+note over router
+  Server erstellt jetzt **QuestionRevealedDTO**:
+  ✅ isCorrect ist ENTHALTEN!
+  + voteCount, votePercentage pro Option
+end note
+
+router -> wss : Push **onResultsRevealed**\n//QuestionRevealedDTO//
+router -> redis : PUBLISH Ergebnisse
+
+wss -> ws : **Event: onResultsRevealed**\n//QuestionRevealedDTO//\n{ answers: [{ isCorrect: true, voteCount: 8 }] }
+ws -> editor : Signal update
+editor -> dozent : Ergebnis-Diagramm\nauf Beamer anzeigen 📊
+
+opt Leaderboard aktiv (showLeaderboard=true)
+  editor -> http : **session.getLeaderboard()**\n{ sessionId }
+  http -> router : HTTP GET /trpc
+  router -> pg : Scores aggregieren
+  router --> http : //LeaderboardEntryDTO[]//\n[{ rank: 1, nickname, totalScore }]
+  editor -> dozent : Top 5 auf\nBeamer anzeigen 🏆
+end
+
+opt Emoji-Reaktionen aktiv
+  wss -> ws : **Event: onEmojiReaction**\n{ emoji: "🎉", count: 5 }
+  ws -> editor : Signal update
+  editor -> dozent : Emoji-Blasen\nauf Beamer animieren 🎉
+end
+
+== Phase 7: Nächste Frage (Schleife) ==
+
+dozent -> editor : "Nächste Frage" ▶️
+editor -> http : **session.nextQuestion()**
+note over editor : Schleife wiederholt sich\nbis alle Fragen durch sind
+
+== Phase 8: Quiz beenden ==
+
+dozent -> editor : "Quiz beenden" 🏁
+editor -> http : **session.end()**\n{ sessionId }
+http -> router : HTTP POST /trpc
+router -> pg : Status = FINISHED
+router -> redis : DEL session:A3F7K2:*\n(Redis-Keys löschen ♻️)
+router -> wss : Push **onStatusChanged**\n{ status: "FINISHED" }
+router --> http : ok
+
+editor -> http : **session.getLeaderboard()**
+http -> router : HTTP GET /trpc
+router --> http : //LeaderboardEntryDTO[]//\n(finales Ranking)
+editor -> dozent : Finales Leaderboard\n+ Belohnungseffekte 🏆🎉
+
+wss -> ws : Verbindung geschlossen
+ws -> editor : Cleanup
+
+== Parallelpfad: Q&A-Modus (Epic 8) ==
+
+dozent -> editor : "Q&A starten"
+editor -> http : **session.create()**\n{ type: 'Q_AND_A', title: "Fragen?" }
+http -> router : HTTP POST /trpc
+router --> http : { code: "B5X9M1" }
+
+editor -> ws : **Subscribe:**\nqa.onQuestionsUpdated
+
+wss -> ws : **Event: onQuestionsUpdated**\n//QaQuestionDTO[]//\n[{ text, upvoteCount, status }]
+ws -> editor : Signal update
+editor -> dozent : Q&A-Liste\nsortiert nach Upvotes
+
+dozent -> editor : Frage pinnen 📌
+editor -> http : **qa.moderate()**\n{ questionId, action: "PIN" }
+http -> router : HTTP POST /trpc
+router -> pg : status = PINNED
+router -> wss : Push Update
+
+@enduml
