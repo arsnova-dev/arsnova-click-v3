@@ -1,0 +1,34 @@
+services:
+  # PostgreSQL Datenbank (Für Prisma ORM)
+  postgres:
+    image: postgres:16-alpine
+    container_name: arsnova-v3-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: arsnova_user
+      POSTGRES_PASSWORD: secretpassword
+      POSTGRES_DB: arsnova_v3_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U arsnova_user -d arsnova_v3_dev"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Redis (Für tRPC Pub/Sub & WebSockets)
+  redis:
+    image: redis:7-alpine
+    container_name: arsnova-v3-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --save 60 1 --loglevel warning
+
+volumes:
+  postgres_data:
+  redis_data:

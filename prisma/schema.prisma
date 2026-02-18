@@ -1,0 +1,60 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Der Dozent / Ersteller (Optional, falls Accounts genutzt werden)
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  quizzes   Quiz[]
+}
+
+// Das Meta-Dokument für den Server
+model Quiz {
+  id          String     @id @default(uuid())
+  name        String
+  description String?
+  isPublic    Boolean    @default(false)
+  creatorId   String?    // Optional wegen Local-First USP
+  creator     User?      @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  questions   Question[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+// Eine einzelne Frage
+model Question {
+  id       String         @id @default(uuid())
+  text     String
+  type     QuestionType
+  timer    Int?           // Optionaler Countdown in Sekunden
+  quizId   String
+  quiz     Quiz           @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answers  AnswerOption[]
+  order    Int            // Sortierung
+}
+
+// Die Antwortmöglichkeiten
+model AnswerOption {
+  id         String   @id @default(uuid())
+  text       String
+  isCorrect  Boolean  // WICHTIG: Darf im Live-Quiz niemals an Studenten geleakt werden!
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  SINGLE_CHOICE
+  FREETEXT
+  SURVEY
+}
