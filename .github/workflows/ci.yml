@@ -21,6 +21,7 @@ jobs:
     name: Build & Validate (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         node-version: [20, 22]
 
@@ -38,7 +39,7 @@ jobs:
         run: npm ci
 
       - name: Prisma validate
-        run: npx prisma validate
+        run: npx prisma validate --schema prisma/schema.prisma
 
       - name: TypeScript compile – shared-types
         run: npx tsc --project libs/shared-types/tsconfig.json --noEmit
@@ -75,6 +76,8 @@ jobs:
   audit:
     name: Security Audit
     runs-on: ubuntu-latest
+    # Audit ist informativ – soll nie den gesamten CI-Lauf blockieren
+    continue-on-error: true
 
     steps:
       - name: Checkout
@@ -89,8 +92,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: npm audit
-        run: npm audit --audit-level=high || true
+      - name: npm audit (informational)
+        run: |
+          echo "::group::npm audit output"
+          npm audit --audit-level=high 2>&1 || echo "⚠️ Vulnerabilities found (see above). This step is informational and does not block CI."
+          echo "::endgroup::"
 
   # ─── Tests (Platzhalter) ─────────────────────────────────────────────────────
   test:
@@ -112,7 +118,7 @@ jobs:
         run: npm ci
 
       - name: Run tests
-        run: echo "No tests yet — wird aktiviert sobald Tests existieren"
+        run: echo "No tests yet – wird aktiviert sobald Tests existieren"
 
   # ─── Docker Build ────────────────────────────────────────────────────────────
   docker:
