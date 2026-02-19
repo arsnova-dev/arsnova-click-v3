@@ -17,7 +17,7 @@
     "dev:backend": "npm run dev -w @arsnova/backend",
     "dev:frontend": "npm run start -w @arsnova/frontend",
     "build": "npm run build -w @arsnova/backend && npm run build -w @arsnova/frontend",
-    "lint": "echo 'TODO: Linting konfigurieren'",
+    "lint": "eslint 'libs/**/*.ts' 'apps/**/*.ts'",
     "format": "prettier --write \"**/*.{ts,js,json,html,css,scss,md}\"",
     "format:check": "prettier --check \"**/*.{ts,js,json,html,css,scss,md}\"",
     "prisma:generate": "prisma generate",
@@ -27,9 +27,13 @@
     "docker:down": "docker compose down"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "concurrently": "^9.0.0",
+    "eslint": "^10.0.0",
+    "globals": "^17.3.0",
     "prettier": "^3.2.0",
-    "prisma": "^7.4.0"
+    "prisma": "^7.4.0",
+    "typescript-eslint": "^8.56.0"
   },
   "dependencies": {
     "@prisma/client": "^7.4.0"

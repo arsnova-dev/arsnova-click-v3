@@ -1,5 +1,6 @@
 # 🚀 arsnova.click V3 (Vibe Coding Edition)
 
+[![CI](https://github.com/kqc-real/arsnova-click-v3/actions/workflows/ci.yml/badge.svg)](https://github.com/kqc-real/arsnova-click-v3/actions/workflows/ci.yml)
 [![Tech Stack: Angular](https://img.shields.io/badge/Frontend-Angular%2017%2B-DD0031.svg?style=flat-square&logo=angular)](https://angular.dev/)
 [![Tech Stack: tRPC](https://img.shields.io/badge/API-tRPC-2596be.svg?style=flat-square&logo=trpc)](https://trpc.io/)
 [![Tech Stack: Prisma](https://img.shields.io/badge/ORM-Prisma-2D3748.svg?style=flat-square&logo=prisma)](https://www.prisma.io/)

@@ -17,6 +17,7 @@
 | 0 | 0.3 | Yjs WebSocket-Provider | 🟡 | ⬜ Offen |
 | 0 | 0.4 | Server-Status-Indikator | 🟡 | ⬜ Offen |
 | 0 | 0.5 | Rate-Limiting & Brute-Force-Schutz | 🔴 | ⬜ Offen |
+| 0 | 0.6 | CI/CD-Pipeline (GitHub Actions) | 🔴 | ⬜ Offen |
 | 1 | 1.1 | Quiz erstellen | 🔴 | ⬜ Offen |
 | 1 | 1.2a | Fragentypen: MC & SC | 🔴 | ⬜ Offen |
 | 1 | 1.2b | Fragentypen: Freitext & Umfrage | 🟡 | ⬜ Offen |
@@ -71,7 +72,7 @@
 
 > **Legende Status:** ⬜ Offen · 🔨 In Arbeit · ✅ Fertig (DoD erfüllt) · ❌ Blockiert
 >
-> **Statistik:** 🔴 Must: 22 · 🟡 Should: 21 · 🟢 Could: 13 = **56 Storys gesamt**
+> **Statistik:** 🔴 Must: 23 · 🟡 Should: 21 · 🟢 Could: 13 = **57 Storys gesamt**
 
 ---
 
@@ -160,6 +161,20 @@ Eine Story gilt als **fertig**, wenn **alle** folgenden Kriterien erfüllt sind:
     - [ ] Rate-Limits werden über Redis (`ioredis`) mit Sliding-Window-Algorithmus umgesetzt (abhängig von Story 0.1).
     - [ ] Bei Überschreitung wird ein strukturierter tRPC-Error (`TOO_MANY_REQUESTS`) mit verbleibender Wartezeit zurückgegeben.
     - [ ] Limits sind als Umgebungsvariablen konfigurierbar (nicht hart kodiert).
+
+* **Story 0.6 (CI/CD-Pipeline):** 🔴 Als Entwickler möchte ich eine automatische CI/CD-Pipeline (GitHub Actions) haben, damit Code-Qualität bei jedem Push und Pull-Request sichergestellt wird und Docker-Images für das Deployment bereitstehen.
+  * **Akzeptanzkriterien:**
+    - [ ] **CI-Workflow (`.github/workflows/ci.yml`):** Wird bei Push auf `main` und bei Pull-Requests ausgelöst.
+    - [ ] **TypeScript-Kompilierung:** `tsc --noEmit` für `libs/shared-types`, `apps/backend` und `apps/frontend` — alle drei müssen fehlerfrei kompilieren.
+    - [ ] **Prisma-Validierung:** `prisma validate` prüft das Schema auf Korrektheit.
+    - [ ] **Linting:** ESLint prüft alle `.ts`-Dateien auf Regelverstöße (Root-Config: `eslint.config.mjs`).
+    - [ ] **Security-Audit:** `npm audit --audit-level=high` meldet keine bekannten Schwachstellen mit Severity ≥ high.
+    - [ ] **Docker-Image:** Multi-Stage-Dockerfile baut ein produktionsfertiges Image (`node:20-alpine`).
+    - [ ] **Docker-Build:** CI baut das Docker-Image erfolgreich (kein Push in Registry, nur Build-Test).
+    - [ ] **Caching:** `node_modules` wird via `actions/cache` zwischengespeichert, um CI-Laufzeit zu verkürzen.
+    - [ ] **Matrix-Test:** Pipeline läuft auf Node.js 20 und 22 (Kompatibilitätstest).
+    - [ ] **Platzhalter für Tests:** Job `test` ist vorbereitet, aktuell mit `echo "No tests yet"` — wird aktiviert, sobald Tests existieren.
+    - [ ] **Status-Badge:** README.md enthält ein CI-Status-Badge (`![CI](https://github.com/...)`).
 
 ---
 
