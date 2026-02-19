@@ -30,6 +30,7 @@
 | 1 | 1.9 | Quiz importieren | 🟡 | ⬜ Offen |
 | 1 | 1.10 | Quiz bearbeiten & löschen | 🔴 | ⬜ Offen |
 | 1 | 1.11 | Quiz-Presets | 🟡 | ⬜ Offen |
+| 1 | 1.12 | SC-Schnellformate | 🟡 | ⬜ Offen |
 | 2 | 2.1a | Session-ID & Quiz-Upload | 🔴 | ⬜ Offen |
 | 2 | 2.1b | QR-Code | 🟢 | ⬜ Offen |
 | 2 | 2.2 | Lobby-Ansicht | 🔴 | ⬜ Offen |
@@ -68,7 +69,7 @@
 
 > **Legende Status:** ⬜ Offen · 🔨 In Arbeit · ✅ Fertig (DoD erfüllt) · ❌ Blockiert
 >
-> **Statistik:** 🔴 Must: 22 · 🟡 Should: 18 · 🟢 Could: 13 = **53 Storys gesamt**
+> **Statistik:** 🔴 Must: 22 · 🟡 Should: 19 · 🟢 Could: 13 = **54 Storys gesamt**
 
 ---
 
@@ -217,6 +218,21 @@ Eine Story gilt als **fertig**, wenn **alle** folgenden Kriterien erfüllt sind:
     - [ ] Das Preset dient nur als Komfortfunktion; es wird **nicht** als eigener Wert gespeichert — die Einzelwerte sind maßgeblich.
     - [ ] Ein visueller Hinweis (Badge „Spielerisch" / „Seriös") zeigt an, welchem Preset die aktuelle Konfiguration entspricht. Wenn Einzelwerte abweichen, wird „Benutzerdefiniert" angezeigt.
     - [ ] Presets sind auch beim Bearbeiten (Story 1.10) verfügbar.
+
+* **Story 1.12 (SC-Schnellformate):** 🟡 Als Dozent möchte ich beim Erstellen einer Single-Choice-Frage aus vorkonfigurierten Antwortformaten wählen können, damit ich häufig benötigte Formate mit einem Klick einfügen kann.
+  * **Akzeptanzkriterien:**
+    - [ ] Wenn der Fragentyp `SINGLE_CHOICE` gewählt ist, erscheint über dem Antwort-Editor eine Dropdown-Leiste **„Schnellformat"** mit folgenden Optionen:
+      - [ ] **Ja / Nein** → 2 Antwortoptionen: „Ja", „Nein"
+      - [ ] **Ja / Nein / Vielleicht** → 3 Antwortoptionen: „Ja", „Nein", „Vielleicht"
+      - [ ] **Ja / Nein / Weiß nicht** → 3 Antwortoptionen: „Ja", „Nein", „Weiß nicht"
+      - [ ] **Wahr / Falsch** → 2 Antwortoptionen: „Wahr", „Falsch"
+      - [ ] **A / B / C / D** → 4 Antwortoptionen: „A", „B", „C", „D"
+    - [ ] Bei Auswahl eines Formats werden die bestehenden Antwortoptionen **ersetzt** (nach Bestätigungsdialog, falls bereits Antworten vorhanden sind).
+    - [ ] Der Dozent muss danach mindestens eine Antwort als korrekt (`isCorrect`) markieren — das Schnellformat setzt keine Lösung voraus.
+    - [ ] Nach dem Einfügen kann der Dozent die Antworttexte frei bearbeiten, weitere Optionen ergänzen oder entfernen.
+    - [ ] Die Schnellformate sind als Konstante `SC_FORMAT_PRESETS` in `@arsnova/shared-types` definiert und werden bei i18n (Story 6.2) lokalisiert.
+    - [ ] Das Dropdown ist nur bei `SINGLE_CHOICE` sichtbar — bei anderen Fragentypen wird es ausgeblendet.
+    - [ ] Das Feature ist rein clientseitig (kein Server-Roundtrip, keine Datenbankänderung).
 
 * **Story 1.5 (Local-First Speicherung):** 🔴 Als Dozent möchte ich, dass mein Quiz automatisch lokal in meinem Browser (IndexedDB via Yjs) gespeichert wird, ohne Account-Zwang.
   * **Akzeptanzkriterien:**

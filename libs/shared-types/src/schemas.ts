@@ -423,6 +423,29 @@ export const UpvoteQaQuestionInputSchema = z.object({
 });
 export type UpvoteQaQuestionInput = z.infer<typeof UpvoteQaQuestionInputSchema>;
 
+// ---------------------------------------------------------------------------
+// SC-Schnellformate (Story 1.12) — clientseitig angewandt
+// ---------------------------------------------------------------------------
+
+/** Verfügbare Single-Choice-Schnellformate */
+export const ScFormatEnum = z.enum([
+  'YES_NO',
+  'YES_NO_MAYBE',
+  'YES_NO_DONT_KNOW',
+  'TRUE_FALSE',
+  'ABCD',
+]);
+export type ScFormat = z.infer<typeof ScFormatEnum>;
+
+/** Vorkonfigurierte Antwortoptionen pro SC-Format (Texte werden bei i18n lokalisiert) */
+export const SC_FORMAT_PRESETS: Record<ScFormat, { label: string; answers: string[] }> = {
+  YES_NO:            { label: 'Ja / Nein',              answers: ['Ja', 'Nein'] },
+  YES_NO_MAYBE:      { label: 'Ja / Nein / Vielleicht', answers: ['Ja', 'Nein', 'Vielleicht'] },
+  YES_NO_DONT_KNOW:  { label: 'Ja / Nein / Weiß nicht', answers: ['Ja', 'Nein', 'Weiß nicht'] },
+  TRUE_FALSE:        { label: 'Wahr / Falsch',          answers: ['Wahr', 'Falsch'] },
+  ABCD:              { label: 'A / B / C / D',          answers: ['A', 'B', 'C', 'D'] },
+};
+
 /** Preset-Konfigurationen (Story 1.11) — clientseitig angewandt */
 export const QUIZ_PRESETS: Record<QuizPreset, Partial<CreateQuizInput>> = {
   PLAYFUL: {
