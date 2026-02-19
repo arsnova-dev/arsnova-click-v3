@@ -18,6 +18,8 @@ app.use(
 );
 
 app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
   console.log(`🚀 Backend läuft auf http://localhost:${PORT}`);
+  // eslint-disable-next-line no-console
   console.log(`   tRPC-API: http://localhost:${PORT}/trpc`);
 });
