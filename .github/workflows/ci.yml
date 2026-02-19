@@ -15,6 +15,10 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  # Pin npm version to match local dev environment (avoids lock file drift)
+  NPM_VERSION: "10.8.2"
+
 jobs:
   # ─── Build & Validate ────────────────────────────────────────────────────────
   build:
@@ -34,6 +38,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
+
+      - name: Pin npm version
+        run: npm install -g npm@${{ env.NPM_VERSION }}
 
       - name: Install dependencies
         run: npm ci
@@ -66,6 +73,9 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Pin npm version
+        run: npm install -g npm@${{ env.NPM_VERSION }}
+
       - name: Install dependencies
         run: npm ci
 
@@ -76,7 +86,6 @@ jobs:
   audit:
     name: Security Audit
     runs-on: ubuntu-latest
-    # Audit ist informativ – soll nie den gesamten CI-Lauf blockieren
     continue-on-error: true
 
     steps:
@@ -88,6 +97,9 @@ jobs:
         with:
           node-version: 20
           cache: npm
+
+      - name: Pin npm version
+        run: npm install -g npm@${{ env.NPM_VERSION }}
 
       - name: Install dependencies
         run: npm ci
@@ -113,6 +125,9 @@ jobs:
         with:
           node-version: 20
           cache: npm
+
+      - name: Pin npm version
+        run: npm install -g npm@${{ env.NPM_VERSION }}
 
       - name: Install dependencies
         run: npm ci
