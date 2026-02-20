@@ -218,6 +218,7 @@ graph TD
 ## Technologie-Stack Übersicht
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e3f2fd', 'primaryTextColor': '#0d47a1', 'primaryBorderColor': '#1976d2', 'secondaryColor': '#e8f5e9', 'secondaryTextColor': '#1b5e20', 'secondaryBorderColor': '#388e3c', 'tertiaryColor': '#fff8e1', 'tertiaryTextColor': '#bf360c', 'tertiaryBorderColor': '#ff9800', 'lineColor': '#37474f', 'textColor': '#212121' }}}%%
 mindmap
   root((arsnova.click V3))
     Frontend
