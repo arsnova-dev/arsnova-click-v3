@@ -27,3 +27,4 @@ Du darfst NIEMALS von diesem Stack abweichen, es sei denn, der User befiehlt es 
 * Schreibe nicht die gesamte App auf einmal.
 * Wenn der Nutzer ein Feature anfragt (z.B. "Erstelle das Leaderboard"), frage nach, ob du zuerst das Backend (tRPC-Endpoint + DTO) oder das Frontend (Angular UI) entwerfen sollst.
 * Liefere Code, der sofort kompiliert und gut kommentiert ist.
+* Bevor du eine Story als fertig markierst, generiere einen einfachen tRPC-Integrationstest, um das DTO-Stripping (Abschnitt 3) zu verifizieren."
