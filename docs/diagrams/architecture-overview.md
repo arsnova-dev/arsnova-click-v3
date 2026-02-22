@@ -1,7 +1,7 @@
 # 🏗️ Architektur-Übersicht: arsnova.click V3
 
 **Erstellt:** 2026-02-20  
-**Zuletzt aktualisiert:** 2026-02-21  
+**Zuletzt aktualisiert:** 2026-02-22  
 **Zweck:** Visualisierung der gesamten Codebasis-Struktur und Architektur
 
 ## System-Architektur-Diagramm
@@ -21,7 +21,7 @@ graph TB
             TRPC[tRPC Router<br/>/trpc]
             ROUTERS[Router Layer<br/>health · quiz · session<br/>vote · qa]
             SERVICES[Service Layer<br/>Scoring · Streak · SessionCode<br/>RateLimit · BonusToken]
-            DTO[DTO Layer<br/>Data Stripping<br/>QuestionStudentDTO<br/>QuestionRevealedDTO]
+            DTO[DTO Layer<br/>Data Stripping<br/>QuestionPreviewDTO<br/>QuestionStudentDTO<br/>QuestionRevealedDTO]
         end
         
         subgraph "Shared Library"
@@ -121,13 +121,21 @@ sequenceDiagram
     BE->>R: Pub/Sub: onParticipantJoined
     R-->>D: Echtzeit-Update
     
-    Note over D,S: Frage wird gestartet
+    Note over D,S: Frage wird gestartet (Story 2.6: Zwei-Phasen optional)
     D->>FE: Nächste Frage
     FE->>BE: session.nextQuestion()
-    BE->>PG: Status = ACTIVE
-    BE->>R: Pub/Sub: onQuestionRevealed
-    R-->>S: Frage anzeigen (OHNE isCorrect!)
-    
+    BE->>PG: Status = QUESTION_OPEN (oder ACTIVE wenn readingPhaseEnabled=false)
+    BE->>R: Pub/Sub: onQuestionRevealed (QuestionPreviewDTO – nur Fragenstamm)
+    R-->>S: Lesephase: Frage anzeigen, keine Antworten
+
+    opt Lesephase aktiv
+        D->>FE: Antworten freigeben
+        FE->>BE: session.revealAnswers()
+        BE->>PG: Status = ACTIVE
+        BE->>R: Pub/Sub: onAnswersRevealed (QuestionStudentDTO OHNE isCorrect)
+        R-->>S: Antwort-Buttons + Countdown
+    end
+
     Note over S,BE: Student votet
     S->>FE: Antwort auswählen
     FE->>BE: vote.submit()
@@ -278,6 +286,8 @@ mindmap
 
 ## Datenbank-Schema Übersicht
 
+Session-Status (Story 2.6): `LOBBY`, `QUESTION_OPEN` (Lesephase), `ACTIVE`, `RESULTS`, `PAUSED`, `FINISHED`.
+
 ```mermaid
 erDiagram
     Quiz ||--o{ Question : enthaelt
@@ -303,6 +313,7 @@ erDiagram
         string name
         boolean showLeaderboard
         int bonusTokenCount
+        boolean readingPhaseEnabled
     }
     Question {
         string id PK
@@ -339,10 +350,12 @@ graph LR
     subgraph "Data Stripping Pattern"
         PG[(PostgreSQL<br/>isCorrect = true)]
         PG -->|Laden| BE[Backend]
+        BE -->|DTO Filter| PREVIEW_DTO[QuestionPreviewDTO<br/>Lesephase – nur Fragenstamm]
         BE -->|DTO Filter| STUDENT_DTO[QuestionStudentDTO<br/>⚠️ KEIN isCorrect]
         BE -->|DTO Filter| REVEALED_DTO[QuestionRevealedDTO<br/>✅ MIT isCorrect]
         
-        STUDENT_DTO -->|Status: ACTIVE| STUDENT[Student Client]
+        PREVIEW_DTO -->|Status: QUESTION_OPEN| STUDENT[Student Client]
+        STUDENT_DTO -->|Status: ACTIVE| STUDENT
         REVEALED_DTO -->|Status: RESULTS| STUDENT
     end
     
@@ -352,6 +365,7 @@ graph LR
         REDIS -->|Allow/Deny| BE
     end
     
+    style PREVIEW_DTO fill:#ffd43b
     style STUDENT_DTO fill:#ff6b6b
     style REVEALED_DTO fill:#51cf66
     style IDB fill:#4dabf7
