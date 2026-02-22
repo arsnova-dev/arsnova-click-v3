@@ -103,6 +103,7 @@ export const CreateQuizInputSchema = z.object({
   bonusTokenCount: z.number().int().min(1).max(50).nullable().optional().default(null), // Story 4.6
   readingPhaseEnabled: z.boolean().optional().default(true), // Story 2.6: Zwei-Phasen-Frageanzeige (Lesephase)
 });
+export type CreateQuizInput = z.infer<typeof CreateQuizInputSchema>;
 
 /** Schema für eine einzelne Antwortoption beim Hinzufügen/Bearbeiten */
 export const AnswerOptionInputSchema = z.object({
