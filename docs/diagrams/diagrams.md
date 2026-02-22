@@ -324,6 +324,14 @@ sequenceDiagram
     FE->>YJS: Yjs-Doc speichern
     YJS->>YJS: IndexedDB persistieren
 
+    opt Story 1.6a: Quiz auf anderem Gerät öffnen
+        D->>FE: „Auf anderem Gerät öffnen“
+        FE->>D: Sync-Link / Sync-Code / QR anzeigen
+        Note over D: Dozent öffnet Link (oder Code) auf Tablet
+        FE->>YJS: Yjs-Room verbinden (gleiche Dokument-ID)
+        YJS->>FE: Quiz synchronisiert
+    end
+
     Note over D,R: Phase 2: Quiz live schalten
     D->>FE: Live schalten
     FE->>YJS: Quiz-Daten lesen
@@ -449,6 +457,7 @@ Vereinfachtes Aktivitätsdiagramm (Quiz-Lifecycle).
 flowchart TB
     subgraph Dozent["Dozent"]
         D1[Quiz erstellen - Yjs IndexedDB]
+        D1a[Sync-Link/Key für anderes Gerät anzeigen - Story 1.6a]
         D2[Quiz-Preview - Validierung]
         D3[Live schalten - Session erstellen]
         D4[Session-Code + QR anzeigen]
@@ -481,7 +490,8 @@ flowchart TB
         ST6[Finales Ranking, ggf. Bonus-Token kopieren]
     end
 
-    D1 --> D2 --> D3
+    D1 --> D1a
+    D1a --> D2 --> D3
     D3 --> S1 --> S2
     S2 --> D4
     D4 --> ST1 --> ST2

@@ -104,7 +104,12 @@ sequenceDiagram
     D->>FE: Quiz erstellen/bearbeiten
     FE->>YJS: CRDT-Dokument speichern
     YJS-->>FE: Sync bestätigt
-    
+    opt Story 1.6a: Auf anderem Gerät öffnen
+        D->>FE: Sync-Link/Key anzeigen
+        FE-->>D: Link/QR/Code (Yjs-Dokument-ID)
+        Note over D: Anderes Gerät: Link öffnen → gleiches Quiz
+    end
+
     Note over D,BE: Session starten (Backlog 2.1a)
     D->>FE: Live schalten
     FE->>BE: quiz.upload (Quiz-Kopie)

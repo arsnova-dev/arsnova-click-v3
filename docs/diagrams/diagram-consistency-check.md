@@ -23,7 +23,7 @@
 - **Felder im erDiagram:** Nur eine Auswahl dargestellt (id, name, text, etc.). Prisma-Schema enthält deutlich mehr Felder (z. B. Quiz hat 17 Felder im Schema, 4 im Diagramm). Akzeptable Vereinfachung.
 
 ### 1.4 Sequenzdiagramme (Dozent & Student)
-- **Dozent:** quiz.upload → session.create → Subscriptions → nextQuestion → revealResults → session.end → Redis-Cleanup → getBonusTokens – Reihenfolge konsistent mit Backlog (2.1a, 2.3, 2.4, 4.2, 4.6). ✓
+- **Dozent:** Optional Phase „Quiz auf anderem Gerät öffnen“ (Story 1.6a: Sync-Link/Key) nach Quiz erstellen; danach quiz.upload → session.create → Subscriptions → nextQuestion → revealResults → session.end → Redis-Cleanup → getBonusTokens – Reihenfolge konsistent mit Backlog (1.6a, 2.1a, 2.3, 2.4, 4.2, 4.6). ✓
 - **Student:** session.getInfo → session.join → onQuestionRevealed → vote.submit → onResultsRevealed → onPersonalResult → onStatusChanged FINISHED → bonusToken – konsistent mit Backlog (3.1, 3.3a/b, 4.6, 5.6). ✓
 - **DTOs:** QuestionStudentDTO (kein isCorrect) im ACTIVE-Status, QuestionRevealedDTO (mit isCorrect) im RESULTS-Status – korrekt dargestellt. ✓
 
@@ -86,6 +86,7 @@ Da beide Dateien als Living Documentation dienen, sollte architecture-overview.m
 
 ### Epic 1: Quiz-Verwaltung
 - QuizEditorComponent, QuestionEditorComponent, AnswerEditorComponent, QuizPreviewComponent, ImportExportComponent – alle in Frontend-Diagramm ✓
+- **Story 1.6a (Quiz auf anderem Gerät öffnen – Sync-Key/Link):** Dozent-Sequenz (opt. Phase „Auf anderem Gerät öffnen“) und Aktivitätsdiagramm (Schritt D1a) in diagrams.md; Datenfluss in architecture-overview.md (opt. Sync-Link) ✓
 - Quiz-Presets (1.11) und SC-Schnellformate (1.12) – clientseitig in shared-types definiert, Komponenten implizit in QuizConfigComponent ✓
 - Markdown/KaTeX (1.7) – MarkdownKatexComponent in Shared ✓
 
