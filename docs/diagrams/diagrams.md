@@ -1,7 +1,7 @@
 # Diagramme: arsnova.click V3
 
 Alle Diagramme sind in Mermaid geschrieben und werden von GitHub nativ gerendert.  
-**Stand:** 2026-02-21
+**Stand:** 2026-02-22
 
 > **VS Code:** Mermaid wird in der Standard-Markdown-Vorschau nicht gerendert. Bitte die Erweiterung **„Markdown Preview Mermaid Support“** (`bierner.markdown-mermaid`) installieren. Siehe [README.md](./README.md) in diesem Ordner.
 
@@ -37,6 +37,7 @@ graph TB
     end
 
     subgraph DTO["DTO Layer - Data-Stripping"]
+        prevdto[QuestionPreviewDTO - Lesephase, nur Fragenstamm]
         studdto[QuestionStudentDTO - kein isCorrect]
         revdto[QuestionRevealedDTO - mit isCorrect]
         sessiondto[SessionInfoDTO]
@@ -72,6 +73,7 @@ graph TB
     vote --> ratelimit
     qa --> ratelimit
 
+    session --> prevdto
     session --> studdto
     session --> revdto
     session --> sessiondto
@@ -259,6 +261,7 @@ erDiagram
         string name
         boolean showLeaderboard
         int bonusTokenCount
+        boolean readingPhaseEnabled
     }
     Question {
         string id PK
@@ -298,7 +301,8 @@ erDiagram
     }
 ```
 
-**Hinweis (Data-Stripping):** `AnswerOption.isCorrect` wird im Status ACTIVE niemals an Studenten gesendet; erst nach RESULTS-Auflösung (QuestionRevealedDTO).
+**Hinweis (Data-Stripping):** `AnswerOption.isCorrect` wird im Status ACTIVE niemals an Studenten gesendet; erst nach RESULTS-Auflösung (QuestionRevealedDTO).  
+**Session-Status (Story 2.6):** `LOBBY → QUESTION_OPEN` (Lesephase, nur Fragenstamm) → `ACTIVE` → `RESULTS` → `PAUSED` → … → `FINISHED`. Optional überspringbar: bei `readingPhaseEnabled=false` geht „Nächste Frage" direkt zu `ACTIVE`.
 
 ---
 
@@ -329,18 +333,26 @@ sequenceDiagram
     FE->>BE: session.create (CreateSessionInputSchema)
     BE->>PG: Session INSERT, Code generieren
     BE-->>FE: sessionId, code A3F7K2
-    FE->>BE: Subscribe session.onParticipantJoined, onStatusChanged
+    FE->>BE: Subscribe session.onParticipantJoined, onStatusChanged, onQuestionRevealed, onAnswersRevealed
 
     Note over D,R: Phase 3: Lobby – Teilnehmer treten bei
     BE->>FE: Event onParticipantJoined (ParticipantDTO)
     FE->>D: Lobby: Teilnehmer anzeigen
 
-    Note over D,R: Phase 4: Frage freigeben
+    Note over D,R: Phase 4a: Frage freigeben (Lesephase, Story 2.6)
     D->>FE: Nächste Frage
     FE->>BE: session.nextQuestion
-    BE->>PG: currentQuestion++, Status = ACTIVE
-    BE->>BE: QuestionStudentDTO (isCorrect entfernt)
+    BE->>PG: currentQuestion++, Status = QUESTION_OPEN (oder ACTIVE wenn readingPhaseEnabled=false)
+    BE->>BE: QuestionPreviewDTO (nur Fragenstamm, keine Antworten)
     BE->>R: PUBLISH questionRevealed
+    BE->>FE: Broadcast an alle Clients
+
+    Note over D,R: Phase 4b: Antworten freigeben (optional)
+    D->>FE: Antworten freigeben
+    FE->>BE: session.revealAnswers
+    BE->>PG: Status = ACTIVE
+    BE->>BE: QuestionStudentDTO (isCorrect entfernt)
+    BE->>R: PUBLISH answersRevealed
     BE->>FE: Broadcast an alle Clients
 
     Note over D,R: Phase 5: Ergebnis auflösen
@@ -390,11 +402,15 @@ sequenceDiagram
     BE->>PG: Participant INSERT
     BE->>R: PUBLISH participantJoined
     BE-->>FE: participantId, token
-    FE->>BE: Subscribe onQuestionRevealed, onResultsRevealed, onPersonalResult, onStatusChanged
+    FE->>BE: Subscribe onQuestionRevealed, onResultsRevealed, onAnswersRevealed, onPersonalResult, onStatusChanged
 
-    Note over S,R: Phase 2: Frage empfangen (Data-Stripping)
-    BE->>FE: Event onQuestionRevealed (QuestionStudentDTO, kein isCorrect)
-    FE->>S: Frage + Buttons, Countdown
+    Note over S,R: Phase 2a: Lesephase (QUESTION_OPEN, Story 2.6)
+    BE->>FE: Event onQuestionRevealed (QuestionPreviewDTO, nur Fragenstamm)
+    FE->>S: Frage anzeigen, Hinweis „Antworten folgen gleich"
+
+    Note over S,R: Phase 2b: Antwortphase (ACTIVE)
+    BE->>FE: Event onAnswersRevealed (QuestionStudentDTO, kein isCorrect)
+    FE->>S: Antwort-Buttons + Countdown
 
     Note over S,R: Phase 3: Abstimmung
     S->>FE: Antwort wählen (SC, MC, Freitext, Rating)
@@ -437,6 +453,7 @@ flowchart TB
         D3[Live schalten - Session erstellen]
         D4[Session-Code + QR anzeigen]
         D5[Nächste Frage klicken]
+        D5b[Antworten freigeben - optional bei Lesephase]
         D6[Ergebnis zeigen]
         D7[Live-Balken aktualisieren]
         D8[Quiz beenden]
@@ -446,7 +463,8 @@ flowchart TB
     subgraph Server["Server"]
         S1[Quiz-Upload validieren, in PG speichern]
         S2[Session anlegen, Code generieren]
-        S3[Status ACTIVE, QuestionStudentDTO ohne isCorrect]
+        S3a[Status QUESTION_OPEN, QuestionPreviewDTO - Lesephase]
+        S3b[Status ACTIVE, QuestionStudentDTO ohne isCorrect]
         S4[Vote speichern, Scoring, voteCountUpdate]
         S5[Status RESULTS, QuestionRevealedDTO mit isCorrect]
         S5b[Status PAUSED - zwischen Fragen]
@@ -456,7 +474,8 @@ flowchart TB
     subgraph Student["Student"]
         ST1[Code eingeben, session.getInfo]
         ST2[Nickname wählen, session.join]
-        ST3[Frage empfangen, Buttons anzeigen]
+        ST3a[Fragenstamm anzeigen - Lesephase]
+        ST3b[Antwort-Buttons + Countdown anzeigen]
         ST4[Abstimmung vote.submit]
         ST5[Ergebnis + Scorecard anzeigen]
         ST6[Finales Ranking, ggf. Bonus-Token kopieren]
@@ -467,8 +486,12 @@ flowchart TB
     S2 --> D4
     D4 --> ST1 --> ST2
     ST2 --> D5
-    D5 --> S3
-    S3 --> ST3 --> ST4
+    D5 --> S3a
+    D5 -.->|readingPhaseEnabled=false| S3b
+    S3a --> ST3a
+    ST3a --> D5b
+    D5b --> S3b
+    S3b --> ST3b --> ST4
     ST4 --> S4
     S4 --> D7
     D7 --> D6
@@ -482,7 +505,9 @@ flowchart TB
 ```
 
 **Legende:**  
+- **QuestionPreviewDTO (Story 2.6):** In der Lesephase (`QUESTION_OPEN`) nur Fragenstamm, keine Antwortoptionen.  
 - **QuestionStudentDTO:** isCorrect wird serverseitig entfernt (Story 2.4).  
 - **QuestionRevealedDTO:** isCorrect erst nach expliziter Auflösung (RESULTS).  
 - **PAUSED:** Zwischenzustand nach Ergebnis-Anzeige, bevor die nächste Frage gestartet wird.  
+- **Lesephase:** Bei `readingPhaseEnabled=false` wird QUESTION_OPEN übersprungen — „Nächste Frage" wechselt direkt zu ACTIVE (D5 → S3b, D5b/ST3a entfallen).  
 - **Bonus-Token (Story 4.6):** Nur für Top-X, individuell per onPersonalResult.

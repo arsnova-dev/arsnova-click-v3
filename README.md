@@ -80,7 +80,7 @@ Die App ist nun unter `http://localhost:4200` (Frontend) erreichbar. Die tRPC-AP
 
 Dieses Projekt wird im "Vibe Coding"-Modus entwickelt. Du agierst als Architekt, die KI (z.B. GitHub Copilot, Cursor, Gemini) übernimmt die Code-Generierung.
 
-**WICHTIG:** Lade zu Beginn deiner Programmier-Session immer die Datei `AGENT.md` in den Kontext deiner KI, damit diese sich an die strengen Architektur- und Sicherheitsregeln (z.B. das Data-Stripping von Lösungen) hält!
+**WICHTIG:** Lade zu Beginn deiner Programmier-Session immer die Datei `AGENT.md` in den Kontext deiner KI, damit diese sich an die strengen Architektur- und Sicherheitsregeln (z.B. das Data-Stripping von Lösungen) hält. Für **umfassenden Projekt-Kontext** (Struktur, Stack, Backlog, DoD, ~4k Tokens) und optional **Context Caching** (Claude Opus 4.6): `@docs/cursor-context.md` in die erste Nachricht einbinden. Die Cursor-Regel unter `.cursor/rules/core.mdc` verweist darauf automatisch.
 
 ## 📚 Dokumentation
 
@@ -91,11 +91,12 @@ Wir leben **"Documentation as Code"**. Bevor du große Features implementierst, 
 Nachdem die App lokal läuft, empfiehlt sich diese Lesereihenfolge:
 
 1. **[AGENT.md](./AGENT.md)** – die KI-Leitplanken (immer zuerst in den Kontext laden!)
-2. **[Backlog.md](./Backlog.md)** – alle Storys mit Prioritäten und Definition of Done
-3. **[Architektur-Handbuch](./docs/architecture/handbook.md)** – Konzepte, Stack und Regeln
-4. **[Diagramme](./docs/diagrams/diagrams.md)** – Mermaid-Diagramme (Komponenten, Sequenz, ER, …)
-5. **[ADRs](./docs/architecture/decisions/)** – bisherige Architekturentscheidungen (Signals, tRPC, Yjs)
-6. **[Vibe-Coding-Szenario](./docs/vibe-coding/vibe-coding-szenario.md)** – so funktioniert die Zusammenarbeit mit der KI
+2. **[docs/cursor-context.md](./docs/cursor-context.md)** – stabile Projektreferenz für KI (~4k Tokens; für Context Caching: `@docs/cursor-context.md` laden)
+3. **[Backlog.md](./Backlog.md)** – alle Storys mit Prioritäten und Definition of Done
+4. **[Architektur-Handbuch](./docs/architecture/handbook.md)** – Konzepte, Stack und Regeln
+5. **[Diagramme](./docs/diagrams/diagrams.md)** – Mermaid-Diagramme (Komponenten, Sequenz, ER, …)
+6. **[ADRs](./docs/architecture/decisions/)** – bisherige Architekturentscheidungen (Signals, tRPC, Yjs)
+7. **[Vibe-Coding-Szenario](./docs/vibe-coding/vibe-coding-szenario.md)** – so funktioniert die Zusammenarbeit mit der KI
 
 > **Tipp:** Starte mit einer 🔴 Must-Story, die noch ⬜ Offen ist (z.B. Story 0.1 Redis-Setup). Lies erst den Story-Text im Backlog, dann prompte deine KI mit dem Kontext aus `AGENT.md`.
 

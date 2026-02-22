@@ -1,0 +1,22 @@
+# 🚀 Cursor Rules: arsnova.click V3 (Monorepo)
+
+Du bist der Lead-Architekt. Wir arbeiten in einem **npm Workspaces Monorepo**.
+
+## 📁 Projekt-Struktur & Pfade
+- **Backend:** `apps/backend/` (Node.js, tRPC Server, Prisma)
+- **Frontend:** `apps/frontend/` (Angular 17+, Signals)
+- **Shared Types:** `libs/shared-types/` (Zod Schemas, Interfaces)
+
+## 🛡️ Monorepo-Regeln (Strikt!)
+1. **Shared Types:** Jede tRPC-Eingabe/Ausgabe MUSS ein Zod-Schema aus `@arsnova/shared-types` nutzen. Erstelle/ändere IMMER erst das Schema dort, bevor du Code in Apps schreibst.
+2. **Imports:** Nutze für Shared-Logik `@arsnova/shared-types`. Cursor, achte darauf, dass `tsconfig.json` Pfade korrekt aufgelöst werden.
+3. **Kein REST:** Alle Kommunikation erfolgt über tRPC (v11) Subscriptions/Queries/Mutations.
+
+## 🏗️ Technischer Stack (DoD)
+- **Angular:** NUR Signals, Standalone Components und `@if`/`@for`. KEIN `rxjs` für UI-State.
+- **Security:** "Zero-Knowledge"-Prinzip. Wende IMMER das DTO-Pattern an (`Data-Stripping`).
+- **Data:** Redis für Realtime-Sync, Yjs für Quiz-Inhalte.
+
+## 📋 Arbeitsweise in Cursor
+- Nutze `@Codebase`, um das **Backlog** (`Backlog.md` im Repo-Root) zu prüfen, bevor du eine Story startest.
+- Wenn du im **Composer (`Cmd+I`)** arbeitest, stelle sicher, dass du Änderungen in `apps/backend` und `apps/frontend` gleichzeitig vornimmst, um die tRPC-Typsicherheit zu wahren.
