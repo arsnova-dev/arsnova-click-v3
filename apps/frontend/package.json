@@ -16,6 +16,7 @@
     "@angular/forms": "^19.0.0",
     "@angular/platform-browser": "^19.0.0",
     "@angular/router": "^19.0.0",
+    "@angular/service-worker": "^19.2.18",
     "@arsnova/shared-types": "*",
     "@trpc/client": "^10.45.0",
     "katex": "^0.16.32",

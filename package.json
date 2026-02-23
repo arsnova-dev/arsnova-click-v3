@@ -39,6 +39,7 @@
     "typescript-eslint": "^8.56.0"
   },
   "dependencies": {
+    "@angular/service-worker": "^19.2.18",
     "@prisma/client": "^7.4.0"
   },
   "overrides": {
