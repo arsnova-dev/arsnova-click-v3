@@ -384,6 +384,11 @@ sequenceDiagram
     FE->>BE: session.getBonusTokens
     BE-->>FE: BonusTokenListDTO
     FE->>D: Token-Tabelle, optional CSV-Export
+    opt Story 4.7: Ergebnis-Export
+        FE->>BE: session.getExportData (oder clientseitig aus gecachten Daten)
+        BE-->>FE: SessionExportDTO (aggregiert, anonym)
+        FE->>D: CSV/PDF-Download
+    end
 ```
 
 ---

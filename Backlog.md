@@ -12,11 +12,11 @@
 
 | Epic | Story | Titel                                         | Prio | Status   |
 | ---- | ----- | --------------------------------------------- | ---- | -------- |
-| 0    | 0.1   | Redis-Setup                                   | 🔴   | ⬜ Offen  |
-| 0    | 0.2   | tRPC WebSocket-Adapter                        | 🔴   | ⬜ Offen  |
-| 0    | 0.3   | Yjs WebSocket-Provider                        | 🟡   | ⬜ Offen  |
-| 0    | 0.4   | Server-Status-Indikator                       | 🟡   | ⬜ Offen  |
-| 0    | 0.5   | Rate-Limiting & Brute-Force-Schutz            | 🔴   | ⬜ Offen  |
+| 0    | 0.1   | Redis-Setup                                   | 🔴   | ✅ Fertig |
+| 0    | 0.2   | tRPC WebSocket-Adapter                        | 🔴   | ✅ Fertig |
+| 0    | 0.3   | Yjs WebSocket-Provider                        | 🟡   | ✅ Fertig |
+| 0    | 0.4   | Server-Status-Indikator                       | 🟡   | ✅ Fertig |
+| 0    | 0.5   | Rate-Limiting & Brute-Force-Schutz            | 🔴   | ✅ Fertig |
 | 0    | 0.6   | CI/CD-Pipeline (GitHub Actions)               | 🔴   | ✅ Fertig |
 | 1    | 1.1   | Quiz erstellen                                | 🔴   | ⬜ Offen  |
 | 1    | 1.2a  | Fragentypen: MC & SC                          | 🔴   | ⬜ Offen  |
@@ -34,6 +34,7 @@
 | 1 | 1.11 | Quiz-Presets | 🟡 | ⬜ Offen |
 | 1 | 1.12 | SC-Schnellformate | 🟡 | ⬜ Offen |
 | 1 | 1.13 | Quiz-Preview & Schnellkorrektur | 🟡 | ⬜ Offen |
+| 1 | 1.14 | Word Cloud (interaktiv + Export) | 🟡 | ⬜ Offen |
 | 2 | 2.1a | Session-ID & Quiz-Upload | 🔴 | ⬜ Offen |
 | 2 | 2.1b | QR-Code | 🟢 | ⬜ Offen |
 | 2 | 2.2 | Lobby-Ansicht | 🔴 | ⬜ Offen |
@@ -54,6 +55,7 @@
 | 4 | 4.4 | Ergebnis-Visualisierung | 🔴 | ⬜ Offen |
 | 4 | 4.5 | Freitext-Auswertung | 🟡 | ⬜ Offen |
 | 4 | 4.6 | Bonus-Token für Top-Platzierungen | 🟡 | ⬜ Offen |
+| 4 | 4.7 | Ergebnis-Export für Dozenten (anonym) | 🟡 | ⬜ Offen |
 | 5 | 5.1 | Sound-Effekte | 🟡 | ⬜ Offen |
 | 5 | 5.3 | Hintergrundmusik | 🟢 | ⬜ Offen |
 | 5 | 5.4 | Belohnungseffekte | 🟡 | ⬜ Offen |
@@ -74,7 +76,7 @@
 
 > **Legende Status:** ⬜ Offen · 🔨 In Arbeit · ✅ Fertig (DoD erfüllt) · ❌ Blockiert
 >
-> **Statistik:** 🔴 Must: 23 · 🟡 Should: 22 · 🟢 Could: 13 = **58 Storys gesamt**
+> **Statistik:** 🔴 Must: 23 · 🟡 Should: 24 · 🟢 Could: 13 = **60 Storys gesamt**
 
 ---
 
@@ -137,48 +139,48 @@ Eine Story gilt als **fertig**, wenn **alle** folgenden Kriterien erfüllt sind:
 
 - **Story 0.1 (Redis-Setup):** 🔴 Als Entwickler möchte ich eine funktionierende Redis-Instanz (via Docker Compose) haben, damit Echtzeit-Features darauf aufbauen können.
   - **Akzeptanzkriterien:**
-    - `docker compose up` startet Redis neben PostgreSQL.
-    - Backend kann sich erfolgreich mit Redis verbinden (Health-Check erweitert).
+    - [x] `docker compose up` startet Redis neben PostgreSQL.
+    - [x] Backend kann sich erfolgreich mit Redis verbinden (Health-Check erweitert).
 - **Story 0.2 (tRPC WebSocket-Adapter):** 🔴 Als Entwickler möchte ich den tRPC-Server um einen WebSocket-Adapter (`@trpc/server/adapters/ws`) erweitern, damit Subscriptions (Echtzeit-Events) möglich werden.
   - **Akzeptanzkriterien:**
-    - WebSocket-Server läuft parallel zum HTTP-Server.
-    - Ein Test-Subscription-Endpoint (`health.ping`) sendet alle 5s ein Heartbeat-Event.
-    - Frontend-tRPC-Client nutzt `wsLink` für Subscriptions und `httpBatchLink` für Queries/Mutations.
+    - [x] WebSocket-Server läuft parallel zum HTTP-Server.
+    - [x] Ein Test-Subscription-Endpoint (`health.ping`) sendet alle 5s ein Heartbeat-Event.
+    - [x] Frontend-tRPC-Client nutzt `wsLink` für Subscriptions und `httpBatchLink` für Queries/Mutations.
 - **Story 0.3 (Yjs WebSocket-Provider):** 🟡 Als Entwickler möchte ich einen Yjs-WebSocket-Provider im Backend einrichten, damit Dozenten ihre Quizzes zwischen Geräten (PC ↔ iPad) synchronisieren können.
   - **Akzeptanzkriterien:**
-    - `y-websocket`-Server ist im Backend integriert.
-    - Ein Yjs-Dokument kann von zwei Browser-Tabs synchron gehalten werden.
+    - [x] `y-websocket`-Server ist im Backend integriert.
+    - [x] Ein Yjs-Dokument kann von zwei Browser-Tabs synchron gehalten werden.
 - **Story 0.4 (Server-Status-Indikator):** 🟡 Als Besucher der Startseite möchte ich auf einen Blick sehen, wie ausgelastet der Server ist, damit ich die aktuelle Nutzung einschätzen kann.
   - **Akzeptanzkriterien:**
-    - tRPC-Query `health.stats` liefert: Anzahl laufender Quizzes, Gesamtzahl aktiver Teilnehmer, Server-Status (`healthy` / `busy` / `overloaded`).
-    - Die Startseite zeigt die Werte als kompaktes Status-Widget an (z.B. "3 Quizzes live · 142 Teilnehmer · 1.247 Quizzes durchgeführt").
-    - Ein farbiger Indikator visualisiert den Server-Status: grün (healthy), gelb (busy), rot (overloaded).
-    - Schwellwerte für Status: `healthy` < 50 Sessions, `busy` < 200 Sessions, `overloaded` ≥ 200 Sessions.
-    - Anzahl bisher durchgeführter Quizzes (`completedSessions`) wird als Gesamtstatistik angezeigt.
-    - Die Daten werden alle 30 Sekunden automatisch aktualisiert (Polling).
-    - Es werden keine personenbezogenen Daten exponiert (nur aggregierte Zahlen).
-    - ⚠️ *Abhängigkeit:* Vor Umsetzung von Story 2.1a liefert die Query Initialwerte (`activeSessions: 0`, `totalParticipants: 0`, `completedSessions: 0`).
+    - [x] tRPC-Query `health.stats` liefert: Anzahl laufender Quizzes, Gesamtzahl aktiver Teilnehmer, Server-Status (`healthy` / `busy` / `overloaded`).
+    - [x] Die Startseite zeigt die Werte als kompaktes Status-Widget an (z.B. "3 Quizzes live · 142 Teilnehmer · 1.247 Quizzes durchgeführt").
+    - [x] Ein farbiger Indikator visualisiert den Server-Status: grün (healthy), gelb (busy), rot (overloaded).
+    - [x] Schwellwerte für Status: `healthy` < 50 Sessions, `busy` < 200 Sessions, `overloaded` ≥ 200 Sessions.
+    - [x] Anzahl bisher durchgeführter Quizzes (`completedSessions`) wird als Gesamtstatistik angezeigt.
+    - [x] Die Daten werden alle 30 Sekunden automatisch aktualisiert (Polling).
+    - [x] Es werden keine personenbezogenen Daten exponiert (nur aggregierte Zahlen).
+    - [x] ⚠️ *Abhängigkeit:* Vor Umsetzung von Story 2.1a liefert die Query Initialwerte (`activeSessions: 0`, `totalParticipants: 0`, `completedSessions: 0`).
 - **Story 0.5 (Rate-Limiting & Brute-Force-Schutz):** 🔴 Als System möchte ich Missbrauch durch automatisierte Anfragen verhindern, damit die Plattform stabil und fair bleibt.
   - **Akzeptanzkriterien:**
-    - **Session-Code-Eingabe (Story 3.1):** Maximal 5 Fehlversuche pro IP-Adresse innerhalb von 5 Minuten. Nach Überschreitung wird eine 60-Sekunden-Sperre verhängt mit Hinweismeldung.
-    - **Vote-Submit (Story 3.3b):** Maximal 1 Request pro Sekunde pro Participant (Token-Bucket). Überschüssige Requests erhalten HTTP 429 mit `Retry-After`-Header.
-    - **Session-Erstellung (Story 2.1a):** Maximal 10 Sessions pro IP pro Stunde.
-    - Rate-Limits werden über Redis (`ioredis`) mit Sliding-Window-Algorithmus umgesetzt (abhängig von Story 0.1).
-    - Bei Überschreitung wird ein strukturierter tRPC-Error (`TOO_MANY_REQUESTS`) mit verbleibender Wartezeit zurückgegeben.
-    - Limits sind als Umgebungsvariablen konfigurierbar (nicht hart kodiert).
+    - [x] **Session-Code-Eingabe (Story 3.1):** Maximal 5 Fehlversuche pro IP-Adresse innerhalb von 5 Minuten. Nach Überschreitung wird eine 60-Sekunden-Sperre verhängt mit Hinweismeldung.
+    - [x] **Vote-Submit (Story 3.3b):** Maximal 1 Request pro Sekunde pro Participant (Token-Bucket). Überschüssige Requests erhalten HTTP 429 mit `Retry-After`-Header.
+    - [x] **Session-Erstellung (Story 2.1a):** Maximal 10 Sessions pro IP pro Stunde.
+    - [x] Rate-Limits werden über Redis (`ioredis`) mit Sliding-Window-Algorithmus umgesetzt (abhängig von Story 0.1).
+    - [x] Bei Überschreitung wird ein strukturierter tRPC-Error (`TOO_MANY_REQUESTS`) mit verbleibender Wartezeit zurückgegeben.
+    - [x] Limits sind als Umgebungsvariablen konfigurierbar (nicht hart kodiert).
 - **Story 0.6 (CI/CD-Pipeline):** 🔴 Als Entwickler möchte ich eine automatische CI/CD-Pipeline (GitHub Actions) haben, damit Code-Qualität bei jedem Push und Pull-Request sichergestellt wird und Docker-Images für das Deployment bereitstehen.
   - **Akzeptanzkriterien:**
-    - **CI-Workflow (`.github/workflows/ci.yml`):** Wird bei Push auf `main` und bei Pull-Requests ausgelöst.
-    - **TypeScript-Kompilierung:** `tsc --noEmit` für `libs/shared-types`, `apps/backend` und `apps/frontend` — alle drei müssen fehlerfrei kompilieren.
-    - **Prisma-Validierung:** `prisma validate` prüft das Schema auf Korrektheit.
-    - **Linting:** ESLint prüft alle `.ts`-Dateien auf Regelverstöße (Root-Config: `eslint.config.mjs`).
-    - **Security-Audit:** `npm audit --audit-level=high` meldet keine bekannten Schwachstellen mit Severity ≥ high.
-    - **Docker-Image:** Multi-Stage-Dockerfile baut ein produktionsfertiges Image (`node:20-alpine`).
-    - **Docker-Build:** CI baut das Docker-Image erfolgreich (kein Push in Registry, nur Build-Test).
-    - **Caching:** `node_modules` wird via `actions/cache` zwischengespeichert, um CI-Laufzeit zu verkürzen.
-    - **Matrix-Test:** Pipeline läuft auf Node.js 20 und 22 (Kompatibilitätstest).
-    - **Platzhalter für Tests:** Job `test` ist vorbereitet, aktuell mit `echo "No tests yet"` — wird aktiviert, sobald Tests existieren.
-    - **Status-Badge:** README.md enthält ein CI-Status-Badge (`![CI](https://github.com/...)`).
+    - [x] **CI-Workflow (`.github/workflows/ci.yml`):** Wird bei Push auf `main` und bei Pull-Requests ausgelöst.
+    - [x] **TypeScript-Kompilierung:** `tsc --noEmit` für `libs/shared-types`, `apps/backend` und `apps/frontend` — alle drei müssen fehlerfrei kompilieren.
+    - [x] **Prisma-Validierung:** `prisma validate` prüft das Schema auf Korrektheit.
+    - [x] **Linting:** ESLint prüft alle `.ts`-Dateien auf Regelverstöße (Root-Config: `eslint.config.mjs`).
+    - [x] **Security-Audit:** `npm audit --audit-level=high` meldet keine bekannten Schwachstellen mit Severity ≥ high.
+    - [x] **Docker-Image:** Multi-Stage-Dockerfile baut ein produktionsfertiges Image (`node:20-alpine`).
+    - [x] **Docker-Build:** CI baut das Docker-Image erfolgreich (kein Push in Registry, nur Build-Test).
+    - [x] **Caching:** `node_modules` wird via `actions/cache` zwischengespeichert, um CI-Laufzeit zu verkürzen.
+    - [x] **Matrix-Test:** Pipeline läuft auf Node.js 20 und 22 (Kompatibilitätstest).
+    - [x] **Tests:** Job `test` führt Backend-Unit-Tests aus (Vitest: health.check, health.stats, Rate-Limiting).
+    - [x] **Status-Badge:** README.md enthält ein CI-Status-Badge (`![CI](https://github.com/...)`).
 
 ---
 
@@ -330,6 +332,16 @@ Eine Story gilt als **fertig**, wenn **alle** folgenden Kriterien erfüllt sind:
       - Wenn keine Probleme: ✅ „Alle Fragen valide — bereit zum Live-Schalten".
     - Das Feature ist rein clientseitig (kein Server-Roundtrip).
     - Abhängigkeiten: Story 1.7 (Markdown/KaTeX), Story 1.2a–c (Fragentypen), Story 1.5 (Local-First).
+- **Story 1.14 (Word Cloud – interaktiv + Export):** 🟡 Als Dozent möchte ich Freitext-Antworten als interaktive Word-Cloud sehen und die Auswertung exportieren können, damit ich auf Mentimeter-Niveau präsentieren und Ergebnisse für Nachbereitung oder Lehrevaluation nutzen kann.
+  - **Akzeptanzkriterien:**
+    - **Interaktive Word-Cloud:** In Beamer-Ansicht (Story 2.5) und Dozenten-Steuerung wird bei FREETEXT-Fragen mit mindestens einer Antwort eine Word-Cloud angezeigt; Begriffe werden nach Häufigkeit skaliert (Stopwörter optional ausblendbar).
+    - Klick auf einen Begriff hebt ihn hervor oder filtert die zugehörigen Antworten in einer Liste (Toggle); Tooltip zeigt exakte Anzahl.
+    - Word-Cloud aktualisiert sich live bei eingehenden Votes (Echtzeit, konsistent mit Story 4.5).
+    - **Export:** Dozent kann pro Frage oder für die gesamte Session exportieren:
+      - **CSV:** Alle Freitext-Antworten (aggregiert: Text, Anzahl), ohne Nicknames; optional Bonus-Token-Liste (Story 4.6) in separatem Export.
+      - **Bild/PNG (optional):** Screenshot der Word-Cloud oder der Ergebnis-Visualisierung für eine Frage.
+    - Export ist nur für den Dozenten zugänglich (kein Studenten-Zugriff); Daten nur aggregiert bzw. pseudonym (Token-Liste), DSGVO-konform.
+    - Abhängigkeiten: Story 4.5 (Freitext-Auswertung), Story 2.5 (Beamer), Story 4.4 (Ergebnis-Visualisierung).
 
 ---
 
@@ -560,6 +572,16 @@ Eine Story gilt als **fertig**, wenn **alle** folgenden Kriterien erfüllt sind:
       - Bonus-Tokens bleiben 90 Tage in der Datenbank gespeichert, danach werden sie automatisch gelöscht (Erweiterung von Story 4.2).
       - Tokens sind nicht übertragbar — der Dozent prüft den Absender der E-Mail eigenverantwortlich.
     - **Abhängigkeiten:** Story 4.1 (Leaderboard), Story 5.6 (Persönliche Scorecard).
+- **Story 4.7 (Ergebnis-Export für Dozenten – anonym):** 🟡 Als Dozent möchte ich nach Ende einer Session die Auswertung anonym als Datei (CSV/PDF) herunterladen können, damit ich die Ergebnisse für Nachbereitung, Lehrevaluation oder Akkreditierung nutzen kann — ohne personenbezogene Daten.
+  - **Akzeptanzkriterien:**
+    - Nach Beendigung der Session (Status `FINISHED`) steht in der Dozenten-Ansicht ein Button **„Ergebnis exportieren“** zur Verfügung.
+    - **CSV-Export (mindestens):** Enthält pro Zeile aggregierte Daten, z. B.: Session-ID, Quiz-Name, Datum, pro Frage: Fragentext (Kurz), Fragentyp, Anzahl Teilnehmer, Verteilung der Antworten (Anzahl pro Option bzw. bei Freitext: aggregierte Begriffe/Häufigkeiten), Durchschnittspunktzahl pro Frage, keine Nicknames und keine personenbezogenen Daten.
+    - Optional: **PDF-Export** mit gleichen Inhalten in lesbarer Form (z. B. Deckblatt, pro Frage eine Seite mit Balkendiagramm-Beschreibung oder Word-Cloud-Text).
+    - Bonus-Token-Liste (Story 4.6) kann in den Export einbezogen werden (Token-Code, Rang, Punkte, Pseudonym) — entspricht der bereits in Story 4.6 beschriebenen CSV-Funktion; kein Widerspruch zur Anonymität, da Zuordnung nur über freiwillige E-Mail-Einreichung.
+    - Export erfolgt clientseitig (Generierung im Browser) oder über einen tRPC-Query, der nur aggregierte/anonymisierte Daten zurückgibt; keine Speicherung der Export-Datei auf dem Server.
+    - **tRPC & Schemas (bei serverseitiger Variante):** Query `session.getExportData` mit `GetExportDataInputSchema` (sessionId); Rückgabe `SessionExportDTO` (sessionId, sessionCode, quizName, finishedAt, participantCount, questions[], bonusTokens?). Siehe `libs/shared-types/src/schemas.ts` (SessionExportDTOSchema, QuestionExportEntrySchema, OptionDistributionEntrySchema, FreetextAggregateEntrySchema).
+    - DSGVO: Export enthält ausschließlich anonymisierte bzw. aggregierte Daten; Hinweis in der UI: „Export für Dokumentation und Evaluation – keine personenbezogenen Daten“.
+    - Abhängigkeiten: Story 4.1 (Leaderboard), Story 4.4 (Ergebnis-Visualisierung), Story 4.5 (Freitext-Auswertung), Story 4.6 (Bonus-Token-Liste).
 
 ---
 

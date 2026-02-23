@@ -1,16 +1,59 @@
-import { publicProcedure, router } from '../trpc';
-import { HealthCheckResponseSchema } from '@arsnova/shared-types';
-
 /**
- * Health-Check Router.
- * Liefert den API-Status – nützlich zum Testen der Verbindung.
+ * Health & Server-Status (Story 0.1, 0.2, 0.4).
+ * check: API + optional Redis | stats: aggregierte Kennzahlen | ping: Subscription Heartbeat
  */
+import { publicProcedure, router } from '../trpc';
+import {
+  HealthCheckResponseSchema,
+  ServerStatsDTOSchema,
+} from '@arsnova/shared-types';
+import { pingRedis } from '../redis';
+import { prisma } from '../db';
+
+const SERVER_STATUS_THRESHOLDS = {
+  healthy: 50,
+  busy: 200,
+} as const;
+
+function getServerStatus(activeSessions: number): 'healthy' | 'busy' | 'overloaded' {
+  if (activeSessions < SERVER_STATUS_THRESHOLDS.healthy) return 'healthy';
+  if (activeSessions < SERVER_STATUS_THRESHOLDS.busy) return 'busy';
+  return 'overloaded';
+}
+
 export const healthRouter = router({
-  check: publicProcedure.output(HealthCheckResponseSchema).query(() => {
+  check: publicProcedure.output(HealthCheckResponseSchema).query(async () => {
+    const redisOk = await pingRedis();
     return {
       status: 'ok' as const,
       timestamp: new Date().toISOString(),
       version: '0.1.0',
+      redis: redisOk ? 'ok' : 'unavailable',
     };
+  }),
+
+  /** Server-Statistik für Startseite (Story 0.4). Bis Story 2.1a: Initialwerte aus DB/Redis. */
+  stats: publicProcedure.output(ServerStatsDTOSchema).query(async () => {
+    const [activeSessions, completedSessions, totalParticipants] = await Promise.all([
+      prisma.session.count({ where: { status: { not: 'FINISHED' } } }),
+      prisma.session.count({ where: { status: 'FINISHED' } }),
+      prisma.participant.count({
+        where: { session: { status: { not: 'FINISHED' } } },
+      }),
+    ]);
+    return {
+      activeSessions,
+      totalParticipants,
+      completedSessions,
+      serverStatus: getServerStatus(activeSessions),
+    };
+  }),
+
+  /** Subscription: Heartbeat alle 5s (Story 0.2 – Test für WebSocket). */
+  ping: publicProcedure.subscription(async function* () {
+    while (true) {
+      yield { heartbeat: new Date().toISOString() };
+      await new Promise((r) => setTimeout(r, 5000));
+    }
   }),
 });

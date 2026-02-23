@@ -28,6 +28,41 @@ services:
     volumes:
       - redis_data:/data
     command: redis-server --save 60 1 --loglevel warning
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Backend + Frontend (Multi-Stage Dockerfile)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: arsnova-v3-app
+    restart: always
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+      - "3002:3002"
+    environment:
+      DATABASE_URL: "postgresql://arsnova_user:secretpassword@postgres:5432/arsnova_v3_dev?schema=public"
+      REDIS_URL: "redis://redis:6379"
+      PORT: "3000"
+      WS_PORT: "3001"
+      YJS_WS_PORT: "3002"
+      NODE_ENV: "production"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/trpc/health.check"]
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
 
 volumes:
   postgres_data:
