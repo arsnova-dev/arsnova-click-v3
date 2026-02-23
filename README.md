@@ -111,13 +111,20 @@ Nachdem die App lokal läuft, empfiehlt sich diese Lesereihenfolge:
 
 > **Tipp:** **Epic 0 (Infrastruktur) ist abgeschlossen** (Redis, tRPC WebSocket, Yjs, Server-Status, Rate-Limiting, CI/CD). Starte mit einer 🔴 Must-Story aus Epic 1 oder 2, die noch ⬜ Offen ist (z.B. Story 1.1 Quiz erstellen). Lies erst den Story-Text im Backlog, dann prompte deine KI mit dem Kontext aus `AGENT.md`.
 
-## 🔄 Zurücksetzen auf den Ausgangszustand
+## 🔄 Zurücksetzen auf einen bekannten Zustand
 
-Falls etwas schiefgeht oder du komplett neu anfangen möchtest: Der Git-Tag **`v0-baseline`** markiert den sauberen Startzustand (Projekt-Skeleton mit Health-Check, CI/CD, Prisma-Schema, Zod-Schemas und Dokumentation).
+Falls etwas schiefgeht oder du komplett neu anfangen möchtest, kannst du auf einen der folgenden Git-Tags zurücksetzen:
+
+| Tag | Beschreibung |
+|-----|--------------|
+| **`v0-baseline`** | Sauberer Startzustand (Projekt-Skeleton: Health-Check, CI/CD, Prisma-Schema, Zod-Schemas, Dokumentation) |
+| **`v0-epic0`** | Epic 0 abgeschlossen (Redis, tRPC WebSocket, Yjs, Server-Status, Rate-Limiting, CI/CD, alle 0.1–0.6 umgesetzt) |
 
 ```bash
-# Alle lokalen Änderungen verwerfen und auf die Baseline zurücksetzen
-git reset --hard v0-baseline
+# Alle lokalen Änderungen verwerfen und auf gewünschten Stand setzen
+git reset --hard v0-epic0   # Stand nach Epic 0 (empfohlen)
+# oder
+git reset --hard v0-baseline   # Nur Skeleton (vor Epic 0)
 npm install
 ```
 
