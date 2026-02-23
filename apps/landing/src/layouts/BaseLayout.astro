@@ -1,0 +1,92 @@
+---
+import { GITHUB_URL } from '@/config/github';
+
+export interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  noindex?: boolean;
+}
+
+const { title, description, canonical, noindex = false } = Astro.props;
+const site = 'https://arsnova.click';
+const fullTitle = title === 'Start' ? 'arsnova.click – Live-Quiz & Abstimmung. 100% DSGVO. Kostenlos.' : `${title} · arsnova.click`;
+const url = canonical ? new URL(canonical, site).href : site;
+const ogImage = new URL('/og.png', site).href;
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    {noindex ? <meta name="robots" content="noindex,nofollow" /> : null}
+    <link rel="canonical" href={url} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={url} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:site_name" content="arsnova.click" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- JSON-LD: WebApplication -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'arsnova.click',
+      description: 'Kostenlose, DSGVO-konforme Live-Quiz- und Abstimmungsplattform für Hochschulen. Kein Account nötig, Local-First, Self-Hosted.',
+      url: site,
+      applicationCategory: 'EducationalApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+      featureList: ['Live-Quiz', 'Abstimmungen', 'DSGVO-konform', 'Local-First', 'Self-Hosted', 'KaTeX', 'Lesephase', 'WCAG 2.1 AA'],
+    })} />
+  </head>
+  <body class="min-h-screen bg-slate-900 text-slate-100 font-sans antialiased">
+    <header class="sticky top-0 z-50 border-b border-slate-700/80 bg-slate-900/95 backdrop-blur-sm">
+      <nav class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6" aria-label="Hauptnavigation">
+        <a href="/" class="font-display text-xl font-bold tracking-tight text-white">arsnova<span class="text-brand-400">.click</span></a>
+        <div class="flex items-center gap-6">
+          <a href="/#features" class="text-sm font-medium text-slate-400 hover:text-white">Features</a>
+          <a href="/#vergleich" class="text-sm font-medium text-slate-400 hover:text-white">Vergleich</a>
+          <a href={GITHUB_URL} class="text-sm font-medium text-slate-400 hover:text-white" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="/#start" class="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-500">Jetzt starten</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="border-t border-slate-700 bg-slate-900">
+      <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
+          <p class="text-sm text-slate-500">© {new Date().getFullYear()} arsnova.click · Open Source · MIT</p>
+          <div class="flex gap-6">
+            <a href="/impressum" class="text-sm text-slate-500 hover:text-slate-300">Impressum</a>
+            <a href="/datenschutz" class="text-sm text-slate-500 hover:text-slate-300">Datenschutz</a>
+            <a href={GITHUB_URL} class="text-sm text-slate-500 hover:text-slate-300" target="_blank" rel="noopener noreferrer">GitHub</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
