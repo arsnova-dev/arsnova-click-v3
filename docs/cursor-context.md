@@ -83,10 +83,10 @@ Dieses Dokument ist die **kanonische Referenz** für Struktur, Stack, Konvention
 - **appRouter** (apps/backend/src/routers/index.ts): health, quiz, session, vote, qa (weitere Router je nach Implementierungsstand).
 - **health:** check, ggf. stats (Story 0.4).
 - **quiz:** upload (QuizUploadInputSchema), getById, list, etc.
-- **session:** create (CreateSessionInputSchema), getInfo (per code), join (JoinSessionInputSchema), nextQuestion, revealAnswers (Story 2.6), revealResults, end; Subscriptions: onParticipantJoined, onStatusChanged, onQuestionRevealed, onAnswersRevealed, onResultsRevealed, onPersonalResult; getBonusTokens, getLeaderboard.
+- **session:** create (CreateSessionInputSchema), getInfo (per code), join (JoinSessionInputSchema), nextQuestion, revealAnswers (Story 2.6), revealResults, end; Subscriptions: onParticipantJoined, onStatusChanged, onQuestionRevealed, onAnswersRevealed, onResultsRevealed, onPersonalResult; getBonusTokens, getLeaderboard; getExportData (Story 4.7: GetExportDataInputSchema → SessionExportDTO).
 - **vote:** submit (SubmitVoteInputSchema).
 - **qa:** submitQuestion, upvote, moderate (Dozent), etc.
-- Alle Ein-/Ausgaben über Zod-Schemas aus libs/shared-types (CreateSessionInputSchema, QuizUploadInputSchema, SubmitVoteInputSchema, JoinSessionInputSchema, SessionInfoDTOSchema, QuestionPreviewDTO, QuestionStudentDTO, QuestionRevealedDTO, PersonalScorecardDTO, LeaderboardEntryDTO, BonusTokenListDTO, etc.).
+- Alle Ein-/Ausgaben über Zod-Schemas aus libs/shared-types (CreateSessionInputSchema, QuizUploadInputSchema, SubmitVoteInputSchema, JoinSessionInputSchema, SessionInfoDTOSchema, QuestionPreviewDTO, QuestionStudentDTO, QuestionRevealedDTO, PersonalScorecardDTO, LeaderboardEntryDTO, BonusTokenListDTO, SessionExportDTO, GetExportDataInputSchema, etc.).
 
 ---
 
@@ -105,10 +105,10 @@ Dieses Dokument ist die **kanonische Referenz** für Struktur, Stack, Konvention
 ## 10. Backlog – Epics und Story-Übersicht
 
 - **Epic 0 – Infrastruktur:** Redis (0.1), tRPC WebSocket (0.2), Yjs Provider (0.3), Server-Status (0.4), Rate-Limiting (0.5), CI/CD (0.6).
-- **Epic 1 – Quiz-Erstellung:** Quiz anlegen (1.1), Fragentypen MC/SC (1.2a), Freitext/Umfrage (1.2b), Rating (1.2c), Antworten & Lösungen (1.3), Sitzungs-Konfiguration (1.4), Local-First (1.5), Yjs Sync (1.6), Markdown/KaTeX (1.7), Export/Import (1.8/1.9), Bearbeiten/Löschen (1.10), Presets (1.11), SC-Schnellformate (1.12), Preview (1.13).
+- **Epic 1 – Quiz-Erstellung:** Quiz anlegen (1.1), Fragentypen MC/SC (1.2a), Freitext/Umfrage (1.2b), Rating (1.2c), Antworten & Lösungen (1.3), Sitzungs-Konfiguration (1.4), Local-First (1.5), Yjs Sync (1.6), Markdown/KaTeX (1.7), Export/Import (1.8/1.9), Bearbeiten/Löschen (1.10), Presets (1.11), SC-Schnellformate (1.12), Preview (1.13), Word Cloud interaktiv + Export (1.14).
 - **Epic 2 – Session-Steuerung:** Quiz-Upload & Session-ID (2.1a), QR-Code (2.1b), Lobby (2.2), Präsentations-Steuerung (2.3), Data-Stripping (2.4), Beamer (2.5), Zwei-Phasen-Frageanzeige/Lesephase (2.6).
 - **Epic 3 – Teilnahme & Abstimmung:** Beitreten (3.1), Nicknames (3.2), Frage empfangen (3.3a), Abstimmung (3.3b), Echtzeit-Feedback (3.4), Countdown (3.5), Anonymer Modus (3.6).
-- **Epic 4 – Auswertung & Cleanup:** Leaderboard (4.1), Server aufräumen (4.2), WebSocket Reconnection (4.3), Ergebnis-Visualisierung (4.4), Freitext-Auswertung (4.5), Bonus-Token (4.6).
+- **Epic 4 – Auswertung & Cleanup:** Leaderboard (4.1), Server aufräumen (4.2), WebSocket Reconnection (4.3), Ergebnis-Visualisierung (4.4), Freitext-Auswertung (4.5), Bonus-Token (4.6), Ergebnis-Export für Dozenten (4.7).
 - **Epic 5 – Gamification & UX:** Sound (5.1), Hintergrundmusik (5.3), Belohnungseffekte (5.4), Answer Streak (5.5), Scorecard (5.6), Motivationsmeldungen (5.7), Emoji-Reaktionen (5.8).
 - **Epic 6 – Theming, i18n, Rechtliches, A11y:** Dark/Light/System (6.1), i18n (6.2), Impressum & Datenschutz (6.3), Mobile-First (6.4), Barrierefreiheit (6.5).
 - **Epic 7 – Team-Modus (Could):** Team-Modus (7.1).
@@ -180,8 +180,8 @@ Dieses Dokument bewusst kompakt und stabil halten. Bei größeren Änderungen (n
 ## 17. Referenz: Key Exports aus libs/shared-types
 
 - Enums/Schemas: SessionStatusEnum, QuestionTypeEnum, DifficultyEnum, NicknameThemeEnum, TeamAssignmentEnum, SessionTypeEnum, QaQuestionStatusEnum.
-- Input-Schemas: CreateSessionInputSchema, JoinSessionInputSchema, CreateQuizInputSchema, QuizUploadInputSchema, SubmitVoteInputSchema, AddQuestionInputSchema, AnswerOptionInputSchema.
-- DTO-Schemas: SessionInfoDTOSchema, QuestionPreviewDTOSchema, QuestionStudentDTOSchema, QuestionRevealedDTOSchema (AnswerOptionRevealedDTO), LeaderboardEntryDTOSchema, PersonalScorecardDTOSchema, BonusTokenListDTO; ParticipantDTO, QuizExportSchema.
+- Input-Schemas: CreateSessionInputSchema, JoinSessionInputSchema, CreateQuizInputSchema, QuizUploadInputSchema, SubmitVoteInputSchema, AddQuestionInputSchema, AnswerOptionInputSchema, GetExportDataInputSchema (Story 4.7).
+- DTO-Schemas: SessionInfoDTOSchema, QuestionPreviewDTOSchema, QuestionStudentDTOSchema, QuestionRevealedDTOSchema (AnswerOptionRevealedDTO), LeaderboardEntryDTOSchema, PersonalScorecardDTOSchema, BonusTokenListDTO, SessionExportDTOSchema (Story 4.7); ParticipantDTO, QuizExportSchema.
 - Presets: QUIZ_PRESETS (PLAYFUL, SERIOUS) mit readingPhaseEnabled, defaultTimer, anonymousMode etc.
 - Typen: Alle via z.infer von den genannten Schemas exportieren; keine Duplikate als interface, außer wo für API-Kompatibilität nötig.
 

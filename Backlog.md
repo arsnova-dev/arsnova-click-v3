@@ -10,13 +10,14 @@
 
 ## 📊 Story-Übersicht & Bearbeitungsstand
 
+
 | Epic | Story | Titel                                         | Prio | Status   |
 | ---- | ----- | --------------------------------------------- | ---- | -------- |
-| 0    | 0.1   | Redis-Setup                                   | 🔴   | ⬜ Offen  |
-| 0    | 0.2   | tRPC WebSocket-Adapter                        | 🔴   | ⬜ Offen  |
-| 0    | 0.3   | Yjs WebSocket-Provider                        | 🟡   | ⬜ Offen  |
-| 0    | 0.4   | Server-Status-Indikator                       | 🟡   | ⬜ Offen  |
-| 0    | 0.5   | Rate-Limiting & Brute-Force-Schutz            | 🔴   | ⬜ Offen  |
+| 0    | 0.1   | Redis-Setup                                   | 🔴   | ✅ Fertig |
+| 0    | 0.2   | tRPC WebSocket-Adapter                        | 🔴   | ✅ Fertig |
+| 0    | 0.3   | Yjs WebSocket-Provider                        | 🟡   | ✅ Fertig |
+| 0    | 0.4   | Server-Status-Indikator                       | 🟡   | ✅ Fertig |
+| 0    | 0.5   | Rate-Limiting & Brute-Force-Schutz            | 🔴   | ✅ Fertig |
 | 0    | 0.6   | CI/CD-Pipeline (GitHub Actions)               | 🔴   | ✅ Fertig |
 | 1    | 1.1   | Quiz erstellen                                | 🔴   | ⬜ Offen  |
 | 1    | 1.2a  | Fragentypen: MC & SC                          | 🔴   | ⬜ Offen  |
@@ -28,53 +29,56 @@
 | 1    | 1.6   | Yjs Multi-Device-Sync                         | 🟢   | ⬜ Offen  |
 | 1    | 1.6a  | Quiz auf anderem Gerät öffnen (Sync-Key/Link) | 🟡   | ⬜ Offen  |
 | 1    | 1.7   | Markdown & KaTeX                              | 🔴   | ⬜ Offen  |
-| 1 | 1.8 | Quiz exportieren | 🟡 | ⬜ Offen |
-| 1 | 1.9 | Quiz importieren | 🟡 | ⬜ Offen |
-| 1 | 1.10 | Quiz bearbeiten & löschen | 🔴 | ⬜ Offen |
-| 1 | 1.11 | Quiz-Presets | 🟡 | ⬜ Offen |
-| 1 | 1.12 | SC-Schnellformate | 🟡 | ⬜ Offen |
-| 1 | 1.13 | Quiz-Preview & Schnellkorrektur | 🟡 | ⬜ Offen |
-| 2 | 2.1a | Session-ID & Quiz-Upload | 🔴 | ⬜ Offen |
-| 2 | 2.1b | QR-Code | 🟢 | ⬜ Offen |
-| 2 | 2.2 | Lobby-Ansicht | 🔴 | ⬜ Offen |
-| 2 | 2.3 | Präsentations-Steuerung | 🔴 | ⬜ Offen |
-| 2 | 2.4 | Security / Data-Stripping | 🔴 | ⬜ Offen |
-| 2 | 2.5 | Beamer-Ansicht / Presenter-Mode | 🔴 | ⬜ Offen |
-| 2 | 2.6 | Zwei-Phasen-Frageanzeige (Lesephase) | 🟡 | ⬜ Offen |
-| 3 | 3.1 | Beitreten | 🔴 | ⬜ Offen |
-| 3 | 3.2 | Nicknames | 🟡 | ⬜ Offen |
-| 3 | 3.3a | Frage empfangen | 🔴 | ⬜ Offen |
-| 3 | 3.3b | Abstimmung abgeben | 🔴 | ⬜ Offen |
-| 3 | 3.4 | Echtzeit-Feedback | 🟡 | ⬜ Offen |
-| 3 | 3.5 | Countdown-Anzeige | 🔴 | ⬜ Offen |
-| 3 | 3.6 | Anonymer Modus | 🟡 | ⬜ Offen |
-| 4 | 4.1 | Leaderboard mit Punktesystem | 🟡 | ⬜ Offen |
-| 4 | 4.2 | Server aufräumen | 🔴 | ⬜ Offen |
-| 4 | 4.3 | WebSocket Reconnection | 🟡 | ⬜ Offen |
-| 4 | 4.4 | Ergebnis-Visualisierung | 🔴 | ⬜ Offen |
-| 4 | 4.5 | Freitext-Auswertung | 🟡 | ⬜ Offen |
-| 4 | 4.6 | Bonus-Token für Top-Platzierungen | 🟡 | ⬜ Offen |
-| 5 | 5.1 | Sound-Effekte | 🟡 | ⬜ Offen |
-| 5 | 5.3 | Hintergrundmusik | 🟢 | ⬜ Offen |
-| 5 | 5.4 | Belohnungseffekte | 🟡 | ⬜ Offen |
-| 5 | 5.5 | Answer Streak | 🟡 | ⬜ Offen |
-| 5 | 5.6 | Persönliche Scorecard | 🔴 | ⬜ Offen |
-| 5 | 5.7 | Motivationsmeldungen | 🟡 | ⬜ Offen |
-| 5 | 5.8 | Emoji-Reaktionen | 🟢 | ⬜ Offen |
-| 6 | 6.1 | Dark/Light/System-Theme | 🟡 | ⬜ Offen |
-| 6 | 6.2 | Internationalisierung | 🟡 | ⬜ Offen |
-| 6 | 6.3 | Impressum & Datenschutz | 🔴 | ⬜ Offen |
-| 6 | 6.4 | Mobile-First & Responsive | 🔴 | ⬜ Offen |
-| 6 | 6.5 | Barrierefreiheit | 🔴 | ⬜ Offen |
-| 7 | 7.1 | Team-Modus | 🟢 | ⬜ Offen |
-| 8 | 8.1 | Q&A-Session starten | 🟢 | ⬜ Offen |
-| 8 | 8.2 | Fragen einreichen | 🟢 | ⬜ Offen |
-| 8 | 8.3 | Upvoting & Sortierung | 🟢 | ⬜ Offen |
-| 8 | 8.4 | Dozenten-Moderation | 🟢 | ⬜ Offen |
+| 1    | 1.8   | Quiz exportieren                              | 🟡   | ⬜ Offen  |
+| 1    | 1.9   | Quiz importieren                              | 🟡   | ⬜ Offen  |
+| 1    | 1.10  | Quiz bearbeiten & löschen                     | 🔴   | ⬜ Offen  |
+| 1    | 1.11  | Quiz-Presets                                  | 🟡   | ⬜ Offen  |
+| 1    | 1.12  | SC-Schnellformate                             | 🟡   | ⬜ Offen  |
+| 1    | 1.13  | Quiz-Preview & Schnellkorrektur               | 🟡   | ⬜ Offen  |
+| 1    | 1.14  | Word Cloud (interaktiv + Export)              | 🟡   | ⬜ Offen  |
+| 2    | 2.1a  | Session-ID & Quiz-Upload                      | 🔴   | ⬜ Offen  |
+| 2    | 2.1b  | QR-Code                                       | 🟢   | ⬜ Offen  |
+| 2    | 2.2   | Lobby-Ansicht                                 | 🔴   | ⬜ Offen  |
+| 2    | 2.3   | Präsentations-Steuerung                       | 🔴   | ⬜ Offen  |
+| 2    | 2.4   | Security / Data-Stripping                     | 🔴   | ⬜ Offen  |
+| 2    | 2.5   | Beamer-Ansicht / Presenter-Mode               | 🔴   | ⬜ Offen  |
+| 2    | 2.6   | Zwei-Phasen-Frageanzeige (Lesephase)          | 🟡   | ⬜ Offen  |
+| 3    | 3.1   | Beitreten                                     | 🔴   | ⬜ Offen  |
+| 3    | 3.2   | Nicknames                                     | 🟡   | ⬜ Offen  |
+| 3    | 3.3a  | Frage empfangen                               | 🔴   | ⬜ Offen  |
+| 3    | 3.3b  | Abstimmung abgeben                            | 🔴   | ⬜ Offen  |
+| 3    | 3.4   | Echtzeit-Feedback                             | 🟡   | ⬜ Offen  |
+| 3    | 3.5   | Countdown-Anzeige                             | 🔴   | ⬜ Offen  |
+| 3    | 3.6   | Anonymer Modus                                | 🟡   | ⬜ Offen  |
+| 4    | 4.1   | Leaderboard mit Punktesystem                  | 🟡   | ⬜ Offen  |
+| 4    | 4.2   | Server aufräumen                              | 🔴   | ⬜ Offen  |
+| 4    | 4.3   | WebSocket Reconnection                        | 🟡   | ⬜ Offen  |
+| 4    | 4.4   | Ergebnis-Visualisierung                       | 🔴   | ⬜ Offen  |
+| 4    | 4.5   | Freitext-Auswertung                           | 🟡   | ⬜ Offen  |
+| 4    | 4.6   | Bonus-Token für Top-Platzierungen             | 🟡   | ⬜ Offen  |
+| 4    | 4.7   | Ergebnis-Export für Dozenten (anonym)         | 🟡   | ⬜ Offen  |
+| 5    | 5.1   | Sound-Effekte                                 | 🟡   | ⬜ Offen  |
+| 5    | 5.3   | Hintergrundmusik                              | 🟢   | ⬜ Offen  |
+| 5    | 5.4   | Belohnungseffekte                             | 🟡   | ⬜ Offen  |
+| 5    | 5.5   | Answer Streak                                 | 🟡   | ⬜ Offen  |
+| 5    | 5.6   | Persönliche Scorecard                         | 🔴   | ⬜ Offen  |
+| 5    | 5.7   | Motivationsmeldungen                          | 🟡   | ⬜ Offen  |
+| 5    | 5.8   | Emoji-Reaktionen                              | 🟢   | ⬜ Offen  |
+| 6    | 6.1   | Dark/Light/System-Theme                       | 🟡   | ⬜ Offen  |
+| 6    | 6.2   | Internationalisierung                         | 🟡   | ⬜ Offen  |
+| 6    | 6.3   | Impressum & Datenschutz                       | 🔴   | ⬜ Offen  |
+| 6    | 6.4   | Mobile-First & Responsive                     | 🔴   | ⬜ Offen  |
+| 6    | 6.5   | Barrierefreiheit                              | 🔴   | ⬜ Offen  |
+| 7    | 7.1   | Team-Modus                                    | 🟢   | ⬜ Offen  |
+| 8    | 8.1   | Q&A-Session starten                           | 🟢   | ⬜ Offen  |
+| 8    | 8.2   | Fragen einreichen                             | 🟢   | ⬜ Offen  |
+| 8    | 8.3   | Upvoting & Sortierung                         | 🟢   | ⬜ Offen  |
+| 8    | 8.4   | Dozenten-Moderation                           | 🟢   | ⬜ Offen  |
+
 
 > **Legende Status:** ⬜ Offen · 🔨 In Arbeit · ✅ Fertig (DoD erfüllt) · ❌ Blockiert
 >
-> **Statistik:** 🔴 Must: 23 · 🟡 Should: 22 · 🟢 Could: 13 = **58 Storys gesamt**
+> **Statistik:** 🔴 Must: 23 · 🟡 Should: 24 · 🟢 Could: 13 = **60 Storys gesamt**
 
 ---
 
@@ -135,50 +139,53 @@ Eine Story gilt als **fertig**, wenn **alle** folgenden Kriterien erfüllt sind:
 
 ## Epic 0: Infrastruktur & Plattform (Rolle: Entwickler)
 
+> **Verifizierung im laufenden Betrieb:** 2025-02-23 — Prisma validate ✅, tsc (shared-types, backend, frontend) ✅, Vitest (health + rateLimit, 21 Tests) ✅, ESLint ✅. Docker/Redis via docker-compose.yml und Health-Check-Code geprüft; Frontend wsLink/httpBatchLink und ServerStatusWidget geprüft; CI-Workflow und README-Badge geprüft.  
+> **Build + Laufbetrieb (2025-02-23):** `npm run build` ✅ (inkl. Fix Session-Template @else). `docker compose up -d postgres redis` ✅, `prisma db push` ✅. Backend gestartet: `health.check` → redis=ok ✅, `health.stats` → activeSessions/totalParticipants/completedSessions/serverStatus ✅, WebSocket-Server (Story 0.2) erreichbar ✅, Frontend `ng serve` + Startseite mit Status-Widget erreichbar ✅.
+
 - **Story 0.1 (Redis-Setup):** 🔴 Als Entwickler möchte ich eine funktionierende Redis-Instanz (via Docker Compose) haben, damit Echtzeit-Features darauf aufbauen können.
   - **Akzeptanzkriterien:**
-    - `docker compose up` startet Redis neben PostgreSQL.
-    - Backend kann sich erfolgreich mit Redis verbinden (Health-Check erweitert).
+    - [x] `docker compose up` startet Redis neben PostgreSQL.
+    - [x] Backend kann sich erfolgreich mit Redis verbinden (Health-Check erweitert).
 - **Story 0.2 (tRPC WebSocket-Adapter):** 🔴 Als Entwickler möchte ich den tRPC-Server um einen WebSocket-Adapter (`@trpc/server/adapters/ws`) erweitern, damit Subscriptions (Echtzeit-Events) möglich werden.
   - **Akzeptanzkriterien:**
-    - WebSocket-Server läuft parallel zum HTTP-Server.
-    - Ein Test-Subscription-Endpoint (`health.ping`) sendet alle 5s ein Heartbeat-Event.
-    - Frontend-tRPC-Client nutzt `wsLink` für Subscriptions und `httpBatchLink` für Queries/Mutations.
+    - [x] WebSocket-Server läuft parallel zum HTTP-Server.
+    - [x] Ein Test-Subscription-Endpoint (`health.ping`) sendet alle 5s ein Heartbeat-Event.
+    - [x] Frontend-tRPC-Client nutzt `wsLink` für Subscriptions und `httpBatchLink` für Queries/Mutations.
 - **Story 0.3 (Yjs WebSocket-Provider):** 🟡 Als Entwickler möchte ich einen Yjs-WebSocket-Provider im Backend einrichten, damit Dozenten ihre Quizzes zwischen Geräten (PC ↔ iPad) synchronisieren können.
   - **Akzeptanzkriterien:**
-    - `y-websocket`-Server ist im Backend integriert.
-    - Ein Yjs-Dokument kann von zwei Browser-Tabs synchron gehalten werden.
+    - [x] `y-websocket`-Server ist im Backend integriert.
+    - [x] Ein Yjs-Dokument kann von zwei Browser-Tabs synchron gehalten werden.
 - **Story 0.4 (Server-Status-Indikator):** 🟡 Als Besucher der Startseite möchte ich auf einen Blick sehen, wie ausgelastet der Server ist, damit ich die aktuelle Nutzung einschätzen kann.
   - **Akzeptanzkriterien:**
-    - tRPC-Query `health.stats` liefert: Anzahl laufender Quizzes, Gesamtzahl aktiver Teilnehmer, Server-Status (`healthy` / `busy` / `overloaded`).
-    - Die Startseite zeigt die Werte als kompaktes Status-Widget an (z.B. "3 Quizzes live · 142 Teilnehmer · 1.247 Quizzes durchgeführt").
-    - Ein farbiger Indikator visualisiert den Server-Status: grün (healthy), gelb (busy), rot (overloaded).
-    - Schwellwerte für Status: `healthy` < 50 Sessions, `busy` < 200 Sessions, `overloaded` ≥ 200 Sessions.
-    - Anzahl bisher durchgeführter Quizzes (`completedSessions`) wird als Gesamtstatistik angezeigt.
-    - Die Daten werden alle 30 Sekunden automatisch aktualisiert (Polling).
-    - Es werden keine personenbezogenen Daten exponiert (nur aggregierte Zahlen).
-    - ⚠️ *Abhängigkeit:* Vor Umsetzung von Story 2.1a liefert die Query Initialwerte (`activeSessions: 0`, `totalParticipants: 0`, `completedSessions: 0`).
+    - [x] tRPC-Query `health.stats` liefert: Anzahl laufender Quizzes, Gesamtzahl aktiver Teilnehmer, Server-Status (`healthy` / `busy` / `overloaded`).
+    - [x] Die Startseite zeigt die Werte als kompaktes Status-Widget an (z.B. "3 Quizzes live · 142 Teilnehmer · 1.247 Quizzes durchgeführt").
+    - [x] Ein farbiger Indikator visualisiert den Server-Status: grün (healthy), gelb (busy), rot (overloaded).
+    - [x] Schwellwerte für Status: `healthy` < 50 Sessions, `busy` < 200 Sessions, `overloaded` ≥ 200 Sessions.
+    - [x] Anzahl bisher durchgeführter Quizzes (`completedSessions`) wird als Gesamtstatistik angezeigt.
+    - [x] Die Daten werden alle 30 Sekunden automatisch aktualisiert (Polling).
+    - [x] Es werden keine personenbezogenen Daten exponiert (nur aggregierte Zahlen).
+    - [x] ⚠️ *Abhängigkeit:* Vor Umsetzung von Story 2.1a liefert die Query Initialwerte (`activeSessions: 0`, `totalParticipants: 0`, `completedSessions: 0`).
 - **Story 0.5 (Rate-Limiting & Brute-Force-Schutz):** 🔴 Als System möchte ich Missbrauch durch automatisierte Anfragen verhindern, damit die Plattform stabil und fair bleibt.
   - **Akzeptanzkriterien:**
-    - **Session-Code-Eingabe (Story 3.1):** Maximal 5 Fehlversuche pro IP-Adresse innerhalb von 5 Minuten. Nach Überschreitung wird eine 60-Sekunden-Sperre verhängt mit Hinweismeldung.
-    - **Vote-Submit (Story 3.3b):** Maximal 1 Request pro Sekunde pro Participant (Token-Bucket). Überschüssige Requests erhalten HTTP 429 mit `Retry-After`-Header.
-    - **Session-Erstellung (Story 2.1a):** Maximal 10 Sessions pro IP pro Stunde.
-    - Rate-Limits werden über Redis (`ioredis`) mit Sliding-Window-Algorithmus umgesetzt (abhängig von Story 0.1).
-    - Bei Überschreitung wird ein strukturierter tRPC-Error (`TOO_MANY_REQUESTS`) mit verbleibender Wartezeit zurückgegeben.
-    - Limits sind als Umgebungsvariablen konfigurierbar (nicht hart kodiert).
+    - [x] **Session-Code-Eingabe (Story 3.1):** Maximal 5 Fehlversuche pro IP-Adresse innerhalb von 5 Minuten. Nach Überschreitung wird eine 60-Sekunden-Sperre verhängt mit Hinweismeldung.
+    - [x] **Vote-Submit (Story 3.3b):** Maximal 1 Request pro Sekunde pro Participant (Token-Bucket). Überschüssige Requests erhalten HTTP 429 mit `Retry-After`-Header.
+    - [x] **Session-Erstellung (Story 2.1a):** Maximal 10 Sessions pro IP pro Stunde.
+    - [x] Rate-Limits werden über Redis (`ioredis`) mit Sliding-Window-Algorithmus umgesetzt (abhängig von Story 0.1).
+    - [x] Bei Überschreitung wird ein strukturierter tRPC-Error (`TOO_MANY_REQUESTS`) mit verbleibender Wartezeit zurückgegeben.
+    - [x] Limits sind als Umgebungsvariablen konfigurierbar (nicht hart kodiert).
 - **Story 0.6 (CI/CD-Pipeline):** 🔴 Als Entwickler möchte ich eine automatische CI/CD-Pipeline (GitHub Actions) haben, damit Code-Qualität bei jedem Push und Pull-Request sichergestellt wird und Docker-Images für das Deployment bereitstehen.
   - **Akzeptanzkriterien:**
-    - **CI-Workflow (`.github/workflows/ci.yml`):** Wird bei Push auf `main` und bei Pull-Requests ausgelöst.
-    - **TypeScript-Kompilierung:** `tsc --noEmit` für `libs/shared-types`, `apps/backend` und `apps/frontend` — alle drei müssen fehlerfrei kompilieren.
-    - **Prisma-Validierung:** `prisma validate` prüft das Schema auf Korrektheit.
-    - **Linting:** ESLint prüft alle `.ts`-Dateien auf Regelverstöße (Root-Config: `eslint.config.mjs`).
-    - **Security-Audit:** `npm audit --audit-level=high` meldet keine bekannten Schwachstellen mit Severity ≥ high.
-    - **Docker-Image:** Multi-Stage-Dockerfile baut ein produktionsfertiges Image (`node:20-alpine`).
-    - **Docker-Build:** CI baut das Docker-Image erfolgreich (kein Push in Registry, nur Build-Test).
-    - **Caching:** `node_modules` wird via `actions/cache` zwischengespeichert, um CI-Laufzeit zu verkürzen.
-    - **Matrix-Test:** Pipeline läuft auf Node.js 20 und 22 (Kompatibilitätstest).
-    - **Platzhalter für Tests:** Job `test` ist vorbereitet, aktuell mit `echo "No tests yet"` — wird aktiviert, sobald Tests existieren.
-    - **Status-Badge:** README.md enthält ein CI-Status-Badge (`![CI](https://github.com/...)`).
+    - [x] **CI-Workflow (`.github/workflows/ci.yml`):** Wird bei Push auf `main` und bei Pull-Requests ausgelöst.
+    - [x] **TypeScript-Kompilierung:** `tsc --noEmit` für `libs/shared-types`, `apps/backend` und `apps/frontend` — alle drei müssen fehlerfrei kompilieren.
+    - [x] **Prisma-Validierung:** `prisma validate` prüft das Schema auf Korrektheit.
+    - [x] **Linting:** ESLint prüft alle `.ts`-Dateien auf Regelverstöße (Root-Config: `eslint.config.mjs`).
+    - [x] **Security-Audit:** `npm audit --audit-level=high` meldet keine bekannten Schwachstellen mit Severity ≥ high.
+    - [x] **Docker-Image:** Multi-Stage-Dockerfile baut ein produktionsfertiges Image (`node:20-alpine`).
+    - [x] **Docker-Build:** CI baut das Docker-Image erfolgreich (kein Push in Registry, nur Build-Test).
+    - [x] **Caching:** `node_modules` wird via `actions/cache` zwischengespeichert, um CI-Laufzeit zu verkürzen.
+    - [x] **Matrix-Test:** Pipeline läuft auf Node.js 20 und 22 (Kompatibilitätstest).
+    - [x] **Tests:** Job `test` führt Backend-Unit-Tests aus (Vitest: health.check, health.stats, Rate-Limiting).
+    - [x] **Status-Badge:** README.md enthält ein CI-Status-Badge (`![CI](https://github.com/...)`).
 
 ---
 
@@ -330,163 +337,161 @@ Eine Story gilt als **fertig**, wenn **alle** folgenden Kriterien erfüllt sind:
       - Wenn keine Probleme: ✅ „Alle Fragen valide — bereit zum Live-Schalten".
     - Das Feature ist rein clientseitig (kein Server-Roundtrip).
     - Abhängigkeiten: Story 1.7 (Markdown/KaTeX), Story 1.2a–c (Fragentypen), Story 1.5 (Local-First).
+- **Story 1.14 (Word Cloud – interaktiv + Export):** 🟡 Als Dozent möchte ich Freitext-Antworten als interaktive Word-Cloud sehen und die Auswertung exportieren können, damit ich auf Mentimeter-Niveau präsentieren und Ergebnisse für Nachbereitung oder Lehrevaluation nutzen kann.
+  - **Akzeptanzkriterien:**
+    - **Interaktive Word-Cloud:** In Beamer-Ansicht (Story 2.5) und Dozenten-Steuerung wird bei FREETEXT-Fragen mit mindestens einer Antwort eine Word-Cloud angezeigt; Begriffe werden nach Häufigkeit skaliert (Stopwörter optional ausblendbar).
+    - Klick auf einen Begriff hebt ihn hervor oder filtert die zugehörigen Antworten in einer Liste (Toggle); Tooltip zeigt exakte Anzahl.
+    - Word-Cloud aktualisiert sich live bei eingehenden Votes (Echtzeit, konsistent mit Story 4.5).
+    - **Export:** Dozent kann pro Frage oder für die gesamte Session exportieren:
+      - **CSV:** Alle Freitext-Antworten (aggregiert: Text, Anzahl), ohne Nicknames; optional Bonus-Token-Liste (Story 4.6) in separatem Export.
+      - **Bild/PNG (optional):** Screenshot der Word-Cloud oder der Ergebnis-Visualisierung für eine Frage.
+    - Export ist nur für den Dozenten zugänglich (kein Studenten-Zugriff); Daten nur aggregiert bzw. pseudonym (Token-Liste), DSGVO-konform.
+    - Abhängigkeiten: Story 4.5 (Freitext-Auswertung), Story 2.5 (Beamer), Story 4.4 (Ergebnis-Visualisierung).
 
 ---
 
 ## Epic 2: Live-Sitzung & Lobby (Rolle: Dozent)
 
-* **Story 2.1a (Session-ID generieren & Quiz-Upload):** 🔴 Als Dozent möchte ich ein Quiz live schalten können, wodurch eine 6-stellige Session-ID generiert wird und die Quizdaten an den Server übertragen werden.
-  * **Akzeptanzkriterien:**
-    - [ ] tRPC-Mutation `session.create` erstellt eine Session mit eindeutigem 6-stelligem Code.
-    - [ ] Session-Status ist initial `LOBBY`.
-    - [ ] Session ist über `Session`-Modell in der Datenbank persistiert.
-    - [ ] Das lokale Quiz (Fragen, Antwortoptionen inkl. `isCorrect`, Konfiguration) wird beim Live-Schalten einmalig an den Server übertragen und in PostgreSQL gespeichert.
-    - [ ] `isCorrect`-Daten verbleiben ausschließlich serverseitig und werden **niemals** während der Frage-Phase an Studenten gesendet (siehe Story 2.4).
-
-* **Story 2.1b (QR-Code):** 🟢 Als Dozent möchte ich einen QR-Code angezeigt bekommen, der den Beitritts-Link enthält.
-  * **Akzeptanzkriterien:**
-    - [ ] QR-Code encodiert `{baseUrl}/join/{sessionCode}`.
-    - [ ] QR-Code ist auf Beamer-Auflösung lesbar.
-
-* **Story 2.2 (Lobby-Ansicht):** 🔴 Als Dozent möchte ich in Echtzeit sehen, wie viele und welche Studenten meiner Lobby beigetreten sind.
-  * **Akzeptanzkriterien:**
-    - [ ] tRPC-Subscription `session.onParticipantJoined` pusht neue Teilnehmer in Echtzeit.
-    - [ ] Teilnehmer-Liste zeigt Nicknames an.
-    - [ ] Teilnehmeranzahl wird live aktualisiert.
-
-* **Story 2.3 (Präsentations-Steuerung):** 🔴 Als Dozent möchte ich den Ablauf steuern (Frage öffnen, Antworten freigeben, Ergebnisse auflösen).
-  * **Akzeptanzkriterien:**
-    - [ ] Buttons: "Nächste Frage" → "Antworten freigeben" → "Ergebnis zeigen".
-    - [ ] Session-Status-Wechsel: `LOBBY → QUESTION_OPEN → ACTIVE → RESULTS → PAUSED → …` (Details siehe Story 2.6).
-    - [ ] Wenn `readingPhaseEnabled=false`: Der Status `QUESTION_OPEN` wird übersprungen — "Nächste Frage" wechselt direkt zu `ACTIVE` (bisheriges Verhalten).
-    - [ ] Alle verbundenen Clients werden via Subscription über Statuswechsel informiert.
-
-* **Story 2.4 (Security / Data-Stripping):** 🔴 Als Dozent möchte ich absolut sicher sein, dass die `isCorrect`-Lösungsflags *während der Frage-Phase* nicht an die Browser der Studenten gesendet werden.
-  * **Akzeptanzkriterien:**
-    - [ ] Das DTO `QuestionStudentDTO` enthält kein `isCorrect`-Feld — es wird bei jeder Frage-Auslieferung serverseitig entfernt.
-    - [ ] `isCorrect`-Daten dürfen erst **nach expliziter Auflösung durch den Dozenten** (Statuswechsel zu `RESULTS`) an die Studenten übertragen werden (siehe Story 3.4).
-    - [ ] Ein automatisierter Test verifiziert, dass das ausgehende JSON im Status `ACTIVE` kein `isCorrect` enthält.
-    - [ ] Ein separater Test bestätigt, dass `isCorrect` im Status `RESULTS` korrekt mitgesendet wird.
-    - [ ] Code-Review-Checkliste dokumentiert die Stripping-Regel.
-
-* **Story 2.5 (Beamer-Ansicht / Presenter-Mode):** 🔴 Als Dozent möchte ich eine dedizierte Beamer-Ansicht haben, die für die Projektion im Hörsaal optimiert ist.
-  * **Akzeptanzkriterien:**
-    - [ ] Eigene Angular-Route `/session/:code/present` — erreichbar über einen „Beamer öffnen"-Button in der Dozenten-Steuerung.
-    - [ ] Die Ansicht ist auf Vollbild (`lg`+) optimiert: große Schrift (≥ 24px Basis), hoher Kontrast, kein Header/Footer.
-    - [ ] **Lobby-Phase:** Zeigt Session-Code, QR-Code (Story 2.1b) und Live-Teilnehmerliste mit Animation bei Neuzugang.
-    - [ ] **Lesephase (`QUESTION_OPEN`, Story 2.6):** Zeigt nur den Fragenstamm (großformatig, zentriert). Antwortoptionen, Countdown und Abstimmungsbalken sind ausgeblendet. Ein dezenter Hinweis „Warte auf Freigabe…" wird angezeigt.
-    - [ ] **Frage-Phase (`ACTIVE`):** Zeigt Fragenstamm, Antwortoptionen (ohne `isCorrect`-Markierung), Countdown (Kreisdiagramm, Story 3.5) und Live-Abstimmungsbalken (Anzahl eingegangener Votes).
-    - [ ] **Ergebnis-Phase (`RESULTS`):** Zeigt Ergebnis-Visualisierung (Story 4.4) und optional Leaderboard-Zwischenstand (Top 5).
-    - [ ] **End-Phase (`FINISHED`):** Zeigt finales Leaderboard (Story 4.1) und Belohnungseffekte (Story 5.4).
-    - [ ] Die Ansicht reagiert auf alle Session-Statuswechsel via tRPC-Subscription (kein manuelles Refresh).
-    - [ ] Dozent kann per Tastendruck (`F11` oder Button) in den Browser-Vollbildmodus wechseln.
-
-* **Story 2.6 (Zwei-Phasen-Frageanzeige / Lesephase):** 🟡 Als Dozent möchte ich, dass beim Freigeben einer Frage zunächst nur der Fragenstamm angezeigt wird (Lesephase), damit die Studierenden die Frage in Ruhe und vollständig lesen können, bevor die Antwortoptionen erscheinen und der Countdown beginnt.
-  * **Didaktische Begründung:** In klassischen Quiz-Apps erscheinen Frage und Antworten gleichzeitig. Studierende springen dann oft direkt zu den Antworten, ohne die Frage gründlich zu lesen — insbesondere bei komplexen Fragen mit Formeln oder längeren Texten. Die Zwei-Phasen-Anzeige fördert **kognitives Processing** und reduziert impulsives Raten.
-  * **Akzeptanzkriterien:**
-    - [ ] Neuer Session-Status `QUESTION_OPEN` zwischen `LOBBY`/`PAUSED` und `ACTIVE`.
-    - [ ] **Status-Flow (erweitert):** `LOBBY → QUESTION_OPEN → ACTIVE → RESULTS → PAUSED → QUESTION_OPEN → … → FINISHED`.
-    - [ ] **Phase 1 (`QUESTION_OPEN`):**
-      - [ ] Auf Beamer und Studenten-Geräten wird **nur der Fragenstamm** angezeigt (Markdown/KaTeX gerendert), ohne Antwortoptionen.
-      - [ ] Kein Countdown läuft. Abstimmung ist nicht möglich.
-      - [ ] Beamer: Frage großformatig zentriert, dezenter Hinweis „Gleich geht's los…".
-      - [ ] Studenten-Gerät: Frage wird angezeigt, Hinweis „Lies die Frage — Antworten folgen gleich."
-      - [ ] Neues DTO `QuestionPreviewDTO` wird gesendet (enthält `id`, `text`, `type`, `difficulty`, `order` — **keine** `answers`).
-    - [ ] **Phase 2 (Übergang zu `ACTIVE`):**
-      - [ ] Der Dozent klickt den Button „Antworten freigeben" (Story 2.3).
-      - [ ] Backend wechselt Status von `QUESTION_OPEN` → `ACTIVE`.
-      - [ ] tRPC-Subscription `session.onAnswersRevealed` pusht die Antwortoptionen (`QuestionStudentDTO` ohne `isCorrect`).
-      - [ ] Auf Beamer und Studenten-Geräten erscheinen die Antwort-Buttons mit Einblende-Animation (Slide-Up, 200 ms).
-      - [ ] Der Countdown beginnt (Story 3.5).
-    - [ ] **Konfigurierbar:** Neues Quiz-Konfigurationsfeld `readingPhaseEnabled` (default: `true`).
-      - [ ] Wenn `true`: Zwei-Phasen-Flow wie oben beschrieben.
-      - [ ] Wenn `false`: „Nächste Frage" wechselt direkt zu `ACTIVE` (Frage + Antworten + Countdown gleichzeitig — bisheriges Verhalten).
-    - [ ] Das Feature ist in beiden Presets (Story 1.11) konfiguriert: **Spielerisch** → `readingPhaseEnabled=false`, **Seriös** → `readingPhaseEnabled=true`.
-    - [ ] **Security:** Während `QUESTION_OPEN` werden weder `isCorrect` noch die Antwortoptionen an Studenten gesendet — das DTO-Stripping (Story 2.4) greift bereits in dieser Phase.
-    - [ ] **Barrierefreiheit:** Der Übergang von Phase 1 zu Phase 2 wird via `aria-live="polite"` angekündigt, damit Screenreader-Nutzer den Wechsel mitbekommen.
-  * **Abhängigkeiten:** Story 2.3 (Steuerung), Story 2.4 (Security), Story 2.5 (Beamer), Story 3.3a (Frage empfangen), Story 3.5 (Countdown).
+- **Story 2.1a (Session-ID generieren & Quiz-Upload):** 🔴 Als Dozent möchte ich ein Quiz live schalten können, wodurch eine 6-stellige Session-ID generiert wird und die Quizdaten an den Server übertragen werden.
+  - **Akzeptanzkriterien:**
+    - tRPC-Mutation `session.create` erstellt eine Session mit eindeutigem 6-stelligem Code.
+    - Session-Status ist initial `LOBBY`.
+    - Session ist über `Session`-Modell in der Datenbank persistiert.
+    - Das lokale Quiz (Fragen, Antwortoptionen inkl. `isCorrect`, Konfiguration) wird beim Live-Schalten einmalig an den Server übertragen und in PostgreSQL gespeichert.
+    - `isCorrect`-Daten verbleiben ausschließlich serverseitig und werden **niemals** während der Frage-Phase an Studenten gesendet (siehe Story 2.4).
+- **Story 2.1b (QR-Code):** 🟢 Als Dozent möchte ich einen QR-Code angezeigt bekommen, der den Beitritts-Link enthält.
+  - **Akzeptanzkriterien:**
+    - QR-Code encodiert `{baseUrl}/join/{sessionCode}`.
+    - QR-Code ist auf Beamer-Auflösung lesbar.
+- **Story 2.2 (Lobby-Ansicht):** 🔴 Als Dozent möchte ich in Echtzeit sehen, wie viele und welche Studenten meiner Lobby beigetreten sind.
+  - **Akzeptanzkriterien:**
+    - tRPC-Subscription `session.onParticipantJoined` pusht neue Teilnehmer in Echtzeit.
+    - Teilnehmer-Liste zeigt Nicknames an.
+    - Teilnehmeranzahl wird live aktualisiert.
+- **Story 2.3 (Präsentations-Steuerung):** 🔴 Als Dozent möchte ich den Ablauf steuern (Frage öffnen, Antworten freigeben, Ergebnisse auflösen).
+  - **Akzeptanzkriterien:**
+    - Buttons: "Nächste Frage" → "Antworten freigeben" → "Ergebnis zeigen".
+    - Session-Status-Wechsel: `LOBBY → QUESTION_OPEN → ACTIVE → RESULTS → PAUSED → …` (Details siehe Story 2.6).
+    - Wenn `readingPhaseEnabled=false`: Der Status `QUESTION_OPEN` wird übersprungen — "Nächste Frage" wechselt direkt zu `ACTIVE` (bisheriges Verhalten).
+    - Alle verbundenen Clients werden via Subscription über Statuswechsel informiert.
+- **Story 2.4 (Security / Data-Stripping):** 🔴 Als Dozent möchte ich absolut sicher sein, dass die `isCorrect`-Lösungsflags *während der Frage-Phase* nicht an die Browser der Studenten gesendet werden.
+  - **Akzeptanzkriterien:**
+    - Das DTO `QuestionStudentDTO` enthält kein `isCorrect`-Feld — es wird bei jeder Frage-Auslieferung serverseitig entfernt.
+    - `isCorrect`-Daten dürfen erst **nach expliziter Auflösung durch den Dozenten** (Statuswechsel zu `RESULTS`) an die Studenten übertragen werden (siehe Story 3.4).
+    - Ein automatisierter Test verifiziert, dass das ausgehende JSON im Status `ACTIVE` kein `isCorrect` enthält.
+    - Ein separater Test bestätigt, dass `isCorrect` im Status `RESULTS` korrekt mitgesendet wird.
+    - Code-Review-Checkliste dokumentiert die Stripping-Regel.
+- **Story 2.5 (Beamer-Ansicht / Presenter-Mode):** 🔴 Als Dozent möchte ich eine dedizierte Beamer-Ansicht haben, die für die Projektion im Hörsaal optimiert ist.
+  - **Akzeptanzkriterien:**
+    - Eigene Angular-Route `/session/:code/present` — erreichbar über einen „Beamer öffnen"-Button in der Dozenten-Steuerung.
+    - Die Ansicht ist auf Vollbild (`lg`+) optimiert: große Schrift (≥ 24px Basis), hoher Kontrast, kein Header/Footer.
+    - **Lobby-Phase:** Zeigt Session-Code, QR-Code (Story 2.1b) und Live-Teilnehmerliste mit Animation bei Neuzugang.
+    - **Lesephase (`QUESTION_OPEN`, Story 2.6):** Zeigt nur den Fragenstamm (großformatig, zentriert). Antwortoptionen, Countdown und Abstimmungsbalken sind ausgeblendet. Ein dezenter Hinweis „Warte auf Freigabe…" wird angezeigt.
+    - **Frage-Phase (`ACTIVE`):** Zeigt Fragenstamm, Antwortoptionen (ohne `isCorrect`-Markierung), Countdown (Kreisdiagramm, Story 3.5) und Live-Abstimmungsbalken (Anzahl eingegangener Votes).
+    - **Ergebnis-Phase (`RESULTS`):** Zeigt Ergebnis-Visualisierung (Story 4.4) und optional Leaderboard-Zwischenstand (Top 5).
+    - **End-Phase (`FINISHED`):** Zeigt finales Leaderboard (Story 4.1) und Belohnungseffekte (Story 5.4).
+    - Die Ansicht reagiert auf alle Session-Statuswechsel via tRPC-Subscription (kein manuelles Refresh).
+    - Dozent kann per Tastendruck (`F11` oder Button) in den Browser-Vollbildmodus wechseln.
+- **Story 2.6 (Zwei-Phasen-Frageanzeige / Lesephase):** 🟡 Als Dozent möchte ich, dass beim Freigeben einer Frage zunächst nur der Fragenstamm angezeigt wird (Lesephase), damit die Studierenden die Frage in Ruhe und vollständig lesen können, bevor die Antwortoptionen erscheinen und der Countdown beginnt.
+  - **Didaktische Begründung:** In klassischen Quiz-Apps erscheinen Frage und Antworten gleichzeitig. Studierende springen dann oft direkt zu den Antworten, ohne die Frage gründlich zu lesen — insbesondere bei komplexen Fragen mit Formeln oder längeren Texten. Die Zwei-Phasen-Anzeige fördert **kognitives Processing** und reduziert impulsives Raten.
+  - **Akzeptanzkriterien:**
+    - Neuer Session-Status `QUESTION_OPEN` zwischen `LOBBY`/`PAUSED` und `ACTIVE`.
+    - **Status-Flow (erweitert):** `LOBBY → QUESTION_OPEN → ACTIVE → RESULTS → PAUSED → QUESTION_OPEN → … → FINISHED`.
+    - **Phase 1 (`QUESTION_OPEN`):**
+      - Auf Beamer und Studenten-Geräten wird **nur der Fragenstamm** angezeigt (Markdown/KaTeX gerendert), ohne Antwortoptionen.
+      - Kein Countdown läuft. Abstimmung ist nicht möglich.
+      - Beamer: Frage großformatig zentriert, dezenter Hinweis „Gleich geht's los…".
+      - Studenten-Gerät: Frage wird angezeigt, Hinweis „Lies die Frage — Antworten folgen gleich."
+      - Neues DTO `QuestionPreviewDTO` wird gesendet (enthält `id`, `text`, `type`, `difficulty`, `order` — **keine** `answers`).
+    - **Phase 2 (Übergang zu `ACTIVE`):**
+      - Der Dozent klickt den Button „Antworten freigeben" (Story 2.3).
+      - Backend wechselt Status von `QUESTION_OPEN` → `ACTIVE`.
+      - tRPC-Subscription `session.onAnswersRevealed` pusht die Antwortoptionen (`QuestionStudentDTO` ohne `isCorrect`).
+      - Auf Beamer und Studenten-Geräten erscheinen die Antwort-Buttons mit Einblende-Animation (Slide-Up, 200 ms).
+      - Der Countdown beginnt (Story 3.5).
+    - **Konfigurierbar:** Neues Quiz-Konfigurationsfeld `readingPhaseEnabled` (default: `true`).
+      - Wenn `true`: Zwei-Phasen-Flow wie oben beschrieben.
+      - Wenn `false`: „Nächste Frage" wechselt direkt zu `ACTIVE` (Frage + Antworten + Countdown gleichzeitig — bisheriges Verhalten).
+    - Das Feature ist in beiden Presets (Story 1.11) konfiguriert: **Spielerisch** → `readingPhaseEnabled=false`, **Seriös** → `readingPhaseEnabled=true`.
+    - **Security:** Während `QUESTION_OPEN` werden weder `isCorrect` noch die Antwortoptionen an Studenten gesendet — das DTO-Stripping (Story 2.4) greift bereits in dieser Phase.
+    - **Barrierefreiheit:** Der Übergang von Phase 1 zu Phase 2 wird via `aria-live="polite"` angekündigt, damit Screenreader-Nutzer den Wechsel mitbekommen.
+  - **Abhängigkeiten:** Story 2.3 (Steuerung), Story 2.4 (Security), Story 2.5 (Beamer), Story 3.3a (Frage empfangen), Story 3.5 (Countdown).
 
 ---
 
 ## Epic 3: Teilnahme & Abstimmung (Rolle: Student)
 
-* **Story 3.1 (Beitreten):** 🔴 Als Student möchte ich über die Eingabe des Session-Codes sofort und ohne Registrierung in die Quiz-Lobby gelangen.
-  * **Akzeptanzkriterien:**
-    - [ ] Eingabefeld für 6-stelligen Code.
-    - [ ] Bei gültigem Code → Weiterleitung zur Lobby.
-    - [ ] Bei ungültigem/abgelaufenem Code → Fehlermeldung.
-
-* **Story 3.2 (Nicknames):** 🟡 Als Student möchte ich einen Nicknamen aus einer themenbezogenen Liste auswählen oder (falls erlaubt) frei eingeben können.
-  * **Akzeptanzkriterien:**
-    - [ ] Der Dozent wählt in der Quiz-Konfiguration ein Nickname-Thema (`nicknameTheme`):
-      - [ ] **Nobelpreisträger** (default) – z.B. "Marie Curie", "Albert Einstein", "Ada Yonath" (mind. 50 Namen).
-      - [ ] **Kindergarten** – Tiere & Farben, z.B. "Blauer Elefant", "Rotes Einhorn" (mind. 50 Kombinationen).
-      - [ ] **Grundschule** – Märchenfiguren, z.B. "Rotkäppchen", "Rumpelstilzchen" (mind. 50 Namen).
-      - [ ] **Mittelstufe** – Superhelden & Entdecker, z.B. "Kolumbus", "Amelia Earhart" (mind. 50 Namen).
-      - [ ] **Oberstufe** – Wissenschaftler & Philosophen, z.B. "Kant", "Noether", "Hawking" (mind. 50 Namen).
-    - [ ] Bereits in der Session vergebene Namen werden ausgegraut und sind nicht wählbar.
-    - [ ] Falls `allowCustomNicknames=true`: Zusätzlich steht ein Freitextfeld zur Verfügung.
-    - [ ] Falls `allowCustomNicknames=false`: Nur die ausgewählte Themenliste ist verfügbar.
-    - [ ] Die Listen werden rein clientseitig bereitgestellt (statische Arrays, kein Server-Roundtrip).
-    - [ ] Doppelte Nicknames in derselben Session werden abgelehnt (DB-Constraint).
-
-* **Story 3.6 (Anonymer Modus):** 🟡 Als Dozent möchte ich einen anonymen Modus aktivieren können, bei dem keine Nicknames angezeigt werden, damit die Teilnahme psychologisch druckfrei ist.
-  * **Akzeptanzkriterien:**
-    - [ ] Neues Quiz-Konfigurationsfeld `anonymousMode` (default: false; wird automatisch durch Preset „Seriös" aktiviert, Story 1.11).
-    - [ ] Wenn aktiviert:
-      - [ ] Studenten erhalten beim Beitreten eine automatisch generierte ID (z.B. „Teilnehmer #7") — kein Nickname-Auswahlschritt.
-      - [ ] In der Lobby (Story 2.2) wird nur die **Teilnehmerzahl** angezeigt, keine Namensliste.
-      - [ ] Im Leaderboard (Story 4.1) und auf der Beamer-Ansicht werden **keine** individuellen Einträge angezeigt — nur aggregierte Ergebnisse (Durchschnittspunkte, Verteilung der richtigen Antworten).
-      - [ ] Die persönliche Scorecard (Story 5.6) wird trotzdem auf dem eigenen Gerät angezeigt (ist privat).
-    - [ ] Wenn deaktiviert: Nickname-Auswahl wie gewohnt (Story 3.2).
-    - [ ] DSGVO-Vorteil: Im anonymen Modus werden keine pseudonymisierten Daten erhoben — vollständig datensparsam.
-
-* **Story 3.3a (Frage empfangen):** 🔴 Als Student möchte ich die aktuell freigegebene Frage auf meinem Gerät in Echtzeit sehen.
-  * **Akzeptanzkriterien:**
-    - [ ] tRPC-Subscription `session.onQuestionRevealed` pusht die aktuelle Frage.
-    - [ ] **Lesephase (`QUESTION_OPEN`, Story 2.6):** Nur der Fragenstamm wird angezeigt (`QuestionPreviewDTO`, ohne Antwortoptionen). Antwort-Buttons und Countdown sind ausgeblendet. Hinweistext: „Lies die Frage — Antworten folgen gleich."
-    - [ ] **Antwortphase (`ACTIVE`):** Die Antwortoptionen werden eingeblendet, der Countdown startet. Die vollständige Frage wird als `QuestionStudentDTO` (ohne `isCorrect`) angezeigt.
-    - [ ] Wenn `readingPhaseEnabled=false`: Die Lesephase entfällt — die Frage wird sofort mit Antwortoptionen angezeigt (bisheriges Verhalten).
-    - [ ] Fragenstamm und Antwortoptionen werden mit Markdown & KaTeX korrekt gerendert (siehe Story 1.7).
-
-* **Story 3.3b (Abstimmung abgeben):** 🔴 Als Student möchte ich performant abstimmen können.
-  * **Akzeptanzkriterien:**
-    - [ ] tRPC-Mutation `vote.submit` nimmt die Stimme entgegen.
-    - [ ] Nur eine Stimme pro Frage und Teilnehmer (DB-Constraint).
-    - [ ] Visuelles Feedback: "Antwort gesendet ✓".
-  * **UI-Vorgaben (Abstimm-Buttons):**
-    - [ ] **Daumen-Erreichbarkeit:** Buttons liegen im unteren Bildschirmdrittel (Thumb Zone) und haben eine Mindestgröße von 48 × 48 px (WCAG 2.5.8 Target Size).
-    - [ ] **Entprellung (Debounce):** Nach dem ersten Tap wird der Button sofort als „gesendet" markiert und für 300 ms gegen erneutes Antippen gesperrt, um Doppel-Submits zu verhindern.
-    - [ ] **Geringe Verzögerung:** Optimistisches UI-Update — die Auswahl wird sofort visuell bestätigt (`selected`-State), bevor die Server-Antwort eintrifft. Bei Fehler wird der State zurückgerollt und eine Fehlermeldung angezeigt.
-    - [ ] **Kurze Klickfolgen:** Bei SC/MC-Fragen genügt ein einziger Tap auf eine Antwortoption, um die Stimme abzusenden (kein zusätzlicher „Absenden"-Button bei Single Choice). Bei Multiple Choice wird ein kompakter „Absenden"-Button direkt unterhalb der Optionen platziert.
-    - [ ] **Touch-Feedback:** Buttons zeigen beim Antippen eine sofortige visuelle Reaktion (`:active`-State, Scale-Down-Animation ≤ 50 ms) und haptisches Feedback via Vibration API (`navigator.vibrate(10)`), sofern vom Gerät unterstützt.
-    - [ ] **Ladeindikator:** Zwischen Tap und Server-Bestätigung wird ein dezenter Spinner/Pulse auf dem gewählten Button angezeigt (kein Fullscreen-Loader).
-  * **Button-Layout (Antwortoptionen):**
-    - [ ] Jede Antwortoption wird als **vollbreiter, vertikal gestapelter Button** dargestellt (100 % Viewport-Breite abzgl. Padding).
-    - [ ] Jeder Button trägt links ein farbiges **Buchstaben-Label** (A, B, C, D, …) als quadratisches Badge — daneben den Antworttext.
-    - [ ] **Farbcodierung der Labels:** A = Blau, B = Orange, C = Grün, D = Violett — weitere Optionen folgen dem Farbring. Die Farben sind in Light- und Dark-Theme kontrastkonform (WCAG AA).
-    - [ ] **Formencodierung (Barrierefreiheit):** Zusätzlich zur Farbe trägt jedes Label eine geometrische Form: A = △ (Dreieck), B = ○ (Kreis), C = □ (Quadrat), D = ◇ (Raute). Damit können farbenblinde Nutzer die Optionen eindeutig unterscheiden (konsistent mit Story 6.5).
-    - [ ] **Kurztext & Formeln:** Der Antworttext wird einzeilig mit Ellipsis abgeschnitten (`text-overflow: ellipsis`), sofern er breiter als der Button ist. KaTeX-Formeln werden inline gerendert — ist die Formel zu breit, wird auf eine zweite Zeile umbrochen (kein horizontales Scrollen).
-    - [ ] **Maximale Höhe pro Button:** 64 px (einzeilig) bzw. 96 px (mit Formelumbruch). Dadurch bleiben bei 4 Optionen alle Buttons ohne Scrollen im sichtbaren Bereich ("above the fold").
-    - [ ] **Beamer-Ansicht (Story 2.5):** Buttons werden als 2×2-Grid dargestellt (bei ≤ 4 Optionen) mit großer Schrift (≥ 28 px) für Lesbarkeit auf Distanz. Ab 5 Optionen wird auf ein einspaltige Liste umgestellt.
-    - [ ] **MC-Auswahl:** Bei Multiple Choice sind Buttons als Toggles realisiert (Antippen = ausgewählt, erneutes Antippen = abgewählt). Ausgewählte Buttons zeigen einen farbigen Rahmen + Häkchen-Icon. Der „Absenden"-Button erscheint erst, wenn ≥ 1 Option gewählt ist.
-    - [ ] **Freitext (FREETEXT):** Statt Buttons wird ein vollbreites Textfeld mit „Absenden"-Button angezeigt. Platzhaltertext: „Deine Antwort…".
-
-* **Story 3.4 (Echtzeit-Feedback):** 🟡 Als Student möchte ich nach der Auflösung durch den Dozenten sofort sehen, ob meine Antwort richtig war.
-  * **Akzeptanzkriterien:**
-    - [ ] tRPC-Subscription `session.onResultsRevealed` sendet die korrekten Antworten.
-    - [ ] Eigene Antwort wird grün (richtig) oder rot (falsch) markiert.
-    - [ ] `isCorrect` wird erst NACH expliziter Auflösung durch den Dozenten übertragen (Statuswechsel `ACTIVE → RESULTS`). Dies steht nicht im Widerspruch zu Story 2.4, die das Stripping nur während der Frage-Phase (`ACTIVE`) fordert.
-
-* **Story 3.5 (Countdown-Anzeige):** 🔴 Als Student möchte ich einen gut sichtbaren Countdown-Zähler auf meinem Gerät sehen, damit ich weiß, wie viel Zeit mir noch bleibt.
-  * **Akzeptanzkriterien:**
-    - [ ] Der Countdown startet erst mit dem Statuswechsel zu `ACTIVE` (d. h. nach der Lesephase, Story 2.6). Während `QUESTION_OPEN` wird **kein** Countdown angezeigt.
-    - [ ] Countdown wird als großer, zentraler Zähler auf dem Client-Gerät (Smartphone) angezeigt.
-    - [ ] Auf der Beamer-Ansicht (Dozent) wird der Countdown zusätzlich als Kreisdiagramm / Fortschrittsbalken dargestellt.
-    - [ ] Countdown synchronisiert sich über den Server-Timestamp (kein Client-Drift).
-    - [ ] Die letzten 5 Sekunden werden visuell hervorgehoben (rot, pulsierend).
-    - [ ] Nach Ablauf wird die Eingabe automatisch gesperrt.
-    - [ ] Falls kein Timer gesetzt ist, wird kein Countdown angezeigt (offene Antwortphase, Dozent beendet manuell).
+- **Story 3.1 (Beitreten):** 🔴 Als Student möchte ich über die Eingabe des Session-Codes sofort und ohne Registrierung in die Quiz-Lobby gelangen.
+  - **Akzeptanzkriterien:**
+    - Eingabefeld für 6-stelligen Code.
+    - Bei gültigem Code → Weiterleitung zur Lobby.
+    - Bei ungültigem/abgelaufenem Code → Fehlermeldung.
+- **Story 3.2 (Nicknames):** 🟡 Als Student möchte ich einen Nicknamen aus einer themenbezogenen Liste auswählen oder (falls erlaubt) frei eingeben können.
+  - **Akzeptanzkriterien:**
+    - Der Dozent wählt in der Quiz-Konfiguration ein Nickname-Thema (`nicknameTheme`):
+      - **Nobelpreisträger** (default) – z.B. "Marie Curie", "Albert Einstein", "Ada Yonath" (mind. 50 Namen).
+      - **Kindergarten** – Tiere & Farben, z.B. "Blauer Elefant", "Rotes Einhorn" (mind. 50 Kombinationen).
+      - **Grundschule** – Märchenfiguren, z.B. "Rotkäppchen", "Rumpelstilzchen" (mind. 50 Namen).
+      - **Mittelstufe** – Superhelden & Entdecker, z.B. "Kolumbus", "Amelia Earhart" (mind. 50 Namen).
+      - **Oberstufe** – Wissenschaftler & Philosophen, z.B. "Kant", "Noether", "Hawking" (mind. 50 Namen).
+    - Bereits in der Session vergebene Namen werden ausgegraut und sind nicht wählbar.
+    - Falls `allowCustomNicknames=true`: Zusätzlich steht ein Freitextfeld zur Verfügung.
+    - Falls `allowCustomNicknames=false`: Nur die ausgewählte Themenliste ist verfügbar.
+    - Die Listen werden rein clientseitig bereitgestellt (statische Arrays, kein Server-Roundtrip).
+    - Doppelte Nicknames in derselben Session werden abgelehnt (DB-Constraint).
+- **Story 3.6 (Anonymer Modus):** 🟡 Als Dozent möchte ich einen anonymen Modus aktivieren können, bei dem keine Nicknames angezeigt werden, damit die Teilnahme psychologisch druckfrei ist.
+  - **Akzeptanzkriterien:**
+    - Neues Quiz-Konfigurationsfeld `anonymousMode` (default: false; wird automatisch durch Preset „Seriös" aktiviert, Story 1.11).
+    - Wenn aktiviert:
+      - Studenten erhalten beim Beitreten eine automatisch generierte ID (z.B. „Teilnehmer #7") — kein Nickname-Auswahlschritt.
+      - In der Lobby (Story 2.2) wird nur die **Teilnehmerzahl** angezeigt, keine Namensliste.
+      - Im Leaderboard (Story 4.1) und auf der Beamer-Ansicht werden **keine** individuellen Einträge angezeigt — nur aggregierte Ergebnisse (Durchschnittspunkte, Verteilung der richtigen Antworten).
+      - Die persönliche Scorecard (Story 5.6) wird trotzdem auf dem eigenen Gerät angezeigt (ist privat).
+    - Wenn deaktiviert: Nickname-Auswahl wie gewohnt (Story 3.2).
+    - DSGVO-Vorteil: Im anonymen Modus werden keine pseudonymisierten Daten erhoben — vollständig datensparsam.
+- **Story 3.3a (Frage empfangen):** 🔴 Als Student möchte ich die aktuell freigegebene Frage auf meinem Gerät in Echtzeit sehen.
+  - **Akzeptanzkriterien:**
+    - tRPC-Subscription `session.onQuestionRevealed` pusht die aktuelle Frage.
+    - **Lesephase (`QUESTION_OPEN`, Story 2.6):** Nur der Fragenstamm wird angezeigt (`QuestionPreviewDTO`, ohne Antwortoptionen). Antwort-Buttons und Countdown sind ausgeblendet. Hinweistext: „Lies die Frage — Antworten folgen gleich."
+    - **Antwortphase (`ACTIVE`):** Die Antwortoptionen werden eingeblendet, der Countdown startet. Die vollständige Frage wird als `QuestionStudentDTO` (ohne `isCorrect`) angezeigt.
+    - Wenn `readingPhaseEnabled=false`: Die Lesephase entfällt — die Frage wird sofort mit Antwortoptionen angezeigt (bisheriges Verhalten).
+    - Fragenstamm und Antwortoptionen werden mit Markdown & KaTeX korrekt gerendert (siehe Story 1.7).
+- **Story 3.3b (Abstimmung abgeben):** 🔴 Als Student möchte ich performant abstimmen können.
+  - **Akzeptanzkriterien:**
+    - tRPC-Mutation `vote.submit` nimmt die Stimme entgegen.
+    - Nur eine Stimme pro Frage und Teilnehmer (DB-Constraint).
+    - Visuelles Feedback: "Antwort gesendet ✓".
+  - **UI-Vorgaben (Abstimm-Buttons):**
+    - **Daumen-Erreichbarkeit:** Buttons liegen im unteren Bildschirmdrittel (Thumb Zone) und haben eine Mindestgröße von 48 × 48 px (WCAG 2.5.8 Target Size).
+    - **Entprellung (Debounce):** Nach dem ersten Tap wird der Button sofort als „gesendet" markiert und für 300 ms gegen erneutes Antippen gesperrt, um Doppel-Submits zu verhindern.
+    - **Geringe Verzögerung:** Optimistisches UI-Update — die Auswahl wird sofort visuell bestätigt (`selected`-State), bevor die Server-Antwort eintrifft. Bei Fehler wird der State zurückgerollt und eine Fehlermeldung angezeigt.
+    - **Kurze Klickfolgen:** Bei SC/MC-Fragen genügt ein einziger Tap auf eine Antwortoption, um die Stimme abzusenden (kein zusätzlicher „Absenden"-Button bei Single Choice). Bei Multiple Choice wird ein kompakter „Absenden"-Button direkt unterhalb der Optionen platziert.
+    - **Touch-Feedback:** Buttons zeigen beim Antippen eine sofortige visuelle Reaktion (`:active`-State, Scale-Down-Animation ≤ 50 ms) und haptisches Feedback via Vibration API (`navigator.vibrate(10)`), sofern vom Gerät unterstützt.
+    - **Ladeindikator:** Zwischen Tap und Server-Bestätigung wird ein dezenter Spinner/Pulse auf dem gewählten Button angezeigt (kein Fullscreen-Loader).
+  - **Button-Layout (Antwortoptionen):**
+    - Jede Antwortoption wird als **vollbreiter, vertikal gestapelter Button** dargestellt (100 % Viewport-Breite abzgl. Padding).
+    - Jeder Button trägt links ein farbiges **Buchstaben-Label** (A, B, C, D, …) als quadratisches Badge — daneben den Antworttext.
+    - **Farbcodierung der Labels:** A = Blau, B = Orange, C = Grün, D = Violett — weitere Optionen folgen dem Farbring. Die Farben sind in Light- und Dark-Theme kontrastkonform (WCAG AA).
+    - **Formencodierung (Barrierefreiheit):** Zusätzlich zur Farbe trägt jedes Label eine geometrische Form: A = △ (Dreieck), B = ○ (Kreis), C = □ (Quadrat), D = ◇ (Raute). Damit können farbenblinde Nutzer die Optionen eindeutig unterscheiden (konsistent mit Story 6.5).
+    - **Kurztext & Formeln:** Der Antworttext wird einzeilig mit Ellipsis abgeschnitten (`text-overflow: ellipsis`), sofern er breiter als der Button ist. KaTeX-Formeln werden inline gerendert — ist die Formel zu breit, wird auf eine zweite Zeile umbrochen (kein horizontales Scrollen).
+    - **Maximale Höhe pro Button:** 64 px (einzeilig) bzw. 96 px (mit Formelumbruch). Dadurch bleiben bei 4 Optionen alle Buttons ohne Scrollen im sichtbaren Bereich ("above the fold").
+    - **Beamer-Ansicht (Story 2.5):** Buttons werden als 2×2-Grid dargestellt (bei ≤ 4 Optionen) mit großer Schrift (≥ 28 px) für Lesbarkeit auf Distanz. Ab 5 Optionen wird auf ein einspaltige Liste umgestellt.
+    - **MC-Auswahl:** Bei Multiple Choice sind Buttons als Toggles realisiert (Antippen = ausgewählt, erneutes Antippen = abgewählt). Ausgewählte Buttons zeigen einen farbigen Rahmen + Häkchen-Icon. Der „Absenden"-Button erscheint erst, wenn ≥ 1 Option gewählt ist.
+    - **Freitext (FREETEXT):** Statt Buttons wird ein vollbreites Textfeld mit „Absenden"-Button angezeigt. Platzhaltertext: „Deine Antwort…".
+- **Story 3.4 (Echtzeit-Feedback):** 🟡 Als Student möchte ich nach der Auflösung durch den Dozenten sofort sehen, ob meine Antwort richtig war.
+  - **Akzeptanzkriterien:**
+    - tRPC-Subscription `session.onResultsRevealed` sendet die korrekten Antworten.
+    - Eigene Antwort wird grün (richtig) oder rot (falsch) markiert.
+    - `isCorrect` wird erst NACH expliziter Auflösung durch den Dozenten übertragen (Statuswechsel `ACTIVE → RESULTS`). Dies steht nicht im Widerspruch zu Story 2.4, die das Stripping nur während der Frage-Phase (`ACTIVE`) fordert.
+- **Story 3.5 (Countdown-Anzeige):** 🔴 Als Student möchte ich einen gut sichtbaren Countdown-Zähler auf meinem Gerät sehen, damit ich weiß, wie viel Zeit mir noch bleibt.
+  - **Akzeptanzkriterien:**
+    - Der Countdown startet erst mit dem Statuswechsel zu `ACTIVE` (d. h. nach der Lesephase, Story 2.6). Während `QUESTION_OPEN` wird **kein** Countdown angezeigt.
+    - Countdown wird als großer, zentraler Zähler auf dem Client-Gerät (Smartphone) angezeigt.
+    - Auf der Beamer-Ansicht (Dozent) wird der Countdown zusätzlich als Kreisdiagramm / Fortschrittsbalken dargestellt.
+    - Countdown synchronisiert sich über den Server-Timestamp (kein Client-Drift).
+    - Die letzten 5 Sekunden werden visuell hervorgehoben (rot, pulsierend).
+    - Nach Ablauf wird die Eingabe automatisch gesperrt.
+    - Falls kein Timer gesetzt ist, wird kein Countdown angezeigt (offene Antwortphase, Dozent beendet manuell).
 
 ---
 
@@ -560,6 +565,16 @@ Eine Story gilt als **fertig**, wenn **alle** folgenden Kriterien erfüllt sind:
       - Bonus-Tokens bleiben 90 Tage in der Datenbank gespeichert, danach werden sie automatisch gelöscht (Erweiterung von Story 4.2).
       - Tokens sind nicht übertragbar — der Dozent prüft den Absender der E-Mail eigenverantwortlich.
     - **Abhängigkeiten:** Story 4.1 (Leaderboard), Story 5.6 (Persönliche Scorecard).
+- **Story 4.7 (Ergebnis-Export für Dozenten – anonym):** 🟡 Als Dozent möchte ich nach Ende einer Session die Auswertung anonym als Datei (CSV/PDF) herunterladen können, damit ich die Ergebnisse für Nachbereitung, Lehrevaluation oder Akkreditierung nutzen kann — ohne personenbezogene Daten.
+  - **Akzeptanzkriterien:**
+    - Nach Beendigung der Session (Status `FINISHED`) steht in der Dozenten-Ansicht ein Button **„Ergebnis exportieren“** zur Verfügung.
+    - **CSV-Export (mindestens):** Enthält pro Zeile aggregierte Daten, z. B.: Session-ID, Quiz-Name, Datum, pro Frage: Fragentext (Kurz), Fragentyp, Anzahl Teilnehmer, Verteilung der Antworten (Anzahl pro Option bzw. bei Freitext: aggregierte Begriffe/Häufigkeiten), Durchschnittspunktzahl pro Frage, keine Nicknames und keine personenbezogenen Daten.
+    - Optional: **PDF-Export** mit gleichen Inhalten in lesbarer Form (z. B. Deckblatt, pro Frage eine Seite mit Balkendiagramm-Beschreibung oder Word-Cloud-Text).
+    - Bonus-Token-Liste (Story 4.6) kann in den Export einbezogen werden (Token-Code, Rang, Punkte, Pseudonym) — entspricht der bereits in Story 4.6 beschriebenen CSV-Funktion; kein Widerspruch zur Anonymität, da Zuordnung nur über freiwillige E-Mail-Einreichung.
+    - Export erfolgt clientseitig (Generierung im Browser) oder über einen tRPC-Query, der nur aggregierte/anonymisierte Daten zurückgibt; keine Speicherung der Export-Datei auf dem Server.
+    - **tRPC & Schemas (bei serverseitiger Variante):** Query `session.getExportData` mit `GetExportDataInputSchema` (sessionId); Rückgabe `SessionExportDTO` (sessionId, sessionCode, quizName, finishedAt, participantCount, questions[], bonusTokens?). Siehe `libs/shared-types/src/schemas.ts` (SessionExportDTOSchema, QuestionExportEntrySchema, OptionDistributionEntrySchema, FreetextAggregateEntrySchema).
+    - DSGVO: Export enthält ausschließlich anonymisierte bzw. aggregierte Daten; Hinweis in der UI: „Export für Dokumentation und Evaluation – keine personenbezogenen Daten“.
+    - Abhängigkeiten: Story 4.1 (Leaderboard), Story 4.4 (Ergebnis-Visualisierung), Story 4.5 (Freitext-Auswertung), Story 4.6 (Bonus-Token-Liste).
 
 ---
 

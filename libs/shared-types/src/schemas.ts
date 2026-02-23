@@ -163,6 +163,12 @@ export const CreateSessionInputSchema = z.object({
 });
 export type CreateSessionInput = z.infer<typeof CreateSessionInputSchema>;
 
+/** Input: Session-Info abfragen (z. B. vor Beitritt) */
+export const GetSessionInfoInputSchema = z.object({
+  code: z.string().length(6, 'Session-Code muss 6 Zeichen lang sein'),
+});
+export type GetSessionInfoInput = z.infer<typeof GetSessionInfoInputSchema>;
+
 /** Input: Einer Session beitreten (Story 3.1) */
 export const JoinSessionInputSchema = z.object({
   code: z.string().length(6, 'Session-Code muss 6 Zeichen lang sein'),
@@ -177,6 +183,7 @@ export type JoinSessionInput = z.infer<typeof JoinSessionInputSchema>;
 /** Input: Abstimmung abgeben */
 export const SubmitVoteInputSchema = z.object({
   sessionId: z.string().uuid(),
+  participantId: z.string().uuid(), // Vom Join-Response (Story 0.5: Rate-Limit pro Participant)
   questionId: z.string().uuid(),
   answerIds: z.array(z.string().uuid()).optional(), // MC: mehrere, SC: eine, FREETEXT/RATING: keine
   freeText: z.string().max(500).optional(),
@@ -271,6 +278,12 @@ export const SessionInfoDTOSchema = z.object({
 });
 export type SessionInfoDTO = z.infer<typeof SessionInfoDTOSchema>;
 
+/** Output: Nach Join (Session-Info + eigene Participant-ID für vote.submit). */
+export const JoinSessionOutputSchema = SessionInfoDTOSchema.extend({
+  participantId: z.string().uuid(),
+});
+export type JoinSessionOutput = z.infer<typeof JoinSessionOutputSchema>;
+
 /** DTO: Teilnehmer-Info */
 export const ParticipantDTOSchema = z.object({
   id: z.string().uuid(),
@@ -329,11 +342,12 @@ export type SendEmojiReactionInput = z.infer<typeof SendEmojiReactionInputSchema
 // Health-Check & Server-Status
 // ---------------------------------------------------------------------------
 
-/** Health-Check Response */
+/** Health-Check Response (Story 0.1: optional Redis-Status) */
 export const HealthCheckResponseSchema = z.object({
   status: z.literal('ok'),
   timestamp: z.string(),
   version: z.string(),
+  redis: z.enum(['ok', 'unavailable']).optional(),
 });
 
 export type HealthCheckResponse = z.infer<typeof HealthCheckResponseSchema>;
@@ -345,6 +359,12 @@ export const ServerStatsDTOSchema = z.object({
   completedSessions: z.number(),   // Anzahl bisher durchgeführter Quizzes (Status == FINISHED)
   serverStatus: z.enum(['healthy', 'busy', 'overloaded']),
 });
+
+/** Event der health.ping-Subscription (Story 0.2) */
+export const HealthPingEventSchema = z.object({
+  heartbeat: z.string(), // ISO-8601
+});
+export type HealthPingEvent = z.infer<typeof HealthPingEventSchema>;
 
 export type ServerStatsDTO = z.infer<typeof ServerStatsDTOSchema>;
 
@@ -443,6 +463,59 @@ export const BonusTokenListDTOSchema = z.object({
   tokens: z.array(BonusTokenEntryDTOSchema),
 });
 export type BonusTokenListDTO = z.infer<typeof BonusTokenListDTOSchema>;
+
+// ---------------------------------------------------------------------------
+// Ergebnis-Export für Dozenten (Story 4.7) – nur aggregierte/anonyme Daten
+// ---------------------------------------------------------------------------
+
+/** Input: Export-Daten für eine beendete Session abrufen (nur Dozent, Session FINISHED) */
+export const GetExportDataInputSchema = z.object({
+  sessionId: z.string().uuid(),
+});
+export type GetExportDataInput = z.infer<typeof GetExportDataInputSchema>;
+
+/** Verteilung einer Antwortoption (MC/SC) für Export */
+export const OptionDistributionEntrySchema = z.object({
+  text: z.string(),
+  count: z.number(),
+  percentage: z.number().optional(),
+  isCorrect: z.boolean().optional(),
+});
+export type OptionDistributionEntry = z.infer<typeof OptionDistributionEntrySchema>;
+
+/** Aggregierte Freitext-Antwort (Begriff + Häufigkeit) für Export */
+export const FreetextAggregateEntrySchema = z.object({
+  text: z.string(),
+  count: z.number(),
+});
+export type FreetextAggregateEntry = z.infer<typeof FreetextAggregateEntrySchema>;
+
+/** Ein Eintrag pro Frage im Session-Export (aggregiert, keine Nicknames) */
+export const QuestionExportEntrySchema = z.object({
+  questionOrder: z.number(),
+  questionTextShort: z.string(),       // z. B. erste 100 Zeichen des Fragenstamms
+  type: QuestionTypeEnum,
+  participantCount: z.number(),        // Anzahl abgegebener Votes für diese Frage
+  optionDistribution: z.array(OptionDistributionEntrySchema).optional(), // MC/SC
+  freetextAggregates: z.array(FreetextAggregateEntrySchema).optional(), // FREETEXT
+  ratingDistribution: z.record(z.string(), z.number()).optional(),       // RATING: "1" -> 5, "2" -> 12
+  ratingAverage: z.number().optional(),
+  ratingStandardDeviation: z.number().optional(),
+  averageScore: z.number().optional(), // Durchschnittspunkte (wenn gescored)
+});
+export type QuestionExportEntry = z.infer<typeof QuestionExportEntrySchema>;
+
+/** DTO: Vollständiger Session-Export für Dozenten (CSV/PDF-Generierung) – DSGVO-konform, nur aggregiert */
+export const SessionExportDTOSchema = z.object({
+  sessionId: z.string().uuid(),
+  sessionCode: z.string(),
+  quizName: z.string(),
+  finishedAt: z.string(),             // ISO-8601
+  participantCount: z.number(),
+  questions: z.array(QuestionExportEntrySchema),
+  bonusTokens: z.array(BonusTokenEntryDTOSchema).optional(), // optional einbeziehen (Pseudonyme)
+});
+export type SessionExportDTO = z.infer<typeof SessionExportDTOSchema>;
 
 // ---------------------------------------------------------------------------
 // Q&A-Modus (Epic 8)

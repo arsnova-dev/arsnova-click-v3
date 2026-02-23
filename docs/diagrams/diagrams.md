@@ -1,7 +1,7 @@
 # Diagramme: arsnova.click V3
 
 Alle Diagramme sind in Mermaid geschrieben und werden von GitHub nativ gerendert.  
-**Stand:** 2026-02-22
+**Stand:** 2026-02-23 · **Epic 0 (Infrastruktur) abgeschlossen:** Redis, tRPC WebSocket, Yjs, Server-Status, Rate-Limiting, CI/CD.
 
 > **VS Code:** Mermaid wird in der Standard-Markdown-Vorschau nicht gerendert. Bitte die Erweiterung **„Markdown Preview Mermaid Support“** (`bierner.markdown-mermaid`) installieren. Siehe [README.md](./README.md) in diesem Ordner.
 
@@ -9,7 +9,7 @@ Alle Diagramme sind in Mermaid geschrieben und werden von GitHub nativ gerendert
 
 ## 1. Backend-Architektur (Komponenten)
 
-Express · tRPC · Prisma 7 · Redis · WebSocket (Ziel-Architektur)
+Express · tRPC · Prisma 7 · Redis · WebSocket · Yjs (Epic 0 umgesetzt; health, stats, ping, Rate-Limit, y-websocket)
 
 ```mermaid
 graph TB
@@ -384,6 +384,11 @@ sequenceDiagram
     FE->>BE: session.getBonusTokens
     BE-->>FE: BonusTokenListDTO
     FE->>D: Token-Tabelle, optional CSV-Export
+    opt Story 4.7: Ergebnis-Export
+        FE->>BE: session.getExportData (oder clientseitig aus gecachten Daten)
+        BE-->>FE: SessionExportDTO (aggregiert, anonym)
+        FE->>D: CSV/PDF-Download
+    end
 ```
 
 ---

@@ -24,6 +24,10 @@
 | **Technik**              | Self-Hosted (Docker)                         | ❌          | ❌           | ❌           | **✅**                                 |
 |                          | Echtzeit (tRPC + Redis) + Offline-Sync       | ✅          | ✅           | ✅           | **✅ Yjs CRDT**                        |
 | **Barrierefreiheit**     | WCAG 2.1 AA + Mobile-First + Dark-Mode       | 🟡          | 🟡           | 🟡           | **✅** (im DoD verankert)              |
+| **Didaktik**             | Lesephase (Frage vor Antworten lesen)        | ❌          | 🟡           | ❌           | **✅** (Story 2.6, Preset „Seriös“)    |
+|                          | Presets „Spielerisch“ vs. „Seriös“           | ❌          | ❌           | ❌           | **✅** (Story 1.11)                    |
+|                          | Bonus-Token für Anerkennung (anonym)          | ❌          | ❌           | ❌           | **✅** (Story 4.6)                     |
+|                          | Anonymer Export für Nachbereitung/Evaluation | 🟡          | ✅           | ✅           | **🟡** (Story 4.7)                     |
 
 **Fazit:**  
 **arsnova.click V3** gewinnt klar bei **Datenschutz**, **Kosten**, **Hochschul-Tauglichkeit** (KaTeX, Local-First, Bonus-Tokens) und **Offenheit**.  

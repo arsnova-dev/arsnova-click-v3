@@ -17,6 +17,7 @@
     "dev:backend": "npm run dev -w @arsnova/backend",
     "dev:frontend": "npm run start -w @arsnova/frontend",
     "build": "npm run build -w @arsnova/backend && npm run build -w @arsnova/frontend",
+    "test": "npm run test -w @arsnova/backend",
     "lint": "eslint 'libs/**/*.ts' 'apps/**/*.ts'",
     "format": "prettier --write \"**/*.{ts,js,json,html,css,scss,md}\"",
     "format:check": "prettier --check \"**/*.{ts,js,json,html,css,scss,md}\"",
@@ -37,5 +38,9 @@
   },
   "dependencies": {
     "@prisma/client": "^7.4.0"
+  },
+  "overrides": {
+    "minimatch": "^10.2.1",
+    "tar": "^7.5.8"
   }
 }
