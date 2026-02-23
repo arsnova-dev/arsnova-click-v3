@@ -37,9 +37,9 @@ Falls die Integration in die Markdown-Vorschau nicht funktioniert:
 
 | Datei | Inhalt |
 |-------|--------|
-| `diagrams.md` | Backend-, Frontend-, DB-Schema, Kommunikation Dozent/Student, Aktivität |
-| `architecture-overview.md` | System-Architektur, Datenfluss, Technologie-Stack, Sicherheit |
-| `diagram-consistency-check.md` | Konsistenzprüfung Diagramme vs. Handbuch/Backlog |
+| `diagrams.md` | Backend-, Frontend-, DB-Schema, Kommunikation Dozent/Student, Aktivität (Stand: Epic 0 abgeschlossen) |
+| `architecture-overview.md` | System-Architektur, Datenfluss, Technologie-Stack, Sicherheit (Stand: Epic 0 abgeschlossen) |
+| `diagram-consistency-check.md` | Konsistenzprüfung Diagramme vs. Handbuch/Backlog (Epic 0: alle Stories umgesetzt) |
 
 ## Online-Rendering
 

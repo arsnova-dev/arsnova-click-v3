@@ -38,5 +38,9 @@
   },
   "dependencies": {
     "@prisma/client": "^7.4.0"
+  },
+  "overrides": {
+    "minimatch": "^10.2.1",
+    "tar": "^7.5.8"
   }
 }

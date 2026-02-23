@@ -1,7 +1,7 @@
 # Prüfung: Widersprüche in der technischen Architektur
 
-**Datum:** 2026-02-21  
-**Geprüft:** AGENT.md, handbook.md, README.md, ADRs (0002–0004), Prisma-Schema, Backend-/Frontend-Code, Zod-Schemas (shared-types), package.json-Dateien, docker-compose.yml, tsconfig.json
+**Datum:** 2026-02-23  
+**Geprüft:** AGENT.md, handbook.md, README.md, ADRs (0002–0004), Prisma-Schema, Backend-/Frontend-Code, Zod-Schemas (shared-types), package.json-Dateien, docker-compose.yml, tsconfig.json. **Epic 0 abgeschlossen** (Redis, WebSocket, Yjs, Server-Status, Rate-Limiting, CI/CD).
 
 ---
 
@@ -183,7 +183,7 @@ Nur `httpBatchLink`, kein `wsLink`.
 Beschreiben Routen (`/quiz`, `/session/:code`, `/legal`, …) und WebSocket-Subscriptions via `wsLink`.
 
 **Bewertung:**  
-Erwartetes Delta – Frontend ist derzeit ein Health-Check-Prototyp. Routes und wsLink werden mit Epic 0-3 implementiert.
+Erwartetes Delta – Epic 0 ist umgesetzt (wsLink + httpBatchLink, ServerStatusWidget, Home/Session/Quiz-Routen). Weitere Routes/Komponenten folgen mit Epic 1–3.
 
 **Empfehlung:**  
 Kein Handlungsbedarf aktuell. Die Diagramme zeigen die Ziel-Architektur.

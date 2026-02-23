@@ -11,6 +11,7 @@ import { applyWSSHandler } from '@trpc/server/adapters/ws';
 import { WebSocketServer } from 'ws';
 import { appRouter } from './routers';
 import { getRedis, closeRedis } from './redis';
+import { logger } from './lib/logger';
 
 const PORT = Number(process.env['PORT']) || 3000;
 const WS_PORT = Number(process.env['WS_PORT']) || 3001;
@@ -45,8 +46,8 @@ if (fs.existsSync(frontendDist)) {
 }
 
 const server = app.listen(PORT, () => {
-  console.log(`🚀 Backend HTTP auf http://localhost:${PORT}`);
-  console.log(`   tRPC: http://localhost:${PORT}/trpc`);
+  logger.info(`🚀 Backend HTTP auf http://localhost:${PORT}`);
+  logger.info(`   tRPC: http://localhost:${PORT}/trpc`);
 });
 
 // WebSocket-Server für tRPC-Subscriptions (Story 0.2)
@@ -56,7 +57,7 @@ const wsHandler = applyWSSHandler({
   router: appRouter,
   createContext: async ({ req }) => ({ req }),
 });
-console.log(`   WebSocket (tRPC): ws://localhost:${WS_PORT}`);
+logger.info(`   WebSocket (tRPC): ws://localhost:${WS_PORT}`);
 
 // Story 0.3: Yjs WebSocket-Server (Zwei-Tabs-Sync für Quiz)
 let yjsChild: ReturnType<typeof spawn> | null = null;
@@ -71,11 +72,11 @@ try {
     stdio: 'ignore',
   });
   yjsChild.on('error', (err) => {
-    console.warn('Yjs WebSocket-Server Fehler:', (err as Error).message);
+    logger.warn('Yjs WebSocket-Server Fehler:', (err as Error).message);
   });
-  console.log(`   Yjs WebSocket: ws://localhost:${YJS_WS_PORT}`);
+  logger.info(`   Yjs WebSocket: ws://localhost:${YJS_WS_PORT}`);
 } catch (e) {
-  console.warn('Yjs WebSocket nicht gestartet:', (e as Error).message);
+  logger.warn('Yjs WebSocket nicht gestartet:', (e as Error).message);
 }
 
 function shutdown(): void {

@@ -1,8 +1,10 @@
 # 🏗️ Architektur-Übersicht: arsnova.click V3
 
 **Erstellt:** 2026-02-20  
-**Zuletzt aktualisiert:** 2026-02-22  
-**Zweck:** Visualisierung der gesamten Codebasis-Struktur und Architektur
+**Zuletzt aktualisiert:** 2026-02-23  
+**Zweck:** Visualisierung der gesamten Codebasis-Struktur und Architektur  
+
+**Epic 0 abgeschlossen:** Redis (Docker + Health-Check), tRPC WebSocket (Port 3001, health.ping), Yjs WebSocket (Port 3002), Server-Status (health.stats, Widget auf Startseite), Rate-Limiting (Redis Sliding-Window), CI/CD (GitHub Actions).
 
 ## System-Architektur-Diagramm
 
@@ -16,7 +18,7 @@ graph TB
             FE_SERVICES[Services<br/>tRPC Client · Yjs · Theme · i18n]
         end
         
-        subgraph "Backend - Node.js + tRPC"
+        subgraph "Backend - Node.js + tRPC (Epic 0 ✅)"
             BE[Express Server<br/>Port 3000]
             TRPC[tRPC Router<br/>/trpc]
             ROUTERS[Router Layer<br/>health · quiz · session<br/>vote · qa]
@@ -29,9 +31,9 @@ graph TB
         end
     end
     
-    subgraph "Datenbanken & Storage"
+    subgraph "Datenbanken & Storage (Epic 0.1 ✅)"
         PG[(PostgreSQL<br/>Prisma ORM<br/>Sessions · Votes<br/>Participants)]
-        REDIS[(Redis<br/>Pub/Sub<br/>Rate Limiting)]
+        REDIS[(Redis<br/>Pub/Sub · Rate-Limit<br/>Docker Compose)]
         IDB[(IndexedDB<br/>Yjs CRDT<br/>Local-First Quizzes)]
     end
     
@@ -40,9 +42,9 @@ graph TB
         STUDENT[Student Client<br/>Voting<br/>Leaderboard]
     end
     
-    subgraph "Echtzeit-Kommunikation"
-        WS[WebSocket<br/>tRPC Subscriptions]
-        YWS[y-websocket<br/>Yjs Sync Relay]
+    subgraph "Echtzeit-Kommunikation (Epic 0.2, 0.3 ✅)"
+        WS[WebSocket<br/>tRPC Subscriptions<br/>Port 3001]
+        YWS[y-websocket<br/>Yjs Sync Relay<br/>Port 3002]
     end
     
     %% Frontend-Verbindungen

@@ -18,7 +18,7 @@ vi.mock('../db', () => ({
 
 import { pingRedis } from '../redis';
 import { prisma } from '../db';
-import { healthRouter } from '../routers/health';
+import { healthRouter, heartbeatGenerator } from '../routers/health';
 
 const caller = healthRouter.createCaller({ req: undefined });
 
@@ -116,5 +116,16 @@ describe('health.stats', () => {
     expect(keys).not.toContain('participants');
     expect(keys).not.toContain('nicknames');
     expect(keys).not.toContain('emails');
+  });
+});
+
+describe('health.ping (Story 0.2 – Subscription Heartbeat)', () => {
+  it('liefert mindestens einen Heartbeat mit ISO-Timestamp', async () => {
+    const stream = heartbeatGenerator(10); // kurzes Intervall für Test
+    const { value } = await stream.next();
+    expect(value).toBeDefined();
+    expect(value).toHaveProperty('heartbeat');
+    expect(typeof value!.heartbeat).toBe('string');
+    expect(value!.heartbeat).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/);
   });
 });

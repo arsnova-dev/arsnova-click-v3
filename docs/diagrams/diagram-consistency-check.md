@@ -1,7 +1,9 @@
 # Konsistenzprüfung: Diagramme · Handbuch · Backlog · Code
 
-**Datum:** 2026-02-21  
-**Geprüft:** diagrams.md, architecture-overview.md, handbook.md, Backlog.md, prisma/schema.prisma, libs/shared-types/src/schemas.ts, apps/backend/src/\*, apps/frontend/src/\*
+**Datum:** 2026-02-23  
+**Geprüft:** diagrams.md, architecture-overview.md, handbook.md, Backlog.md, prisma/schema.prisma, libs/shared-types/src/schemas.ts, apps/backend/src/\*, apps/frontend/src/\*  
+
+**Epic 0:** Alle Stories 0.1–0.6 umgesetzt (Redis, tRPC WebSocket, Yjs, Server-Status, Rate-Limiting, CI/CD). health.check, health.stats, health.ping, Rate-Limit-Service und Frontend ServerStatusWidget sind implementiert.
 
 ---
 
@@ -11,7 +13,7 @@
 - **Router:** health, quiz, session, vote, qa – untereinander konsistent; Verbindungen zu Services, DTO, Validation und PG/Redis/WebSocket/y-websocket stimmig.
 - **DTO-Layer:** QuestionStudentDTO (kein isCorrect), QuestionRevealedDTO (mit isCorrect), SessionInfoDTO, LeaderboardEntryDTO, PersonalScorecardDTO – stimmt mit shared-types Zod-Schemas überein.
 - **Validation:** SubmitVoteInputSchema, CreateSessionInputSchema, QuizUploadInputSchema im Diagramm – alle drei existieren identisch in `libs/shared-types/src/schemas.ts`. ✓
-- **Header:** Als „Ziel-Architektur" gekennzeichnet; nur healthRouter ist implementiert. ✓
+- **Header:** Epic 0 umgesetzt; healthRouter (check, stats, ping), sessionRouter (mit Rate-Limit), voteRouter (mit Rate-Limit), Yjs- und WebSocket-Server implementiert. ✓
 
 ### 1.2 Frontend-Komponenten
 - **Routen:** Home (/), Quiz (/quiz), Session (/session/:code), Beamer (/session/:code/present), Student (/session/:code/vote), Legal (/legal) – konsistent mit Backlog und Handbook.
@@ -74,15 +76,15 @@ Da beide Dateien als Living Documentation dienen, sollte architecture-overview.m
 
 ## 4. Abdeckung Backlog (Stories/Epics)
 
-### Epic 0: Infrastruktur
+### Epic 0: Infrastruktur (✅ abgeschlossen)
 | Story | Abgedeckt in Diagrammen | Anmerkung |
 |-------|------------------------|-----------|
-| 0.1 Redis-Setup | Redis in System- und Backend-Architektur ✓ | |
-| 0.2 tRPC WebSocket | WebSocket Server + wsLink in Diagrammen ✓ | Code: noch nicht implementiert |
-| 0.3 Yjs WebSocket | y-websocket Relay in Backend-Diagramm ✓ | |
-| 0.4 health.stats | Nicht explizit in Diagrammen | ⚠️ ServerStatusWidget im Frontend-Diagramm, aber kein health.stats-Call in Sequenzdiagrammen |
-| 0.5 Rate-Limiting | RateLimitService in Backend-Diagramm ✓ | Redis-basiert dargestellt |
-| 0.6 CI/CD | Nicht in Architektur-Diagrammen (korrekt, da Dev-Tooling) | |
+| 0.1 Redis-Setup | Redis in System- und Backend-Architektur ✓ | Docker Compose + health.check (redis=ok) implementiert |
+| 0.2 tRPC WebSocket | WebSocket Server + wsLink in Diagrammen ✓ | health.ping Subscription, wsLink/httpBatchLink im Frontend implementiert |
+| 0.3 Yjs WebSocket | y-websocket Relay in Backend-Diagramm ✓ | y-websocket-Server (Port 3002) im Backend integriert |
+| 0.4 health.stats | ServerStatusWidget im Frontend-Diagramm ✓ | health.stats, Widget (30s Polling), Schwellwerte healthy/busy/overloaded implementiert |
+| 0.5 Rate-Limiting | RateLimitService in Backend-Diagramm ✓ | Redis Sliding-Window, TOO_MANY_REQUESTS, Env-konfigurierbar implementiert |
+| 0.6 CI/CD | Nicht in Architektur-Diagrammen (korrekt, da Dev-Tooling) | GitHub Actions: Build, Lint, Test, Docker-Build, Matrix Node 20/22 ✓ |
 
 ### Epic 1: Quiz-Verwaltung
 - QuizEditorComponent, QuestionEditorComponent, AnswerEditorComponent, QuizPreviewComponent, ImportExportComponent – alle in Frontend-Diagramm ✓

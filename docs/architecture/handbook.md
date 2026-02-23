@@ -1,7 +1,9 @@
 # 🏛️ Architektur-Handbuch: arsnova.click V3
 
-**Zuletzt aktualisiert:** 2026-02-21
-**Rolle:** Living Documentation (Documentation as Code)
+**Zuletzt aktualisiert:** 2026-02-23  
+**Rolle:** Living Documentation (Documentation as Code)  
+
+**Epic 0 (Infrastruktur) abgeschlossen:** Redis (Docker + Health-Check), tRPC WebSocket (Subscriptions), Yjs WebSocket-Provider, Server-Status (health.stats, Widget), Rate-Limiting (Redis Sliding-Window), CI/CD (GitHub Actions).
 
 ## 1. Einleitung & Philosophie
 Dieses Handbuch beschreibt die Softwarearchitektur von **arsnova.click V3**. Wir folgen dem Prinzip der **"Living Documentation"**. Dieses Dokument und alle dazugehörigen Architekturentscheidungen (ADRs) leben direkt im Git-Repository. Sie entwickeln sich parallel zum Code weiter. 

@@ -1,4 +1,6 @@
-# Story 0.3: Yjs WebSocket-Provider
+# Story 0.3: Yjs WebSocket-Provider (Epic 0 abgeschlossen)
+
+**Epic 0 (Infrastruktur)** ist umgesetzt: Redis (0.1), tRPC WebSocket (0.2), Yjs (0.3), Server-Status (0.4), Rate-Limiting (0.5), CI/CD (0.6).
 
 Der Yjs-WebSocket-Server wird **mit dem Backend gestartet** (Story 0.3 umgesetzt).
 

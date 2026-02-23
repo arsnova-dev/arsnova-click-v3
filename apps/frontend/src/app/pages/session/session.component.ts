@@ -32,26 +32,28 @@ import type { SessionInfoDTO } from '@arsnova/shared-types';
             <p class="font-medium">Fehler</p>
             <p class="text-sm mt-1">{{ error() }}</p>
           </div>
-        } @else if (session(); as s) {
-          <div class="mt-8 rounded-xl bg-white p-6 shadow-lg dark:bg-gray-900">
-            <div class="text-center">
-              <p class="text-sm text-gray-500 dark:text-gray-400">Session-Code</p>
-              <p class="text-4xl font-mono font-bold tracking-widest text-indigo-600 dark:text-indigo-400">
-                {{ s.code }}
+        } @else {
+          @if (session(); as s) {
+            <div class="mt-8 rounded-xl bg-white p-6 shadow-lg dark:bg-gray-900">
+              <div class="text-center">
+                <p class="text-sm text-gray-500 dark:text-gray-400">Session-Code</p>
+                <p class="text-4xl font-mono font-bold tracking-widest text-indigo-600 dark:text-indigo-400">
+                  {{ s.code }}
+                </p>
+              </div>
+              <div class="mt-4 space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                <p><span class="font-medium">Status:</span> {{ s.status }}</p>
+                <p><span class="font-medium">Typ:</span> {{ s.type }}</p>
+                @if (s.quizName) {
+                  <p><span class="font-medium">Quiz:</span> {{ s.quizName }}</p>
+                }
+                <p><span class="font-medium">Teilnehmer:</span> {{ s.participantCount }}</p>
+              </div>
+              <p class="mt-6 text-xs text-gray-400 dark:text-gray-500 text-center">
+                Lobby, Steuerung und Abstimmung werden in Epic 2 + 3 implementiert.
               </p>
             </div>
-            <div class="mt-4 space-y-2 text-sm text-gray-700 dark:text-gray-300">
-              <p><span class="font-medium">Status:</span> {{ s.status }}</p>
-              <p><span class="font-medium">Typ:</span> {{ s.type }}</p>
-              @if (s.quizName) {
-                <p><span class="font-medium">Quiz:</span> {{ s.quizName }}</p>
-              }
-              <p><span class="font-medium">Teilnehmer:</span> {{ s.participantCount }}</p>
-            </div>
-            <p class="mt-6 text-xs text-gray-400 dark:text-gray-500 text-center">
-              Lobby, Steuerung und Abstimmung werden in Epic 2 + 3 implementiert.
-            </p>
-          </div>
+          }
         }
       </div>
     </div>

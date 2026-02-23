@@ -5,4 +5,4 @@
  * Beide Apps importieren von hier – niemals umgekehrt.
  */
 
-export * from './schemas';
+export * from './schemas.js';

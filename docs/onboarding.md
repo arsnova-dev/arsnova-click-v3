@@ -49,7 +49,7 @@ npm run dev:backend    # → http://localhost:3000 (tRPC-API)
 npm run dev:frontend   # → http://localhost:4200 (Angular)
 ```
 
-**Funktioniert alles?** Öffne `http://localhost:4200` im Browser. Du solltest „✅ Frontend läuft!" und „✅ Backend verbunden (ok)" sehen.
+**Funktioniert alles?** Öffne `http://localhost:4200` im Browser. Du solltest die Startseite mit dem **Server-Status-Widget** sehen (Epic 0.4: „X Quiz live · Y Teilnehmer · Z Quizzes durchgeführt" und grün/gelb/roter Status-Indikator). Backend-Health (inkl. Redis) und tRPC laufen auf Port 3000; WebSocket auf 3001, Yjs auf 3002.
 
 ---
 

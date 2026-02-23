@@ -21,6 +21,16 @@ function getServerStatus(activeSessions: number): 'healthy' | 'busy' | 'overload
   return 'overloaded';
 }
 
+/** Async-Generator für Heartbeat-Subscription (exportiert für Unit-Tests). */
+export async function* heartbeatGenerator(
+  intervalMs: number = 5000,
+): AsyncGenerator<{ heartbeat: string }> {
+  while (true) {
+    yield { heartbeat: new Date().toISOString() };
+    await new Promise((r) => setTimeout(r, intervalMs));
+  }
+}
+
 export const healthRouter = router({
   check: publicProcedure.output(HealthCheckResponseSchema).query(async () => {
     const redisOk = await pingRedis();
@@ -50,10 +60,5 @@ export const healthRouter = router({
   }),
 
   /** Subscription: Heartbeat alle 5s (Story 0.2 – Test für WebSocket). */
-  ping: publicProcedure.subscription(async function* () {
-    while (true) {
-      yield { heartbeat: new Date().toISOString() };
-      await new Promise((r) => setTimeout(r, 5000));
-    }
-  }),
+  ping: publicProcedure.subscription(() => heartbeatGenerator(5000)),
 });

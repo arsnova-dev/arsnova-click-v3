@@ -62,11 +62,12 @@ cd arsnova-click-v3
 npm install
 ```
 
-Kopiere die Environment-Datei und starte die Docker-Container (Postgres & Redis):
+Kopiere die Environment-Datei und starte die Docker-Container (Postgres & Redis, **Epic 0**):
 
 ```bash
 cp .env.example .env
 docker compose up -d
+# → Startet PostgreSQL (5432) und Redis (6379); optional: App-Container (3000, 3001, 3002)
 ```
 
 Pushe das Datenbankschema und generiere den Prisma-Client:
@@ -84,7 +85,7 @@ Starte Frontend und Backend parallel (oder einzeln: `npm run dev:backend` / `npm
 npm run dev
 ```
 
-Die App ist nun unter `http://localhost:4200` (Frontend) erreichbar. Die tRPC-API läuft auf `http://localhost:3000`.
+Die App ist nun unter `http://localhost:4200` (Frontend) erreichbar; auf der Startseite erscheint das **Server-Status-Widget** (Epic 0.4: aktive Sessions, Teilnehmer, completed Sessions, Status-Indikator). Die tRPC-API läuft auf `http://localhost:3000`; WebSocket-Subscriptions auf Port 3001, Yjs-Sync auf Port 3002.
 
 ## 🤖 Vibe Coding & KI-Assistenz
 
@@ -108,7 +109,7 @@ Nachdem die App lokal läuft, empfiehlt sich diese Lesereihenfolge:
 6. **[ADRs](./docs/architecture/decisions/)** – bisherige Architekturentscheidungen (Signals, tRPC, Yjs)
 7. **[Vibe-Coding-Szenario](./docs/vibe-coding/vibe-coding-szenario.md)** – so funktioniert die Zusammenarbeit mit der KI
 
-> **Tipp:** Starte mit einer 🔴 Must-Story, die noch ⬜ Offen ist (z.B. Story 0.1 Redis-Setup). Lies erst den Story-Text im Backlog, dann prompte deine KI mit dem Kontext aus `AGENT.md`.
+> **Tipp:** **Epic 0 (Infrastruktur) ist abgeschlossen** (Redis, tRPC WebSocket, Yjs, Server-Status, Rate-Limiting, CI/CD). Starte mit einer 🔴 Must-Story aus Epic 1 oder 2, die noch ⬜ Offen ist (z.B. Story 1.1 Quiz erstellen). Lies erst den Story-Text im Backlog, dann prompte deine KI mit dem Kontext aus `AGENT.md`.
 
 ## 🔄 Zurücksetzen auf den Ausgangszustand
 
