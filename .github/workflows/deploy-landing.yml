@@ -43,6 +43,7 @@ jobs:
       - name: Build landing
         env:
           PUBLIC_GITHUB_REPO: ${{ github.repository }}
+          BASE_PATH: /${{ github.event.repository.name }}/
         run: npm run build -w @arsnova/landing
 
       - name: Upload artifact
