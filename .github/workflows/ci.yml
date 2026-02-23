@@ -41,6 +41,9 @@ jobs:
       - name: Prisma validate
         run: npx prisma validate --schema prisma/schema.prisma
 
+      - name: Prisma generate
+        run: npx prisma generate --schema prisma/schema.prisma
+
       - name: TypeScript build – shared-types + backend
         run: npx tsc -b apps/backend/tsconfig.json
 

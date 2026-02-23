@@ -12,6 +12,7 @@ import {
   SessionExportDTOSchema,
   type SessionExportDTO,
   type QuestionExportEntry,
+  type QuestionType,
   type OptionDistributionEntry,
   type FreetextAggregateEntry,
   type BonusTokenEntryDTO,
@@ -26,6 +27,29 @@ import {
 import { randomBytes } from 'crypto';
 
 const QUESTION_TEXT_SHORT_MAX = 100;
+
+/** Typen für getExportData-Callbacks (vermeidet implizites any). */
+interface QuestionWithAnswersForExport {
+  id: string;
+  order: number;
+  text: string;
+  type: string;
+  answers: Array<{ id: string; text: string; isCorrect: boolean }>;
+}
+interface VoteForExport {
+  selectedAnswers: Array<{ answerOptionId: string }>;
+  freeText?: string | null;
+  ratingValue?: number | null;
+  score?: number | null;
+}
+interface BonusTokenForExport {
+  token: string;
+  nickname: string;
+  quizName: string;
+  totalScore: number;
+  rank: number;
+  generatedAt: Date;
+}
 
 function generateSessionCode(): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -206,8 +230,8 @@ export const sessionRouter = router({
         votesByQuestion.set(vote.questionId, list);
       }
 
-      const questionEntries: QuestionExportEntry[] = questions.map((q) => {
-        const votes = votesByQuestion.get(q.id) ?? [];
+      const questionEntries: QuestionExportEntry[] = questions.map((q: QuestionWithAnswersForExport) => {
+        const votes: VoteForExport[] = votesByQuestion.get(q.id) ?? [];
         const participantCount = votes.length;
 
         let optionDistribution: OptionDistributionEntry[] | undefined;
@@ -221,7 +245,7 @@ export const sessionRouter = router({
           case 'MULTIPLE_CHOICE':
           case 'SINGLE_CHOICE': {
             const optionCounts = new Map<string, { count: number; isCorrect?: boolean }>();
-            for (const opt of q.answers) {
+            for (const opt of q.answers as Array<{ id: string; text: string; isCorrect: boolean }>) {
               optionCounts.set(opt.id, { count: 0, isCorrect: opt.isCorrect });
             }
             for (const v of votes) {
@@ -234,7 +258,7 @@ export const sessionRouter = router({
               }
             }
             const total = votes.length || 1;
-            optionDistribution = q.answers.map((opt) => {
+            optionDistribution = (q.answers as Array<{ id: string; text: string; isCorrect: boolean }>).map((opt) => {
               const { count, isCorrect } = optionCounts.get(opt.id) ?? { count: 0 };
               return {
                 text: opt.text,
@@ -247,7 +271,7 @@ export const sessionRouter = router({
           }
           case 'FREETEXT': {
             const byText = new Map<string, number>();
-            for (const v of votes) {
+            for (const v of votes as VoteForExport[]) {
               const t = (v.freeText ?? '').trim() || '(leer)';
             byText.set(t, (byText.get(t) ?? 0) + 1);
             }
@@ -257,7 +281,7 @@ export const sessionRouter = router({
           case 'RATING': {
             const dist: Record<string, number> = {};
             let sum = 0;
-            for (const v of votes) {
+            for (const v of votes as VoteForExport[]) {
               if (v.ratingValue !== null && v.ratingValue !== undefined) {
                 const key = String(v.ratingValue);
                 dist[key] = (dist[key] ?? 0) + 1;
@@ -269,7 +293,7 @@ export const sessionRouter = router({
               ratingAverage = Math.round((sum / votes.length) * 100) / 100;
               const avg = sum / votes.length;
               let variance = 0;
-              for (const v of votes) {
+              for (const v of votes as VoteForExport[]) {
                 if (v.ratingValue !== null && v.ratingValue !== undefined) {
                   variance += (v.ratingValue - avg) ** 2;
                 }
@@ -286,15 +310,15 @@ export const sessionRouter = router({
             break;
         }
 
-        if (votes.length > 0 && votes.some((v) => v.score !== undefined && v.score > 0)) {
-          const totalScore = votes.reduce((a, v) => a + (v.score ?? 0), 0);
+        if (votes.length > 0 && votes.some((v: VoteForExport) => (v.score ?? 0) > 0)) {
+          const totalScore = votes.reduce((a: number, v: VoteForExport) => a + (v.score ?? 0), 0);
           averageScore = Math.round((totalScore / votes.length) * 100) / 100;
         }
 
         return {
           questionOrder: q.order,
           questionTextShort: q.text.slice(0, QUESTION_TEXT_SHORT_MAX),
-          type: q.type,
+          type: q.type as QuestionType,
           participantCount,
           optionDistribution,
           freetextAggregates,
@@ -306,7 +330,7 @@ export const sessionRouter = router({
       });
 
       const bonusTokens: BonusTokenEntryDTO[] | undefined = session.bonusTokens.length
-        ? session.bonusTokens.map((t) => ({
+        ? session.bonusTokens.map((t: BonusTokenForExport) => ({
             token: t.token,
             nickname: t.nickname,
             quizName: t.quizName,
