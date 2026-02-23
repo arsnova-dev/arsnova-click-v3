@@ -12,6 +12,7 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const iconsDir = join(__dirname, '..', 'src', 'assets', 'icons');
 const svgPath = join(iconsDir, 'icon.svg');
+const faviconSvgPath = join(iconsDir, 'favicon.svg');
 
 const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
 
@@ -43,15 +44,14 @@ await sharp(svgPath)
   .toFile(join(iconsDir, `apple-touch-icon.png`));
 console.log('Generated apple-touch-icon.png');
 
-// Favicon 32x32
-await sharp(svgPath)
+// Favicon 32x32 und 16x16: eigenes SVG (nur Rahmen + Punkt), bei Kleinformaten erkennbar
+await sharp(faviconSvgPath)
   .resize(32, 32)
   .png()
   .toFile(join(iconsDir, `favicon-32x32.png`));
 console.log('Generated favicon-32x32.png');
 
-// Favicon 16x16
-await sharp(svgPath)
+await sharp(faviconSvgPath)
   .resize(16, 16)
   .png()
   .toFile(join(iconsDir, `favicon-16x16.png`));
