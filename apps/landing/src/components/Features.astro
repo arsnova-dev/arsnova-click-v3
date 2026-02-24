@@ -21,6 +21,11 @@ const features = [
     icon: 'toggle',
   },
   {
+    title: 'Echtzeit-Kollaboration',
+    description: 'Gemeinsam am Quiz arbeiten mit Yjs – mehrere Autor:innen gleichzeitig, Sync in Echtzeit, keine Konflikte. Ideal für Teams und Co-Teaching.',
+    icon: 'collab',
+  },
+  {
     title: 'Institutionelle Souveränität',
     description: 'Self-Hosted per Docker. Open Source, keine Abo-Kosten. WCAG 2.1 AA, Mobile-First, Dark-Mode.',
     icon: 'server',
@@ -40,6 +45,7 @@ const features = [
             {f.icon === 'bolt' && '⚡'}
             {f.icon === 'academic' && '🎓'}
             {f.icon === 'toggle' && '↔️'}
+            {f.icon === 'collab' && '🤝'}
             {f.icon === 'server' && '📦'}
           </div>
           <h3 class="mt-4 font-display text-lg font-semibold text-white">{f.title}</h3>
