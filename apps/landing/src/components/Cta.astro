@@ -1,5 +1,6 @@
 ---
 import { GITHUB_URL, APP_URL_V2, APP_URL_V3 } from '@/config/github';
+const base = (typeof import.meta.env.BASE_URL === 'string' && import.meta.env.BASE_URL) || '/';
 ---
 
 <section class="bg-slate-900 px-4 py-16 sm:px-6 sm:py-24" aria-labelledby="cta-heading">
@@ -11,7 +12,8 @@ import { GITHUB_URL, APP_URL_V2, APP_URL_V3 } from '@/config/github';
         V2 starten
         <span class="ml-2" aria-hidden="true">→</span>
       </a>
-      <a href={APP_URL_V3} class="inline-flex items-center rounded-xl border border-slate-500 bg-slate-800/80 px-6 py-3.5 text-base font-semibold text-white transition hover:border-brand-500/50 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-slate-900">
+      <a href={APP_URL_V3} class="inline-flex items-center gap-2 rounded-xl border border-slate-500 bg-slate-800/80 px-6 py-3.5 text-base font-semibold text-white transition hover:border-brand-500/50 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-slate-900">
+        <img src={`${base}favicon.svg`} alt="" class="h-5 w-5 shrink-0" width="20" height="20" />
         V3 (Work in Progress)
       </a>
     </div>
