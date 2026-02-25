@@ -19,7 +19,7 @@ Diese Datenschutzerklärung gilt für die Website **https://arsnova.click** (Inf
 
 Beim Aufruf dieser Website werden durch den betreibenden Server bzw. den Hosting-Anbieter in der Regel automatisch Zugriffsdaten (z. B. IP-Adresse, Datum/Uhrzeit, aufgerufene Seite, übertragene Datenmenge, Browsertyp) in Server-Logs verarbeitet. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse am Betrieb und an der Sicherheit der Website). Die Speicherdauer richtet sich nach den Vorgaben des Hosting-Anbieters; typischerweise werden Logs nach kurzer Frist gelöscht oder anonymisiert.
 
-Diese statische Website setzt **keine Cookies** und führt keine Analyse-Tools (z. B. Google Analytics) aus, sofern nicht ausdrücklich anders angegeben. Sollten Sie auf dieser Website eingebettete Inhalte Dritter (z. B. Karten, Videos) oder Links zu Drittanbietern nutzen, können dort eigene Verarbeitungen stattfinden; dazu siehe Abschnitt zu Drittanbietern.
+Diese Website setzt **keine Cookies** (auch keine Drittanbieter-Cookies) und führt keine Analyse-Tools (z. B. Google Analytics) aus. Schriftarten werden von Google Fonts geladen; dabei werden nach aktuellem Stand keine Cookies gesetzt, jedoch kann Ihr Browser Verbindung zu Servern von Google (USA) aufnehmen. Sofern nicht ausdrücklich anders angegeben, werden keine weiteren eingebetteten Inhalte Dritter (z. B. Karten, Videos) genutzt. Links zu Drittanbietern siehe Abschnitt 4.
 
 ## 4. Verlinkung zu Drittanbietern
 
