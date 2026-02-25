@@ -7,35 +7,53 @@
 
 ## Übersicht: Backlog vs. Startseite
 
-| Backlog-Anforderung | Story | Sichtbar/Erreichbar | Status |
-|---------------------|-------|---------------------|--------|
-| Theme-Umschalter (Light/Dark/System) | 6.1 | Header | ✅ |
-| Sprachwähler | 6.2 | Header | ✅ (DE/EN; 5 Sprachen noch offen) |
-| Quiz-Presets (Seriös/Spielerisch) | 1.11 | Header | ✅ |
-| Session erstellen / Quiz erstellen | 2.1a, Epic 1 | Erstellen-Karte | ✅ |
-| Quiz wählen | Epic 1 | Erstellen-Karte | ✅ |
-| Q&amp;A | 8.1 | Erstellen-Karte | ⚠️ Link zu /quiz (Platzhalter; Story 8.1 offen) |
-| Session-Code-Eingabe (Beitreten) | 3.1 | Beitreten-Karte | ✅ |
-| Server-Status-Widget | 0.4 | Status-Karte | ✅ |
-| Bibliothek (Lokal &amp; Vorlagen) | Epic 1 | Bibliothek-Karte | ✅ Link „Zur Bibliothek“ → /quiz |
-| Neues Quiz (Start-Karte) | Epic 1 | Start-Karte | ✅ |
-| Beitreten (Start-Karte) | 3.1 | Start-Karte | ✅ |
-| Impressum / Datenschutz | 6.3 | Footer (alle Seiten) | ✅ |
-| Hilfe (Onboarding) | – | Erstellen-Karte | ✅ |
+| Backlog-Anforderung | Story | Sichtbar/Erreichbar | Ziel | Status |
+|--------------------|-------|---------------------|------|--------|
+| Theme-Umschalter (Light/Dark/System) | 6.1 | Header | – | ✅ (Default: Dark) |
+| Sprachwähler | 6.2 | Header | – | ✅ 5 Sprachen (de, en, fr, it, es); i18n-Übersetzungen noch offen |
+| Quiz-Presets (Seriös/Spielerisch) | 1.11 | Header | – | ✅ |
+| Session erstellen | 2.1a, Epic 1 | Erstellen-Karte | /quiz | ⚠️ Platzhalter (Story 1.1 offen) |
+| Quiz wählen | Epic 1 | Erstellen-Karte | /quiz | ⚠️ Platzhalter |
+| Q&amp;A | 8.1 | Erstellen-Karte | /quiz | ⚠️ Platzhalter (Story 8.1 offen) |
+| Session-Code-Eingabe (Beitreten) | 3.1 | Beitreten-Karte | /session/:code | ✅ (Session-Info; Lobby Story 2.2 offen) |
+| Zuletzt beigetretene Sessions | – | Beitreten-Karte | /session/:code | ✅ Zusatzfeature |
+| Zur Bibliothek | Epic 1 | Bibliothek-Karte | /quiz | ⚠️ Platzhalter |
+| Quiz aus Vorlage erstellen | Epic 1 | Bibliothek-Karte | /quiz | ⚠️ Platzhalter |
+| Demo starten | – | Bibliothek-Karte | /quiz | ⚠️ Platzhalter |
+| Demo beitreten | – | Bibliothek-Karte | /session/DEMO01 | ⚠️ Platzhalter (Demo-Session im Backend optional) |
+| Server-Status-Widget | 0.4 | Status-Karte | – | ✅ |
+| Backend-Status / Retry | – | Status-Karte | – | ✅ Zusatzfeature |
+| Impressum / Datenschutz | 6.3 | Footer | /legal/imprint, /legal/privacy | ✅ |
+| Trust-Badges (DSGVO · Open Source) | – | Footer + Hero | – | ✅ Zusatzfeature |
+| Offline-Indikator | – | App-weit | – | ✅ Zusatzfeature |
+| Hilfe (Onboarding) | – | Erstellen-Karte | GitHub/docs | ✅ |
 
 ---
 
-## Lücken
+## Vollständigkeit: Von der Startseite erreichbare Funktionen
 
-### 1. Bibliothek-Karte – ✅ Erledigt
-Link „Zur Bibliothek“ hinzugefügt, führt zu `/quiz`.
+### ✅ Vollständig erreichbar
+- **Beitreten:** Code-Eingabe → /session/:code (zeigt Session-Info oder Fehlermeldung)
+- **Impressum / Datenschutz:** Footer-Links → /legal/:slug
+- **Theme, Presets, Sprache:** Header-Controls (persistiert in localStorage)
+- **Server-Status:** Live-Daten + Retry bei Verbindungsfehler
 
-### 2. Q&amp;A-Link
-Der Link „Q&amp;A“ führt zu `/quiz`. Story 8.1 (Q&amp;A-Session) ist noch offen – der Link ist ein sinnvoller Platzhalter bis zur Implementierung.
+### ⚠️ Platzhalter (Zielseite existiert, Backlog-Story offen)
+- **Session erstellen, Quiz wählen, Q&amp;A** → /quiz (Quiz-Seite zeigt „Noch keine Quizzes“, Story 1.1 offen)
+- **Zur Bibliothek, Quiz aus Vorlage, Demo starten** → /quiz (gleicher Platzhalter)
+- **Demo beitreten** → /session/DEMO01 (funktioniert, wenn Demo-Session im Backend existiert)
+
+### Offene Backlog-Lücken (nicht von Startseite lösbar)
+- **Story 6.2:** Sprachauswahl ist vollständig (5 Sprachen); i18n-Übersetzungsdateien noch offen
+- **Story 6.1:** Theme-Default ist „Dark“, Backlog nennt „System“ als Default
+- **Story 2.2 (Lobby):** Beitreten führt zur Session-Info, nicht zur Lobby-Ansicht
+- **Story 1.1 (Quiz erstellen):** Quiz-Seite ist Platzhalter
 
 ---
 
 ## Zusammenfassung
 
-- **Alle Lücken behoben.** Bibliothek-Karte hat nun Link „Zur Bibliothek“ → /quiz.
-- **Platzhalter:** Q&amp;A → /quiz (korrekt bis Story 8.1)
+- **Alle Startseiten-Links führen zu gültigen Zielen.** Keine toten Links.
+- **Platzhalter sind konsistent:** Quiz-Funktionen → /quiz; Beitreten → /session/:code.
+- **Zusatzfeatures:** Zuletzt beigetreten, Retry, Trust-Badges, Offline-Indikator, Demo-Buttons.
+- **Backlog-Stories:** Epic 1 (Quiz), Epic 2 (Lobby), Epic 8 (Q&amp;A) noch offen – Startseite ist vorbereitet.

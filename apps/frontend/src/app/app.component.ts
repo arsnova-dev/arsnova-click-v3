@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnInit, signal } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +9,15 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [RouterOutlet, RouterLink, MatButtonModule, MatIconModule],
   template: `
     <div class="app-layout">
+      @if (!isOnline()) {
+        <div class="app-offline-banner" role="alert">
+          <mat-icon class="app-offline-banner__icon">cloud_off</mat-icon>
+          <span>Offline – Verbindung prüfen</span>
+          <button mat-button class="app-offline-banner__retry" (click)="retryOnline()">
+            Erneut versuchen
+          </button>
+        </div>
+      }
       <a href="#main-content" class="app-skip-link">Zum Inhalt springen</a>
       <main id="main-content" class="app-main" role="main">
         <router-outlet />
@@ -16,6 +25,7 @@ import { MatIconModule } from '@angular/material/icon';
       <footer class="app-footer" role="contentinfo">
         <div class="app-footer__inner">
           <span class="app-footer__copy">© {{ year }} arsnova.click</span>
+          <p class="app-footer__badges">100 % DSGVO-konform · Open Source · Kostenlos</p>
           <div class="app-footer__links">
             <a mat-button routerLink="/legal/imprint">
               <mat-icon class="app-footer__icon">business</mat-icon>
@@ -70,6 +80,31 @@ import { MatIconModule } from '@angular/material/icon';
       background: var(--mat-sys-surface-container-low);
     }
 
+    .app-offline-banner {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--mat-sys-error-container);
+      color: var(--mat-sys-on-error-container);
+      font: var(--mat-sys-label-medium);
+    }
+
+    .app-offline-banner__icon {
+      font-size: 1.25rem;
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    .app-offline-banner__retry {
+      margin-left: 0.5rem;
+      color: var(--mat-sys-on-error-container);
+    }
+
     .app-footer__inner {
       max-width: 56rem;
       margin-inline: auto;
@@ -78,6 +113,23 @@ import { MatIconModule } from '@angular/material/icon';
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
+    }
+
+    .app-footer__badges {
+      order: 3;
+      width: 100%;
+      margin: 0.25rem 0 0;
+      font: var(--mat-sys-body-small);
+      color: var(--mat-sys-on-surface-variant);
+      text-align: center;
+    }
+
+    @media (min-width: 600px) {
+      .app-footer__badges {
+        order: 0;
+        width: auto;
+        margin: 0;
+      }
     }
 
     .app-footer__copy {
@@ -103,6 +155,29 @@ import { MatIconModule } from '@angular/material/icon';
     }
   `],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   readonly year = new Date().getFullYear();
+  isOnline = signal(true);
+
+  ngOnInit(): void {
+    this.isOnline.set(navigator.onLine);
+  }
+
+  @HostListener('window:online')
+  onOnline(): void {
+    this.isOnline.set(true);
+  }
+
+  @HostListener('window:offline')
+  onOffline(): void {
+    this.isOnline.set(false);
+  }
+
+  retryOnline(): void {
+    if (navigator.onLine) {
+      this.isOnline.set(true);
+    } else {
+      window.location.reload();
+    }
+  }
 }

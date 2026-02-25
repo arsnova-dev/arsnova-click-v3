@@ -70,6 +70,7 @@ html {
 :root {
   --app-color-success-bg: var(--mat-sys-secondary-container);
   --app-color-success-fg: var(--mat-sys-on-secondary-container);
+  --app-status-healthy: light-dark(#16a34a, #4ade80);
   --app-color-danger-bg: var(--mat-sys-error-container);
   --app-color-danger-fg: var(--mat-sys-on-error-container);
   --app-color-info-bg: var(--mat-sys-tertiary-container);
@@ -105,9 +106,6 @@ html.preset-playful {
     color: var(--mat-sys-primary);
   }
 
-  .server-status__icon {
-    color: var(--mat-sys-primary);
-  }
 }
 
 // ---------------------------------------------------------------------------
@@ -179,9 +177,9 @@ body {
   &--2col { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   &--4col { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
-  @media (max-width: 639px)  { &--2col, &--4col { grid-template-columns: 1fr; } }
-  @media (min-width: 640px)  { &--auto-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (min-width: 1280px) { &--auto-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  @media (max-width: 599px)  { &--2col, &--4col { grid-template-columns: 1fr; } }
+  @media (min-width: 600px)  { &--auto-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1200px) { &--auto-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 }
 
 .l-inset {
@@ -197,8 +195,8 @@ body {
   margin-inline: auto;
   padding: 1.5rem 1rem;
 
-  @media (min-width: 640px) { padding-inline: 1.5rem; }
-  @media (min-width: 1024px) { padding-inline: 2rem; }
+  @media (min-width: 600px) { padding-inline: 1.5rem; }
+  @media (min-width: 840px) { padding-inline: 2rem; }
 }
 
 .l-section {

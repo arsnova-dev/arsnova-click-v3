@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -79,6 +79,21 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
 
           <div class="home-controls desktop-only">
             <mat-button-toggle-group
+              [value]="preset()"
+              (change)="setPreset($event.value)"
+              appearance="standard"
+              aria-label="Preset auswählen"
+              class="home-icon-toggles"
+            >
+              <mat-button-toggle value="serious">
+                <mat-icon>school</mat-icon> Seriös
+              </mat-button-toggle>
+              <mat-button-toggle value="spielerisch">
+                <mat-icon class="home-preset-icon--playful">celebration</mat-icon> Spielerisch
+              </mat-button-toggle>
+            </mat-button-toggle-group>
+
+            <mat-button-toggle-group
               [value]="theme()"
               (change)="onThemeChange($event.value)"
               appearance="standard"
@@ -100,22 +115,24 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
               <mat-icon>language</mat-icon>
             </button>
             <mat-menu #langMenu="matMenu">
-              <button mat-menu-item (click)="language.set('de')">
-                <mat-icon matMenuItemIcon>language</mat-icon>
-                DE
-              </button>
-              <button mat-menu-item (click)="language.set('en')">
-                <mat-icon matMenuItemIcon>language</mat-icon>
-                EN
-              </button>
+              @for (lang of supportedLanguages; track lang.code) {
+                <button mat-menu-item (click)="setLanguage(lang.code)">
+                  <mat-icon matMenuItemIcon>language</mat-icon>
+                  {{ lang.label }}
+                </button>
+              }
             </mat-menu>
+          </div>
+        </div>
 
+        @if (controlsMenuOpen()) {
+          <div id="home-controls-mobile" class="home-controls-mobile l-stack l-stack--sm">
             <mat-button-toggle-group
               [value]="preset()"
-              (change)="setPreset($event.value)"
+              (change)="setPreset($event.value, true)"
               appearance="standard"
               aria-label="Preset auswählen"
-              class="home-icon-toggles"
+              class="home-icon-toggles home-preset-toggle--full"
             >
               <mat-button-toggle value="serious">
                 <mat-icon>school</mat-icon> Seriös
@@ -124,11 +141,7 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
                 <mat-icon class="home-preset-icon--playful">celebration</mat-icon> Spielerisch
               </mat-button-toggle>
             </mat-button-toggle-group>
-          </div>
-        </div>
 
-        @if (controlsMenuOpen()) {
-          <div id="home-controls-mobile" class="home-controls-mobile l-stack l-stack--sm">
             <mat-button-toggle-group
               [value]="theme()"
               (change)="onThemeChange($event.value)"
@@ -151,74 +164,20 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
               <mat-icon>language</mat-icon>
             </button>
             <mat-menu #langMenuMobile="matMenu">
-              <button mat-menu-item (click)="language.set('de'); closeControlsMenu()">
-                <mat-icon matMenuItemIcon>language</mat-icon>
-                DE
-              </button>
-              <button mat-menu-item (click)="language.set('en'); closeControlsMenu()">
-                <mat-icon matMenuItemIcon>language</mat-icon>
-                EN
-              </button>
+              @for (lang of supportedLanguages; track lang.code) {
+                <button mat-menu-item (click)="setLanguage(lang.code); closeControlsMenu()">
+                  <mat-icon matMenuItemIcon>language</mat-icon>
+                  {{ lang.label }}
+                </button>
+              }
             </mat-menu>
-
-            <mat-button-toggle-group
-              [value]="preset()"
-              (change)="setPreset($event.value, true)"
-              appearance="standard"
-              aria-label="Preset auswählen"
-              class="home-icon-toggles home-preset-toggle--full"
-            >
-              <mat-button-toggle value="serious">
-                <mat-icon>school</mat-icon> Seriös
-              </mat-button-toggle>
-              <mat-button-toggle value="spielerisch">
-                <mat-icon class="home-preset-icon--playful">celebration</mat-icon> Spielerisch
-              </mat-button-toggle>
-            </mat-button-toggle-group>
           </div>
         }
       </header>
 
       <main class="home-main">
-        <mat-card appearance="raised" class="home-card home-card--create">
-          <mat-card-header>
-            <mat-card-subtitle>
-              <mat-icon class="home-card__icon">school</mat-icon>
-              Lehrkraft
-            </mat-card-subtitle>
-            <mat-card-title class="home-card__title">Erstellen</mat-card-title>
-          </mat-card-header>
-
-          <mat-card-content>
-            <div class="home-card__meta">
-              <p class="home-card__copy">Neue Session für Kurs oder Q&amp;A in wenigen Klicks.</p>
-              <a
-                mat-stroked-button
-                href="https://github.com/arsnova-dev/arsnova-click-v3/blob/main/docs/onboarding.md"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <mat-icon>help</mat-icon>
-                Hilfe
-              </a>
-            </div>
-          </mat-card-content>
-
-          <mat-card-actions class="l-stack l-stack--sm">
-            <a mat-flat-button routerLink="/quiz" class="home-cta">
-              <mat-icon class="home-cta__icon">add_circle</mat-icon>
-              Session erstellen
-            </a>
-            <a mat-stroked-button routerLink="/quiz" class="home-cta">
-              <mat-icon class="home-cta__icon">quiz</mat-icon>
-              Quiz wählen
-            </a>
-            <a mat-stroked-button routerLink="/quiz" class="home-cta">
-              <mat-icon class="home-cta__icon">question_answer</mat-icon>
-              Q&amp;A
-            </a>
-          </mat-card-actions>
-        </mat-card>
+        <p class="home-hero">Live-Quiz &amp; Abstimmung in wenigen Klicks</p>
+        <p class="home-trust-badges">100 % DSGVO-konform · Open Source · Kostenlos</p>
 
         <mat-card appearance="raised" id="student-entry" class="home-card">
           <mat-card-header>
@@ -230,15 +189,16 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
           </mat-card-header>
 
           <mat-card-content class="l-stack l-stack--sm">
-            <div
-              class="home-code-slots"
-              [class.home-code-slots--valid]="isValidSessionCode()"
-              aria-hidden="true"
-            >
-              @for (char of codeSlots(); track $index) {
-                <span class="home-code-slot">{{ char || '·' }}</span>
-              }
-            </div>
+            @if (recentSessionCodes().length > 0) {
+              <p class="home-recent-label">Zuletzt beigetreten</p>
+              <div class="home-recent-codes">
+                @for (code of recentSessionCodes(); track code) {
+                  <button mat-stroked-button class="home-recent-code" (click)="joinSessionByCode(code)">
+                    {{ code }}
+                  </button>
+                }
+              </div>
+            }
             <p class="home-code-help">A–Z, 0–9 · 6 Zeichen</p>
 
             <mat-form-field appearance="outline" subscriptSizing="dynamic" class="home-code-field">
@@ -250,7 +210,7 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
                 [value]="sessionCode()"
                 (input)="onSessionCodeInput($event)"
                 (keydown.enter)="joinSession()"
-                placeholder="A7K9P2"
+                placeholder="Code eingeben"
                 autocapitalize="characters"
                 autocomplete="off"
                 spellcheck="false"
@@ -281,6 +241,47 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
             }
           </mat-card-actions>
         </mat-card>
+
+        <mat-card appearance="raised" class="home-card home-card--create">
+          <mat-card-header>
+            <mat-card-subtitle>
+              <mat-icon class="home-card__icon">school</mat-icon>
+              Lehrkraft
+            </mat-card-subtitle>
+            <mat-card-title class="home-card__title">Erstellen</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="home-card__meta">
+              <p class="home-card__copy">Neue Session für Kurs oder Q&amp;A in wenigen Klicks.</p>
+              <a
+                mat-stroked-button
+                class="home-help-btn"
+                href="https://github.com/arsnova-dev/arsnova-click-v3/blob/main/docs/onboarding.md"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <mat-icon>help</mat-icon>
+                Hilfe
+              </a>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions class="l-stack l-stack--sm">
+            <a mat-flat-button routerLink="/quiz" class="home-cta" (mouseenter)="preloadQuiz()">
+              <mat-icon class="home-cta__icon">add_circle</mat-icon>
+              Session erstellen
+            </a>
+            <a mat-stroked-button routerLink="/quiz" class="home-cta" (mouseenter)="preloadQuiz()">
+              <mat-icon class="home-cta__icon">quiz</mat-icon>
+              Quiz wählen
+            </a>
+            <a mat-stroked-button routerLink="/quiz" class="home-cta" (mouseenter)="preloadQuiz()">
+              <mat-icon class="home-cta__icon">question_answer</mat-icon>
+              Q&amp;A
+            </a>
+          </mat-card-actions>
+        </mat-card>
       </main>
 
       <section class="home-grid">
@@ -293,14 +294,24 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
           </mat-card-header>
           <mat-card-content>
             <div class="home-subcard__links l-stack l-stack--xs">
-              <a mat-button routerLink="/quiz" class="home-subcard__link">
+              <a mat-button routerLink="/quiz" class="home-subcard__link" (mouseenter)="preloadQuiz()">
                 <mat-icon class="home-subcard__link-icon">menu_book</mat-icon>
                 Zur Bibliothek
               </a>
-              <a mat-button routerLink="/quiz" class="home-subcard__link">
+              <a mat-button routerLink="/quiz" class="home-subcard__link" (mouseenter)="preloadQuiz()">
                 <mat-icon class="home-subcard__link-icon">content_copy</mat-icon>
                 Quiz aus Vorlage erstellen
               </a>
+              <div class="home-subcard__demo l-stack l-stack--xs">
+                <a mat-stroked-button routerLink="/quiz" class="home-subcard__demo-btn" (mouseenter)="preloadQuiz()">
+                  <mat-icon class="home-subcard__link-icon">play_circle</mat-icon>
+                  Demo starten
+                </a>
+                <a mat-stroked-button [routerLink]="['/session', demoSessionCode]" class="home-subcard__demo-btn">
+                  <mat-icon class="home-subcard__link-icon">group_add</mat-icon>
+                  Demo beitreten
+                </a>
+              </div>
             </div>
           </mat-card-content>
         </mat-card>
@@ -313,9 +324,14 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
             </mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <p class="home-subcard__body">
-              @if (apiStatus()) { Backend online } @else { Verbinde… }
-            </p>
+            @if (apiStatus()) {
+              <p class="home-subcard__body">Backend online</p>
+            } @else {
+              <p class="home-subcard__body">Backend nicht erreichbar</p>
+              <button mat-stroked-button class="home-retry-btn" (click)="retryConnection()" [disabled]="apiRetrying()">
+                {{ apiRetrying() ? 'Verbinde…' : 'Erneut verbinden' }}
+              </button>
+            }
             <app-server-status-widget />
           </mat-card-content>
         </mat-card>
@@ -373,6 +389,25 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
       gap: 1rem;
     }
 
+    @media (min-width: 600px) {
+      .home-header__row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 1rem;
+      }
+
+      .home-brand {
+        justify-self: start;
+      }
+
+      .home-controls {
+        grid-column: 2 / -1;
+        display: flex;
+        justify-content: space-evenly;
+        justify-self: stretch;
+      }
+    }
+
     .home-brand {
       display: inline-flex;
       align-items: center;
@@ -393,12 +428,16 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
 
     .mobile-only { display: inline-flex; }
     .desktop-only { display: none; }
-    @media (min-width: 768px) {
+    @media (max-width: 599px) {
+      .desktop-only { display: none !important; }
+    }
+    @media (min-width: 600px) {
       .mobile-only { display: none; }
       .desktop-only { display: inline-flex; }
     }
 
     .home-controls {
+      display: flex;
       align-items: center;
       gap: 0.5rem;
     }
@@ -456,14 +495,33 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
       flex: 1;
     }
 
+    .home-hero {
+      margin: 0 0 0.25rem;
+      font: var(--mat-sys-headline-small);
+      color: var(--mat-sys-on-surface-variant);
+      text-align: center;
+    }
+
+    .home-trust-badges {
+      margin: 0 0 1rem;
+      font: var(--mat-sys-body-small);
+      color: var(--mat-sys-outline);
+      text-align: center;
+    }
+
     .home-main {
       display: grid;
       gap: 1rem;
     }
 
-    @media (min-width: 1024px) {
+    @media (min-width: 600px) {
       .home-main {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .home-hero,
+      .home-trust-badges {
+        grid-column: 1 / -1;
       }
     }
 
@@ -513,6 +571,10 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
       flex-shrink: 0;
     }
 
+    .home-help-btn {
+      border: none;
+    }
+
     .home-card__copy {
       margin: 0;
       font: var(--mat-sys-body-small);
@@ -529,7 +591,7 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
       width: 100%;
     }
 
-    @media (min-width: 640px) {
+    @media (min-width: 600px) {
       mat-card-actions.l-stack {
         flex-direction: row;
         flex-wrap: wrap;
@@ -550,41 +612,28 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
       }
     }
 
-    .home-code-slots {
+    .home-recent-label {
+      margin: 0;
+      font: var(--mat-sys-label-small);
+      color: var(--mat-sys-on-surface-variant);
+    }
+
+    .home-recent-codes {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
+      margin-bottom: 0.25rem;
     }
 
-    .home-code-slots--valid .home-code-slot {
-      border-color: var(--app-color-success-fg);
-      background: var(--app-color-success-bg);
-    }
-
-    .home-code-slot {
-      width: 2.75rem;
-      height: 2.75rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: var(--mat-sys-corner-small);
-      border: 1px solid var(--mat-sys-outline);
-      background: var(--mat-sys-surface-container);
+    .home-recent-code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       font-weight: 600;
-      font-size: 1.25rem;
-      text-transform: uppercase;
-    }
-
-    @media (min-width: 640px) {
-      .home-code-slot {
-        width: 3rem;
-        height: 3rem;
-        font-size: 1.5rem;
-      }
+      letter-spacing: 0.1em;
+      border: none;
     }
 
     .home-code-help {
-      margin: 0.75rem 0 0;
+      margin: 0;
       font: var(--mat-sys-body-small);
       color: var(--mat-sys-on-surface-variant);
     }
@@ -603,7 +652,7 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
       font-size: 1.1rem;
     }
 
-    @media (min-width: 640px) {
+    @media (min-width: 600px) {
       .home-code-field input {
         font-size: 1.2rem;
         letter-spacing: 0.35em;
@@ -634,16 +683,20 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
       gap: 0.75rem;
     }
 
-    @media (min-width: 640px) {
+    @media (min-width: 600px) {
       .home-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
-    @media (min-width: 1280px) {
+    @media (min-width: 1200px) {
       .home-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
+    }
+
+    .home-retry-btn {
+      margin-top: 0.5rem;
     }
 
     .home-subcard__body {
@@ -654,6 +707,16 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
 
     .home-subcard__links {
       margin-top: 0.5rem;
+    }
+
+    .home-subcard__demo {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--mat-sys-outline-variant);
+    }
+
+    .home-subcard__demo-btn {
+      justify-content: flex-start;
     }
 
     .home-subcard__link {
@@ -684,11 +747,8 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
       }
 
       .home-brand__icon {
-        border-radius: 50%;
-      }
-
-      .home-code-slot {
-        border-radius: 50%;
+        border-radius: 0.5rem;
+        overflow: visible;
       }
 
       .home-card__icon,
@@ -718,21 +778,30 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
     }
   `],
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly router = inject(Router);
   @ViewChild('homeHeader') private readonly homeHeader?: ElementRef<HTMLElement>;
   @ViewChild('controlsToggleBtn') private readonly controlsToggleBtn?: ElementRef<HTMLButtonElement>;
   @ViewChild('sessionCodeInput') private readonly sessionCodeInput?: ElementRef<HTMLInputElement>;
 
   apiStatus = signal<string | null>(null);
+  apiRetrying = signal(false);
   redisStatus = signal<string | null>(null);
   sessionCode = signal('');
+  recentSessionCodes = signal<string[]>([]);
   joinError = signal<string | null>(null);
   isJoining = signal(false);
 
-  theme = signal<'system' | 'dark' | 'light'>('system');
-  language = signal<'de' | 'en'>('de');
-  preset = signal<'serious' | 'spielerisch'>('serious');
+  theme = signal<'system' | 'dark' | 'light'>('dark');
+  readonly supportedLanguages = [
+    { code: 'de' as const, label: 'Deutsch' },
+    { code: 'en' as const, label: 'English' },
+    { code: 'fr' as const, label: 'Français' },
+    { code: 'it' as const, label: 'Italiano' },
+    { code: 'es' as const, label: 'Español' },
+  ];
+  language = signal<'de' | 'en' | 'fr' | 'it' | 'es'>('de');
+  preset = signal<'serious' | 'spielerisch'>('spielerisch');
   controlsMenuOpen = signal(false);
   presetToastVisible = signal(false);
   presetToastTitle = signal('');
@@ -742,10 +811,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   private presetToastTimer: ReturnType<typeof setTimeout> | null = null;
 
   isValidSessionCode = computed(() => /^[A-Z0-9]{6}$/.test(this.sessionCode()));
-  codeSlots = computed(() => {
-    const code = this.sessionCode().padEnd(6, ' ').slice(0, 6);
-    return code.split('').map((c) => (c.trim() ? c : ''));
-  });
+  readonly demoSessionCode = 'DEMO01';
+
+  ngAfterViewInit(): void {
+    setTimeout(() => this.sessionCodeInput?.nativeElement.focus(), 100);
+  }
 
   async ngOnInit(): Promise<void> {
     const storedTheme = localStorage.getItem('home-theme');
@@ -754,14 +824,26 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
     this.applyTheme();
 
+    const storedLang = localStorage.getItem('home-language');
+    if (storedLang && ['de', 'en', 'fr', 'it', 'es'].includes(storedLang)) {
+      this.language.set(storedLang as 'de' | 'en' | 'fr' | 'it' | 'es');
+    }
+
     const storedPreset = localStorage.getItem('home-preset');
     const preset = storedPreset === 'serioes' ? 'serious' : storedPreset; // Migration: serioes → serious
     if (preset === 'serious' || preset === 'spielerisch') {
       this.preset.set(preset);
       this.applyPreset();
       if (preset !== storedPreset) localStorage.setItem('home-preset', preset);
+    } else {
+      this.applyPreset(); // Default: spielerisch
     }
 
+    this.loadRecentSessionCodes();
+    await this.checkApiConnection();
+  }
+
+  async checkApiConnection(): Promise<void> {
     try {
       const health = await trpc.health.check.query();
       this.apiStatus.set(health.status);
@@ -771,11 +853,50 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
+  async retryConnection(): Promise<void> {
+    this.apiRetrying.set(true);
+    await this.checkApiConnection();
+    this.apiRetrying.set(false);
+  }
+
+  private loadRecentSessionCodes(): void {
+    try {
+      const raw = localStorage.getItem('home-recent-sessions');
+      const codes = raw ? (JSON.parse(raw) as string[]) : [];
+      const valid = Array.isArray(codes)
+        ? codes.filter((c) => typeof c === 'string' && /^[A-Z0-9]{6}$/.test(c.trim().toUpperCase())).slice(0, 3)
+        : [];
+      this.recentSessionCodes.set(valid);
+    } catch {
+      this.recentSessionCodes.set([]);
+    }
+  }
+
+  private addToRecentSessionCodes(code: string): void {
+    const normalized = code.trim().toUpperCase();
+    if (!/^[A-Z0-9]{6}$/.test(normalized)) return;
+    const current = this.recentSessionCodes();
+    const filtered = current.filter((c) => c !== normalized);
+    const updated = [normalized, ...filtered].slice(0, 3);
+    this.recentSessionCodes.set(updated);
+    localStorage.setItem('home-recent-sessions', JSON.stringify(updated));
+  }
+
+  async joinSessionByCode(code: string): Promise<void> {
+    this.sessionCode.set(code);
+    await this.joinSession();
+  }
+
   ngOnDestroy(): void {
     if (this.presetToastTimer) {
       clearTimeout(this.presetToastTimer);
       this.presetToastTimer = null;
     }
+  }
+
+  setLanguage(code: 'de' | 'en' | 'fr' | 'it' | 'es'): void {
+    this.language.set(code);
+    localStorage.setItem('home-language', code);
   }
 
   onThemeChange(value: 'system' | 'dark' | 'light'): void {
@@ -799,6 +920,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.controlsMenuOpen.set(!this.controlsMenuOpen());
   }
 
+  preloadQuiz(): void {
+    import('../quiz/quiz.component').then(() => {});
+  }
+
   closeControlsMenu(restoreFocus = false): void {
     this.controlsMenuOpen.set(false);
     if (restoreFocus) {
@@ -810,6 +935,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   onEscapePressed(): void {
     if (this.controlsMenuOpen()) {
       this.closeControlsMenu(true);
+    }
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent): void {
+    if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+      event.preventDefault();
+      if (this.isValidSessionCode()) this.joinSession();
     }
   }
 
@@ -841,6 +974,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
     this.joinError.set(null);
     this.isJoining.set(true);
+    this.addToRecentSessionCodes(code);
     try {
       await this.router.navigate(['/session', code]);
     } finally {

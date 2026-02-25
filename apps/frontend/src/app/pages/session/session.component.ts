@@ -146,7 +146,7 @@ export class SessionComponent implements OnInit {
       const session = await trpc.session.getInfo.query({ code: code.toUpperCase() });
       this.session.set(session);
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : 'Session nicht gefunden.';
+      const msg = e instanceof Error ? e.message : 'Session nicht gefunden. Code prüfen oder neu eingeben.';
       this.error.set(msg);
     } finally {
       this.loading.set(false);

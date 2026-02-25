@@ -35,15 +35,15 @@
 | Countdown, Leaderboard, Lobby, Beamer | ➖ Noch nicht implementiert |
 | Kontrast WCAG 2.1 AA | ✅ (Material M3) |
 
-### Story 6.2 (Internationalisierung) – 🟡 Offen
+### Story 6.2 (Internationalisierung) – 🟡 Teilweise
 
 | Akzeptanzkriterium | Status |
 |--------------------|--------|
-| 5 Sprachen (de, en, fr, it, es) | ❌ Nur DE/EN im UI |
-| Sprachwähler in Navbar | ✅ (DE/EN) |
+| 5 Sprachen (de, en, fr, it, es) | ✅ Auswahl im Sprachwähler |
+| Sprachwähler in Navbar | ✅ |
 | localStorage-Persistenz | ✅ |
 | ngx-translate oder @angular/localize | ❌ Nicht implementiert |
-| i18n/*.json Übersetzungsdateien | ❌ Keine |
+| i18n/*.json Übersetzungsdateien | ❌ Keine – UI-Texte noch deutsch |
 
 ### Story 6.3 (Impressum & Datenschutz) – ✅ Implementiert
 
@@ -123,7 +123,7 @@ Die Backlog-DoD und Story 6.1/6.4 verweisen auf „Tailwind“.
 |-----------|-----------|-----------|-------|
 | DoD Frontend | 7 | 2 | 0 |
 | Story 6.1 | 5 | 0 | 0 |
-| Story 6.2 | 2 | 0 | 3 |
+| Story 6.2 | 3 | 0 | 2 |
 | Story 6.3 | 3 | 0 | 0 |
 | Story 6.4 | 4 | 2 | 0 |
 | Story 6.5 | 5 | 2 | 0 |

@@ -19,7 +19,14 @@ import type { ServerStatsDTO } from '@arsnova/shared-types';
       [attr.aria-label]="ariaStatusLabel()"
     >
       <div class="server-status__header">
-        <mat-icon class="server-status__icon" aria-hidden="true">monitor_heart</mat-icon>
+        <mat-icon
+          class="server-status__icon server-status__icon--status"
+          [class.server-status__icon--healthy]="statusColor() === 'green'"
+          [class.server-status__icon--busy]="statusColor() === 'yellow'"
+          [class.server-status__icon--overloaded]="statusColor() === 'red'"
+          [class.server-status__icon--unknown]="statusColor() === 'gray'"
+          aria-hidden="true"
+        >timeline</mat-icon>
         <span
           class="server-status__dot"
           [class.server-status__dot--healthy]="statusColor() === 'green'"
@@ -32,18 +39,20 @@ import type { ServerStatsDTO } from '@arsnova/shared-types';
       </div>
       @if (stats(); as s) {
         <p class="server-status__text">
-          {{ s.activeSessions }} Quiz live · {{ s.totalParticipants }} Teilnehmer ·
-          {{ s.completedSessions }} Quizzes durchgeführt
+          <strong class="server-status__highlight">{{ s.activeSessions }} Quiz live</strong>
+          · {{ s.totalParticipants }} Teilnehmer · {{ s.completedSessions }} durchgeführt
         </p>
       } @else {
-        <p class="server-status__text">Wird geladen…</p>
+        <div class="server-status__skeleton" aria-hidden="true">
+          <span class="server-status__skeleton-line"></span>
+        </div>
+        <p class="server-status__text server-status__text--muted" aria-live="polite">Wird geladen…</p>
       }
     </div>
   `,
   styles: [`
     .server-status {
       border-radius: var(--mat-sys-corner-small);
-      border: 1px solid var(--mat-sys-outline-variant);
       background: var(--mat-sys-surface-container);
       color: var(--mat-sys-on-surface);
       padding: 0.75rem;
@@ -57,11 +66,38 @@ import type { ServerStatsDTO } from '@arsnova/shared-types';
       font: var(--mat-sys-label-large);
     }
 
+    .server-status__icon-wrap {
+      display: inline-flex;
+      align-items: center;
+      line-height: 1;
+    }
+
     .server-status__icon {
-      font-size: 1.25rem;
-      width: 1.25rem;
-      height: 1.25rem;
-      color: var(--mat-sys-on-surface-variant);
+      display: inline-flex;
+      align-items: center;
+      width: 20px;
+      height: 20px;
+      font-size: 20px;
+    }
+
+    .server-status__icon--status {
+      color: var(--mat-sys-outline);
+    }
+
+    .server-status__icon--healthy {
+      color: var(--mat-sys-outline);
+    }
+
+    .server-status__icon--busy {
+      color: var(--mat-sys-tertiary);
+    }
+
+    .server-status__icon--overloaded {
+      color: var(--mat-sys-error);
+    }
+
+    .server-status__icon--unknown {
+      color: var(--mat-sys-outline);
     }
 
     .server-status__dot {
@@ -73,7 +109,7 @@ import type { ServerStatsDTO } from '@arsnova/shared-types';
     }
 
     .server-status__dot--healthy {
-      background: var(--app-color-success-fg);
+      background: var(--app-status-healthy);
     }
 
     .server-status__dot--busy {
@@ -92,6 +128,39 @@ import type { ServerStatsDTO } from '@arsnova/shared-types';
       margin: 0.25rem 0 0;
       font: var(--mat-sys-body-small);
       color: var(--mat-sys-on-surface-variant);
+    }
+
+    .server-status__text--muted {
+      color: var(--mat-sys-outline);
+    }
+
+    .server-status__highlight {
+      color: var(--mat-sys-primary);
+      font-weight: 600;
+    }
+
+    .server-status__skeleton {
+      margin: 0.25rem 0 0;
+    }
+
+    .server-status__skeleton-line {
+      display: block;
+      height: 0.875rem;
+      width: 85%;
+      background: linear-gradient(
+        90deg,
+        var(--mat-sys-surface-variant) 25%,
+        var(--mat-sys-outline-variant) 50%,
+        var(--mat-sys-surface-variant) 75%
+      );
+      background-size: 200% 100%;
+      animation: server-status-shimmer 1.2s ease-in-out infinite;
+      border-radius: var(--mat-sys-corner-extra-small);
+    }
+
+    @keyframes server-status-shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
   `],
 })

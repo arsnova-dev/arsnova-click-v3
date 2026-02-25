@@ -32,6 +32,7 @@ Aktuell definierte App-Tokens:
   --app-color-info-fg: var(--mat-sys-on-tertiary-container);
   --app-color-warning-bg: var(--mat-sys-surface-variant);
   --app-color-warning-fg: var(--mat-sys-on-surface-variant);
+  --app-status-healthy: light-dark(#16a34a, #4ade80);  // Semantisch gruen (Status-Punkt)
 
   // Preset-abhaengige Tokens
   --app-bg-root: var(--mat-sys-surface);
@@ -110,12 +111,26 @@ Preset-Umschaltung via CSS-Klasse `html.preset-playful`.
 
 ## Technische Ausnahmen
 
+### --app-status-healthy (light-dark Hex)
+Der Status-Punkt (Server healthy) nutzt `light-dark(#16a34a, #4ade80)` – semantisch gruen unabhaengig von der Theme-Palette. Begruendung: Der Punkt soll immer gruen erscheinen, wenn der Server gesund ist.
+
 ### meta theme-color (index.html)
 Die HTML meta `theme-color` unterstuetzt keine CSS Custom Properties. Daher werden feste Hex-Werte verwendet:
 - Light: `#f5f5f5` (naehe M3 surface)
 - Dark: `#1c1b1f` (naehe M3 surface)
 
 Diese Ausnahme ist technisch bedingt und dokumentiert in ADR 0005.
+
+## Responsive Breakpoints (Material Design 3)
+
+| Breakpoint | Viewport | Verwendung |
+|------------|---------|------------|
+| &lt; 600px | Compact | Smartphone (Portrait/Landscape) – Hamburger, 1-spaltig |
+| 600–839px | Medium | Tablet Portrait – Desktop-Controls, 2-spaltig |
+| 840–1199px | Expanded | Tablet Landscape, kleiner Desktop |
+| ≥ 1200px | Large | Desktop – 3-spaltige Grids, volle Layouts |
+
+Quelle: [M3 Window Size Classes](https://m3.material.io/foundations/layout/applying-layout/window-size-classes)
 
 ## Referenzen
 - ADR: `docs/architecture/decisions/0005-use-angular-material-design.md`
