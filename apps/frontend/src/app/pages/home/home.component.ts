@@ -772,7 +772,7 @@ import { ThemePresetService } from '../../services/theme-preset.service';
           var(--mat-sys-surface-container),
           var(--mat-sys-tertiary-container)
         );
-        border-color: var(--mat-sys-primary);
+        border: 1px solid color-mix(in srgb, var(--mat-sys-primary) 40%, transparent);
         box-shadow: var(--app-shadow-accent);
       }
 
@@ -804,6 +804,32 @@ import { ThemePresetService } from '../../services/theme-preset.service';
       .preset-toast {
         border-radius: 1.5rem;
         border-color: var(--mat-sys-primary);
+      }
+
+      .home-card--create mat-card-actions .home-cta:first-child {
+        box-shadow: var(--mat-sys-level1), var(--app-shadow-cta-glow);
+      }
+      .home-card--create mat-card-actions .home-cta:first-child:hover {
+        box-shadow: var(--mat-sys-level2), var(--app-shadow-cta-glow);
+      }
+
+      .home-grid mat-card,
+      .home-card {
+        box-shadow: var(--mat-sys-level2), var(--app-shadow-card-playful);
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .home-main {
+          perspective: 1200px;
+        }
+        .home-card {
+          transition: transform 0.25s ease, box-shadow 0.25s ease;
+          transform-origin: center center;
+        }
+        .home-card:hover {
+          transform: translateY(-6px) scale(1.02);
+          box-shadow: var(--mat-sys-level3), var(--app-shadow-card-playful);
+        }
       }
     }
   `],
