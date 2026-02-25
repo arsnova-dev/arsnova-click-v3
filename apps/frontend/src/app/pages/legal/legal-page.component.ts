@@ -2,17 +2,16 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { marked } from 'marked';
 
 @Component({
   selector: 'app-legal-page',
-  standalone: true,
-  imports: [RouterLink, MatButtonModule, MatIconModule],
+  imports: [RouterLink, MatButton, MatIcon],
   template: `
     <div class="l-page l-section">
-      <a mat-button routerLink="/" class="legal-back">
+      <a matButton routerLink="/" class="legal-back">
         <mat-icon>arrow_back</mat-icon>
         Startseite
       </a>

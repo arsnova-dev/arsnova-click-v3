@@ -39,8 +39,8 @@
 
 | Kriterium | Status | Details |
 |-----------|--------|---------|
-| Keine fragilen Material-DOM-Overrides | ✅ Bestanden | Kein `::ng-deep`, keine `.mat-mdc-*` Selektoren in Komponenten |
-| Anpassungen nur ueber offizielle APIs | ✅ Bestanden | `mat.theme()`, `mat.card-overrides()` in styles.scss |
+| Keine fragilen Material-DOM-Overrides | ⚠️ Ausnahme | Kein `::ng-deep`. Home-Komponente nutzt `.mat-mdc-button-toggle` Selektoren fuer transparente Toggle-Buttons – offizielle Override-APIs (`mat.button-toggle-overrides()`, CSS Custom Properties, Element-Selektoren) koennen Material's interne Styles im Playful+Dark-Modus nicht zuverlaessig ueberschreiben. Fokus-Indikatoren (`outline: none`) wurden entfernt (A11y-Fix). |
+| Anpassungen nur ueber offizielle APIs | ⚠️ Teilweise | `mat.theme()`, `mat.card-overrides()`, `mat.button-toggle-overrides()` in styles.scss. Button-Toggle-Transparenz erfordert `.mat-mdc-*` Selektoren als Workaround. |
 
 ---
 
@@ -69,7 +69,7 @@
 | Kriterium | Status | Details |
 |-----------|--------|---------|
 | Light/Dark geprueft | ✅ Manuell moeglich | Theme-Switcher vorhanden |
-| Fokuszustand sichtbar | ✅ Bestanden | Material-Komponenten haben Default-Focus; `focus-visible` bei Custom-Elementen |
+| Fokuszustand sichtbar | ✅ Bestanden | Material-Komponenten haben Default-Focus; `focus-visible` bei Custom-Elementen. `outline: none !important` auf Button-Toggles und Icon-Buttons entfernt (A11y-Fix). |
 | Disabled/Error/Hover getestet | ⚠️ Manuell erforderlich | Beitreten-Button disabled-State; joinError-Anzeige |
 | `mat.strong-focus-indicators()` | ✅ Bestanden | In styles.scss aktiviert |
 

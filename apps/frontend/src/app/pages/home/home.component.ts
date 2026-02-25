@@ -1,31 +1,39 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatIconModule } from '@angular/material/icon';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButtonToggle, MatButtonToggleGroup } from '@angular/material/button-toggle';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatChip, MatChipSet } from '@angular/material/chips';
+import { MatIcon } from '@angular/material/icon';
 import { trpc } from '../../trpc.client';
 import { ServerStatusWidgetComponent } from '../../components/server-status-widget/server-status-widget.component';
 
 @Component({
   selector: 'app-home',
-  standalone: true,
   imports: [
     RouterLink,
-    MatButtonModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatInputModule,
-    MatButtonToggleModule,
-    MatMenuModule,
-    MatChipsModule,
-    MatIconModule,
+    MatButton,
+    MatIconButton,
+    MatCard,
+    MatCardActions,
+    MatCardContent,
+    MatCardHeader,
+    MatCardSubtitle,
+    MatCardTitle,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatButtonToggle,
+    MatButtonToggleGroup,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
+    MatChip,
+    MatChipSet,
+    MatIcon,
     ServerStatusWidgetComponent,
   ],
   template: `
@@ -67,7 +75,7 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
 
           <button
             #controlsToggleBtn
-            mat-icon-button
+            matIconButton
             class="mobile-only"
             [attr.aria-expanded]="controlsMenuOpen() ? 'true' : 'false'"
             aria-controls="home-controls-mobile"
@@ -111,7 +119,7 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
               </mat-button-toggle>
             </mat-button-toggle-group>
 
-            <button mat-icon-button [matMenuTriggerFor]="langMenu" aria-label="Sprache" class="home-icon-btn">
+            <button matIconButton [matMenuTriggerFor]="langMenu" aria-label="Sprache" class="home-icon-btn">
               <mat-icon>language</mat-icon>
             </button>
             <mat-menu #langMenu="matMenu">
@@ -160,7 +168,7 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
               </mat-button-toggle>
             </mat-button-toggle-group>
 
-            <button mat-icon-button [matMenuTriggerFor]="langMenuMobile" aria-label="Sprache" class="home-icon-btn">
+            <button matIconButton [matMenuTriggerFor]="langMenuMobile" aria-label="Sprache" class="home-icon-btn">
               <mat-icon>language</mat-icon>
             </button>
             <mat-menu #langMenuMobile="matMenu">
@@ -193,7 +201,7 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
               <p class="home-recent-label">Zuletzt beigetreten</p>
               <div class="home-recent-codes">
                 @for (code of recentSessionCodes(); track code) {
-                  <button mat-stroked-button class="home-recent-code" (click)="joinSessionByCode(code)">
+                  <button matButton="outlined" class="home-recent-code" (click)="joinSessionByCode(code)">
                     {{ code }}
                   </button>
                 }
@@ -220,13 +228,13 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
 
           <mat-card-actions class="l-stack l-stack--sm">
             @if (isJoining()) {
-              <button mat-flat-button class="home-cta" disabled aria-label="Session beitreten">
+              <button matButton="filled" class="home-cta" disabled aria-label="Session beitreten">
                 <mat-icon class="home-cta__icon home-spin">sync</mat-icon>
                 Beitreten…
               </button>
             } @else {
               <button
-                mat-flat-button
+                matButton="filled"
                 class="home-cta"
                 (click)="joinSession()"
                 [disabled]="!isValidSessionCode()"
@@ -255,7 +263,7 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
             <div class="home-card__meta">
               <p class="home-card__copy">Neue Session für Kurs oder Q&amp;A in wenigen Klicks.</p>
               <a
-                mat-stroked-button
+                matButton="outlined"
                 class="home-help-btn"
                 href="https://github.com/arsnova-dev/arsnova-click-v3/blob/main/docs/onboarding.md"
                 target="_blank"
@@ -268,15 +276,15 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
           </mat-card-content>
 
           <mat-card-actions class="l-stack l-stack--sm">
-            <a mat-flat-button routerLink="/quiz" class="home-cta" (mouseenter)="preloadQuiz()">
+            <a matButton="filled" routerLink="/quiz" class="home-cta" (mouseenter)="preloadQuiz()">
               <mat-icon class="home-cta__icon">add_circle</mat-icon>
               Session erstellen
             </a>
-            <a mat-stroked-button routerLink="/quiz" class="home-cta" (mouseenter)="preloadQuiz()">
+            <a matButton="outlined" routerLink="/quiz" class="home-cta" (mouseenter)="preloadQuiz()">
               <mat-icon class="home-cta__icon">quiz</mat-icon>
               Quiz wählen
             </a>
-            <a mat-stroked-button routerLink="/quiz" class="home-cta" (mouseenter)="preloadQuiz()">
+            <a matButton="outlined" routerLink="/quiz" class="home-cta" (mouseenter)="preloadQuiz()">
               <mat-icon class="home-cta__icon">question_answer</mat-icon>
               Q&amp;A
             </a>
@@ -294,20 +302,20 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
           </mat-card-header>
           <mat-card-content>
             <div class="home-subcard__links l-stack l-stack--xs">
-              <a mat-button routerLink="/quiz" class="home-subcard__link" (mouseenter)="preloadQuiz()">
+              <a matButton routerLink="/quiz" class="home-subcard__link" (mouseenter)="preloadQuiz()">
                 <mat-icon class="home-subcard__link-icon">menu_book</mat-icon>
                 Zur Bibliothek
               </a>
-              <a mat-button routerLink="/quiz" class="home-subcard__link" (mouseenter)="preloadQuiz()">
+              <a matButton routerLink="/quiz" class="home-subcard__link" (mouseenter)="preloadQuiz()">
                 <mat-icon class="home-subcard__link-icon">content_copy</mat-icon>
                 Quiz aus Vorlage erstellen
               </a>
               <div class="home-subcard__demo l-stack l-stack--xs">
-                <a mat-stroked-button routerLink="/quiz" class="home-subcard__demo-btn" (mouseenter)="preloadQuiz()">
+                <a matButton="outlined" routerLink="/quiz" class="home-subcard__demo-btn" (mouseenter)="preloadQuiz()">
                   <mat-icon class="home-subcard__link-icon">play_circle</mat-icon>
                   Demo starten
                 </a>
-                <a mat-stroked-button [routerLink]="['/session', demoSessionCode]" class="home-subcard__demo-btn">
+                <a matButton="outlined" [routerLink]="['/session', demoSessionCode]" class="home-subcard__demo-btn">
                   <mat-icon class="home-subcard__link-icon">group_add</mat-icon>
                   Demo beitreten
                 </a>
@@ -328,7 +336,7 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
               <p class="home-subcard__body">Backend online</p>
             } @else {
               <p class="home-subcard__body">Backend nicht erreichbar</p>
-              <button mat-stroked-button class="home-retry-btn" (click)="retryConnection()" [disabled]="apiRetrying()">
+              <button matButton="outlined" class="home-retry-btn" (click)="retryConnection()" [disabled]="apiRetrying()">
                 {{ apiRetrying() ? 'Verbinde…' : 'Erneut verbinden' }}
               </button>
             }
@@ -447,37 +455,25 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
       background: transparent;
     }
 
-    .home-icon-toggles .mat-mdc-button-toggle {
+    .home-icon-toggles .mat-button-toggle {
       border: none !important;
       background: transparent;
     }
 
-    .home-icon-toggles .mat-mdc-button-toggle:focus,
-    .home-icon-toggles .mat-mdc-button-toggle:focus-visible {
-      outline: none !important;
-      box-shadow: none !important;
-    }
-
-    .home-icon-toggles .mat-mdc-button-toggle-checked {
+    .home-icon-toggles .mat-button-toggle-checked {
       border: none !important;
-      background: var(--mat-sys-surface-container);
+      background: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
     }
 
-    .home-icon-toggles .mat-mdc-button-toggle-checked .mat-icon {
+    .home-icon-toggles .mat-button-toggle-checked .mat-icon {
       color: var(--mat-sys-primary);
-    }
-
-    .home-icon-btn:focus,
-    .home-icon-btn:focus-visible {
-      outline: none !important;
-      box-shadow: none !important;
     }
 
     .home-icon-toggles--full {
       width: 100%;
     }
 
-    .home-icon-toggles--full .mat-mdc-button-toggle {
+    .home-icon-toggles--full .mat-button-toggle {
       flex: 1;
     }
 
@@ -757,7 +753,7 @@ import { ServerStatusWidgetComponent } from '../../components/server-status-widg
         color: var(--mat-sys-primary);
       }
 
-      a[mat-stroked-button] .home-cta__icon {
+      a[matButton="outlined"] .home-cta__icon {
         color: var(--mat-sys-primary);
       }
 

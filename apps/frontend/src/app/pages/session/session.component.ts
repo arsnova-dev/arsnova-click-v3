@@ -1,8 +1,8 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
+import { MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
 import { trpc } from '../../trpc.client';
 import type { SessionInfoDTO } from '@arsnova/shared-types';
 
@@ -13,11 +13,10 @@ import type { SessionInfoDTO } from '@arsnova/shared-types';
  */
 @Component({
   selector: 'app-session',
-  standalone: true,
-  imports: [RouterLink, MatButtonModule, MatCardModule, MatIconModule],
+  imports: [RouterLink, MatButton, MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle, MatIcon],
   template: `
     <div class="l-page l-section">
-      <a mat-button routerLink="/" aria-label="Zurück zur Startseite">
+      <a matButton routerLink="/" aria-label="Zurück zur Startseite">
         <mat-icon>arrow_back</mat-icon>
         Startseite
       </a>

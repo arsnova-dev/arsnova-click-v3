@@ -1,19 +1,18 @@
 import { Component, HostListener, OnInit, signal } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, RouterLink, MatButtonModule, MatIconModule],
+  imports: [RouterOutlet, RouterLink, MatButton, MatIcon],
   template: `
     <div class="app-layout">
       @if (!isOnline()) {
         <div class="app-offline-banner" role="alert">
           <mat-icon class="app-offline-banner__icon">cloud_off</mat-icon>
           <span>Offline – Verbindung prüfen</span>
-          <button mat-button class="app-offline-banner__retry" (click)="retryOnline()">
+          <button matButton class="app-offline-banner__retry" (click)="retryOnline()">
             Erneut versuchen
           </button>
         </div>
@@ -27,11 +26,11 @@ import { MatIconModule } from '@angular/material/icon';
           <span class="app-footer__copy">© {{ year }} arsnova.click</span>
           <p class="app-footer__badges">100 % DSGVO-konform · Open Source · Kostenlos</p>
           <div class="app-footer__links">
-            <a mat-button routerLink="/legal/imprint">
+            <a matButton routerLink="/legal/imprint">
               <mat-icon class="app-footer__icon">business</mat-icon>
               Impressum
             </a>
-            <a mat-button routerLink="/legal/privacy">
+            <a matButton routerLink="/legal/privacy">
               <mat-icon class="app-footer__icon">privacy_tip</mat-icon>
               Datenschutz
             </a>

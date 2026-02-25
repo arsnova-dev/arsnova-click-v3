@@ -61,7 +61,12 @@ html {
   @include mat.card-overrides((
     outlined-container-shape: var(--mat-sys-corner-extra-large),
   ));
+
+  @include mat.button-toggle-overrides((
+    shape: var(--mat-sys-corner-medium),
+  ));
 }
+
 
 // ---------------------------------------------------------------------------
 // 2) App-Semantic Tokens – TOKENS.md §2

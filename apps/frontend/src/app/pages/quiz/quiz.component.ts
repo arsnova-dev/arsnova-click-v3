@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
 
 /**
  * Quiz-Verwaltungsseite (Epic 1).
@@ -10,8 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
  */
 @Component({
   selector: 'app-quiz',
-  standalone: true,
-  imports: [RouterLink, MatButtonModule, MatCardModule, MatIconModule],
+  imports: [RouterLink, MatButton, MatCard, MatCardContent, MatIcon],
   template: `
     <div class="l-page l-section">
       <div class="quiz-page__header">
@@ -19,7 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
           <mat-icon class="quiz-page__title-icon">quiz</mat-icon>
           Meine Quizzes
         </h1>
-        <a mat-button routerLink="/" aria-label="Zurück zur Startseite">
+        <a matButton routerLink="/" aria-label="Zurück zur Startseite">
           <mat-icon>arrow_back</mat-icon>
           Startseite
         </a>
@@ -30,7 +29,7 @@ import { MatIconModule } from '@angular/material/icon';
           <p class="quiz-empty-state__text">
             Noch keine Quizzes vorhanden.
           </p>
-          <button mat-flat-button aria-label="Neues Quiz erstellen">
+          <button matButton="filled" aria-label="Neues Quiz erstellen">
             <mat-icon>add_circle</mat-icon>
             Neues Quiz erstellen
           </button>

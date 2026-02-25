@@ -3,14 +3,13 @@
  * Zeigt aggregierte Kennzahlen und Status-Indikator; Polling alle 30s.
  */
 import { Component, OnInit, OnDestroy, signal } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
+import { MatIcon } from '@angular/material/icon';
 import { trpc } from '../../trpc.client';
 import type { ServerStatsDTO } from '@arsnova/shared-types';
 
 @Component({
   selector: 'app-server-status-widget',
-  standalone: true,
-  imports: [MatIconModule],
+  imports: [MatIcon],
   template: `
     <div
       class="server-status"
