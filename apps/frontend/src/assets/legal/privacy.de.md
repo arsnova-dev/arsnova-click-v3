@@ -49,7 +49,15 @@ Die Bereitstellung personenbezogener Daten ist weder gesetzlich noch vertraglich
 
 ## 8. Hinweis zur Anwendung arsnova.click
 
-Die Anwendung arsnova.click (Quiz, Abstimmungen, Sessions) ist datenschutzfreundlich konzipiert: Quiz-Inhalte werden lokal bzw. bei Self-Hosting auf Ihrem Server gehalten (Local-First). Welche Daten beim Betrieb der Anwendung (z. B. Session-Codes, Nicknames, Abstimmungen) verarbeitet werden, richtet sich nach dem jeweiligen Betreiber (bei Self-Hosting: Ihre Institution). Bitte beachten Sie die dort bereitgestellten Datenschutzhinweise.
+Die Anwendung arsnova.click (Live-Quiz, Q&A, Abstimmungen) ist datenschutzfreundlich konzipiert:
+
+- **Local-First:** Quiz-Inhalte (Fragen, Antworten) werden im Browser des Erstellers lokal gespeichert (IndexedDB/Yjs). Eine dauerhafte serverseitige Speicherung von Quiz-Inhalten erfolgt nicht; beim Start einer Live-Session werden die Daten nur temporär für die Dauer der Session an den Server übertragen.
+- **Speicherung im Browser:** Die Anwendung nutzt Local Storage bzw. IndexedDB für Quiz-Daten, Einstellungen und zuletzt genutzte Session-Codes. Es werden keine Cookies für Tracking oder Analyse gesetzt.
+- **Betrieb der Live-Session (bei Betreib durch den unter Abschnitt 1 genannten Verantwortlichen):** Während einer Session werden u. a. Session-Code, pseudonyme Nicknames (oder im anonymen Modus nur automatisch vergebene Teilnehmer-IDs), Abstimmungen und Punkte verarbeitet. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse am Betrieb der Echtzeit-Anwendung). Es werden keine personenbezogenen Daten ohne Zweckbindung gespeichert.
+- **Bereinigung:** Session-Daten (Abstimmungen, Teilnehmerlisten) werden nach Beendigung der Session bzw. spätestens nach 24 Stunden automatisch bereinigt. Aggregierte Statistiken (z. B. Teilnehmerzahlen) enthalten keine Rückschlüsse auf Einzelpersonen.
+- **Anonymer Modus:** Optional kann ein Modus genutzt werden, in dem keine Nicknames erhoben werden (nur automatische Teilnehmer-IDs), um die Teilnahme besonders datensparsam zu gestalten.
+
+Bei Self-Hosting der Anwendung kann der Verantwortliche ein anderer sein (Ihre Institution). Dann gelten die dort bereitgestellten Datenschutzhinweise.
 
 ## 9. Änderungen
 

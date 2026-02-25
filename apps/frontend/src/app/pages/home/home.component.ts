@@ -192,14 +192,14 @@ import { ThemePresetService } from '../../services/theme-preset.service';
       </header>
 
       <main class="home-main">
-        <p class="home-hero">Live-Quiz und Abstimmung – in wenigen Klicks</p>
+        <p class="home-hero">Live-Quiz, Q&A und Abstimmung – mit wenigen Klicks</p>
         <p class="home-trust-badges">100 % DSGVO-konform · Open Source · kostenlos</p>
 
-        <mat-card appearance="raised" id="student-entry" class="home-card">
+        <mat-card appearance="raised" id="participant-entry" class="home-card">
           <mat-card-header>
             <mat-card-subtitle>
               <mat-icon class="home-card__icon">group</mat-icon>
-              Student/in
+              Teilnehmer/in
             </mat-card-subtitle>
             <mat-card-title class="home-card__title">Beitreten</mat-card-title>
           </mat-card-header>
@@ -508,6 +508,7 @@ import { ThemePresetService } from '../../services/theme-preset.service';
       margin-top: 1rem;
       border-top: 1px solid var(--mat-sys-outline-variant);
       padding-top: 1rem;
+      align-items: flex-end;
     }
 
     .home-preset-toggle--full {
@@ -1021,8 +1022,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       this.presetToastHint.set('Antwortphase offen (kein Standard-Timer).');
     } else {
       this.presetToastTitle.set('Preset: Spielerisch');
-      this.presetToastOn.set(['Leaderboard', 'Sound', 'Belohnung', 'Motivation', 'Emoji']);
-      this.presetToastOff.set(['Anonym']);
+      this.presetToastOn.set(['Leaderboard', 'Sound', 'Belohnung', 'Motivation', 'Emoji', 'Nicknames']);
+      this.presetToastOff.set([]);
       this.presetToastHint.set('');
     }
     this.presetToastVisible.set(true);
