@@ -106,6 +106,9 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
                   {{ presetToastTitle() }}
                 </p>
                 <p class="preset-toast__preset-hint">{{ presetToastPresetHint() }}</p>
+                <button type="button" class="preset-toast__switch-preset" (click)="switchPresetInToast()">
+                  Zu {{ themePreset.preset() === 'serious' ? 'Spielerisch' : 'Seriös' }} wechseln
+                </button>
               </div>
               <button matIconButton type="button" class="preset-toast__close" aria-label="Hinweis schließen" (click)="dismissPresetToast()">
                 <mat-icon>close</mat-icon>
@@ -503,6 +506,22 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
       color: var(--mat-sys-on-surface-variant);
     }
 
+    .preset-toast__switch-preset {
+      margin-top: 0.5rem;
+      padding: 0;
+      border: none;
+      background: none;
+      font: var(--mat-sys-body-small);
+      color: var(--mat-sys-on-surface);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      cursor: pointer;
+    }
+
+    .preset-toast__switch-preset:hover {
+      color: var(--mat-sys-primary);
+    }
+
     .preset-toast__close {
       flex-shrink: 0;
       margin: -0.25rem -0.25rem 0 0;
@@ -577,6 +596,7 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
       background: var(--mat-sys-surface-container);
       padding: 1rem;
       box-shadow: var(--mat-sys-level1);
+      font-size: 0.875rem;
     }
 
     .home-header__row {
@@ -619,7 +639,10 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
 
     .home-brand__title {
       margin: 0;
-      font: var(--mat-sys-title-large);
+      font-size: 1.375rem;
+      line-height: 1.25;
+      font-weight: 500;
+      font-family: inherit;
     }
 
 
@@ -1106,6 +1129,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   dismissPresetToast(): void {
     this.presetToastVisible.set(false);
+  }
+
+  /** Im geöffneten Toast zum anderen Preset wechseln (ein Klick, Toast bleibt offen). */
+  switchPresetInToast(): void {
+    const other = this.themePreset.preset() === 'serious' ? 'spielerisch' : 'serious';
+    this.setPreset(other);
   }
 
   setLanguage(code: 'de' | 'en' | 'fr' | 'it' | 'es'): void {
