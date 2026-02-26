@@ -25,23 +25,23 @@ const PRESET_CATEGORIES = [
 
 type CategoryId = (typeof PRESET_CATEGORIES)[number]['id'];
 
-/** Alle Preset-Optionen mit Kategorie und verständlichem Label (Wirkung erkennbar) */
+/** Alle Preset-Optionen mit Kategorie, Icon und Label */
 const PRESET_OPTION_IDS = [
-  { id: 'showLeaderboard', label: 'Rangliste (Punkte & Platzierung)', categoryId: 'gamification' as CategoryId },
-  { id: 'enableRewardEffects', label: 'Effekte bei richtiger Antwort', categoryId: 'gamification' as CategoryId },
-  { id: 'enableMotivationMessages', label: 'Anfeuerungstexte nach Antwort', categoryId: 'gamification' as CategoryId },
-  { id: 'enableEmojiReactions', label: 'Emoji-Reaktionen zulassen', categoryId: 'gamification' as CategoryId },
-  { id: 'bonusTokenCount', label: 'Bonus-Token für Top-Plätze', categoryId: 'gamification' as CategoryId },
-  { id: 'allowCustomNicknames', label: 'Eigene Namen (statt vorgegebene Liste)', categoryId: 'participation' as CategoryId },
-  { id: 'anonymousMode', label: 'Anonym (keine Namen sichtbar)', categoryId: 'participation' as CategoryId },
-  { id: 'nicknameTheme', label: 'Vorgegebene Namen (z. B. Thema)', categoryId: 'participation' as CategoryId },
-  { id: 'defaultTimer', label: 'Zeitlimit pro Frage (Countdown)', categoryId: 'flow' as CategoryId },
-  { id: 'readingPhaseEnabled', label: 'Zuerst lesen, dann antworten', categoryId: 'flow' as CategoryId },
-  { id: 'teamMode', label: 'In Teams spielen', categoryId: 'team' as CategoryId },
-  { id: 'teamCount', label: 'Anzahl Teams (2–8)', categoryId: 'team' as CategoryId },
-  { id: 'teamAssignment', label: 'Teams automatisch/manuell zuweisen', categoryId: 'team' as CategoryId },
-  { id: 'enableSoundEffects', label: 'Sound bei Aktionen', categoryId: 'audio' as CategoryId },
-  { id: 'backgroundMusic', label: 'Hintergrundmusik in Lobby', categoryId: 'audio' as CategoryId },
+  { id: 'showLeaderboard', label: 'Rangliste (Punkte & Platzierung)', icon: 'leaderboard', categoryId: 'gamification' as CategoryId },
+  { id: 'enableRewardEffects', label: 'Effekte bei richtiger Antwort', icon: 'auto_awesome', categoryId: 'gamification' as CategoryId },
+  { id: 'enableMotivationMessages', label: 'Anfeuerungstexte nach Antwort', icon: 'campaign', categoryId: 'gamification' as CategoryId },
+  { id: 'enableEmojiReactions', label: 'Emoji-Reaktionen zulassen', icon: 'emoji_emotions', categoryId: 'gamification' as CategoryId },
+  { id: 'bonusTokenCount', label: 'Bonus-Token für Top-Plätze', icon: 'military_tech', categoryId: 'gamification' as CategoryId },
+  { id: 'allowCustomNicknames', label: 'Eigene Namen (statt vorgegebene Liste)', icon: 'edit', categoryId: 'participation' as CategoryId },
+  { id: 'anonymousMode', label: 'Anonym (keine Namen sichtbar)', icon: 'visibility_off', categoryId: 'participation' as CategoryId },
+  { id: 'nicknameTheme', label: 'Vorgegebene Namen (z. B. Thema)', icon: 'palette', categoryId: 'participation' as CategoryId },
+  { id: 'defaultTimer', label: 'Zeitlimit pro Frage (Countdown)', icon: 'timer', categoryId: 'flow' as CategoryId },
+  { id: 'readingPhaseEnabled', label: 'Zuerst lesen, dann antworten', icon: 'menu_book', categoryId: 'flow' as CategoryId },
+  { id: 'teamMode', label: 'In Teams spielen', icon: 'groups', categoryId: 'team' as CategoryId },
+  { id: 'teamCount', label: 'Anzahl Teams (2–8)', icon: 'numbers', categoryId: 'team' as CategoryId },
+  { id: 'teamAssignment', label: 'Teams automatisch/manuell zuweisen', icon: 'shuffle', categoryId: 'team' as CategoryId },
+  { id: 'enableSoundEffects', label: 'Sound bei Aktionen', icon: 'volume_up', categoryId: 'audio' as CategoryId },
+  { id: 'backgroundMusic', label: 'Hintergrundmusik in Lobby', icon: 'music_note', categoryId: 'audio' as CategoryId },
 ] as const;
 
 type PresetOptionState = Record<string, boolean>;
@@ -100,7 +100,10 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
           <div class="preset-toast" (click)="$event.stopPropagation()">
           <div class="preset-toast__head">
             <div class="preset-toast__head-text">
-              <p class="preset-toast__title">{{ presetToastTitle() }}</p>
+              <p class="preset-toast__title">
+                <mat-icon class="preset-toast__title-icon">{{ presetToastIcon() }}</mat-icon>
+                {{ presetToastTitle() }}
+              </p>
               <p class="preset-toast__preset-hint">{{ presetToastPresetHint() }}</p>
             </div>
             <button matIconButton type="button" class="preset-toast__close" aria-label="Hinweis schließen" (click)="dismissPresetToast()">
@@ -123,7 +126,9 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
                       [attr.aria-pressed]="presetOptionEffective(opt.id)"
                       [attr.aria-disabled]="isPresetOptionDisabled(opt.id)"
                       [attr.aria-label]="opt.label + (presetOptionEffective(opt.id) ? ' an' : ' aus') + (isPresetOptionDisabled(opt.id) ? ', deaktiviert' : '')"
+                      class="preset-toast__chip"
                     >
+                      <mat-icon class="preset-toast__chip-icon">{{ opt.icon }}</mat-icon>
                       {{ opt.label }} {{ presetOptionEffective(opt.id) ? 'an' : 'aus' }}
                     </mat-chip>
                   }
@@ -134,6 +139,7 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
           <div class="preset-toast__actions">
             <button mat-button type="button" (click)="resetPresetOptions()">Zurücksetzen</button>
             <button mat-flat-button type="button" color="primary" (click)="savePresetAndCloseToast()">
+              <mat-icon>save</mat-icon>
               Speichern
             </button>
           </div>
@@ -467,6 +473,16 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
     .preset-toast__title {
       margin: 0;
       font: var(--mat-sys-title-large);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .preset-toast__title-icon {
+      flex-shrink: 0;
+      width: 1.75rem;
+      height: 1.75rem;
+      font-size: 1.75rem;
     }
 
     .preset-toast__preset-hint {
@@ -515,6 +531,14 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
 
     .preset-toast__chips mat-chip {
       cursor: pointer;
+    }
+
+    .preset-toast__chip-icon {
+      width: 1.125rem;
+      height: 1.125rem;
+      margin-right: 0.35rem;
+      font-size: 1.125rem;
+      vertical-align: middle;
     }
 
     .preset-toast__chips mat-chip.preset-toast__chip--disabled {
@@ -989,6 +1013,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   presetToastVisible = signal(false);
   presetToastTitle = signal('');
   presetToastPresetHint = signal('');
+  presetToastIcon = signal<string>('school');
   /** Zustand jeder Option (an = true, aus = false); wird beim Speichern in localStorage geschrieben */
   presetOptionState = signal<PresetOptionState>({});
   readonly presetOptionList = PRESET_OPTION_IDS;
@@ -1217,6 +1242,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   private showPresetToast(preset: 'serious' | 'spielerisch'): void {
     this.presetToastTitle.set(preset === 'serious' ? 'Preset: Seriös' : 'Preset: Spielerisch');
+    this.presetToastIcon.set(preset === 'serious' ? 'school' : 'celebration');
     this.presetToastPresetHint.set(
       preset === 'serious'
         ? 'Druckfrei, anonym, Fokus auf Inhalt.'
