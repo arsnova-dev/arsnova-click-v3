@@ -458,7 +458,7 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
 
     .preset-toast__title {
       margin: 0;
-      font: var(--mat-sys-title-small);
+      font: var(--mat-sys-title-large);
       flex: 1;
     }
 
