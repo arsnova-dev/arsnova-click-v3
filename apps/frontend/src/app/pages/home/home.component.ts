@@ -99,7 +99,10 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
         <div class="preset-toast-backdrop" (click)="dismissPresetToast()">
           <div class="preset-toast" (click)="$event.stopPropagation()">
           <div class="preset-toast__head">
-            <p class="preset-toast__title">{{ presetToastTitle() }}</p>
+            <div class="preset-toast__head-text">
+              <p class="preset-toast__title">{{ presetToastTitle() }}</p>
+              <p class="preset-toast__preset-hint">{{ presetToastPresetHint() }}</p>
+            </div>
             <button matIconButton type="button" class="preset-toast__close" aria-label="Hinweis schließen" (click)="dismissPresetToast()">
               <mat-icon>close</mat-icon>
             </button>
@@ -456,10 +459,20 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
       gap: 0.5rem;
     }
 
+    .preset-toast__head-text {
+      flex: 1;
+      min-width: 0;
+    }
+
     .preset-toast__title {
       margin: 0;
       font: var(--mat-sys-title-large);
-      flex: 1;
+    }
+
+    .preset-toast__preset-hint {
+      margin: 0.25rem 0 0 0;
+      font: var(--mat-sys-body-small);
+      color: var(--mat-sys-on-surface-variant);
     }
 
     .preset-toast__close {
@@ -469,26 +482,30 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
 
     .preset-toast__subtitle,
     .preset-toast__hint {
-      margin: 0.35rem 0 0;
+      margin: 1.25rem 0 0;
       font: var(--mat-sys-body-small);
       color: var(--mat-sys-on-surface-variant);
     }
 
     .preset-toast__categories {
-      margin-top: 0.5rem;
+      margin-top: 1.25rem;
     }
 
     .preset-toast__category {
       margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--mat-sys-outline-variant);
     }
 
     .preset-toast__category:first-child {
       margin-top: 0;
+      padding-top: 0;
+      border-top: none;
     }
 
     .preset-toast__category-label {
       margin: 0 0 0.35rem 0;
-      font: var(--mat-sys-label-small);
+      font: var(--mat-sys-title-small);
       color: var(--mat-sys-on-surface-variant);
     }
 
@@ -971,6 +988,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   controlsMenuOpen = signal(false);
   presetToastVisible = signal(false);
   presetToastTitle = signal('');
+  presetToastPresetHint = signal('');
   /** Zustand jeder Option (an = true, aus = false); wird beim Speichern in localStorage geschrieben */
   presetOptionState = signal<PresetOptionState>({});
   readonly presetOptionList = PRESET_OPTION_IDS;
@@ -1199,6 +1217,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   private showPresetToast(preset: 'serious' | 'spielerisch'): void {
     this.presetToastTitle.set(preset === 'serious' ? 'Preset: Seriös' : 'Preset: Spielerisch');
+    this.presetToastPresetHint.set(
+      preset === 'serious'
+        ? 'Druckfrei, anonym, Fokus auf Inhalt.'
+        : 'Rangliste, Sound & Effekte, Motivation & Wettbewerb.'
+    );
     let state: PresetOptionState;
     try {
       const raw = localStorage.getItem(PRESET_OPTIONS_STORAGE);
