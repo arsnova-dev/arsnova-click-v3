@@ -50,7 +50,7 @@ jobs:
         run: npx tsc -b apps/backend/tsconfig.json
 
       - name: TypeScript compile – frontend
-        run: npx tsc --project apps/frontend/tsconfig.json --noEmit
+        run: npx tsc --project apps/frontend/tsconfig.app.json --noEmit
 
   # ─── Lint ────────────────────────────────────────────────────────────────────
   lint:
