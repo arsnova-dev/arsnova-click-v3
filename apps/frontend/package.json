@@ -11,6 +11,8 @@
     "lighthouse:serve": "npm run build:prod && npm run serve:dist",
     "check:viewport": "node scripts/check-viewport-320.mjs",
     "lighthouse:a11y": "node scripts/lighthouse-a11y.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
     "screenshots": "node scripts/capture-screenshots.mjs"
   },
@@ -24,6 +26,7 @@
     "@angular/material": "^21.0.0",
     "@angular/platform-browser": "^21.0.0",
     "@angular/router": "^21.0.0",
+    "@angular/platform-browser-dynamic": "^21.0.0",
     "@angular/service-worker": "^21.0.0",
     "@arsnova/shared-types": "*",
     "@trpc/client": "^10.45.0",
@@ -46,7 +49,11 @@
     "autoprefixer": "^10.4.0",
     "playwright": "^1.49.0",
     "postcss": "^8.4.0",
+    "@analogjs/vite-plugin-angular": "^1.22.0",
+    "@analogjs/vitest-angular": "^1.22.0",
+    "jsdom": "^26.1.0",
     "sharp-ico": "^0.1.5",
-    "typescript": "~5.9.0"
+    "typescript": "~5.9.0",
+    "vitest": "^4.0.18"
   }
 }

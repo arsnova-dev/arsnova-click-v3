@@ -6,67 +6,11 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButtonToggle, MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
-import { MatChip, MatChipSet } from '@angular/material/chips';
 import { MatIcon } from '@angular/material/icon';
 import { trpc } from '../../trpc.client';
 import { ServerStatusWidgetComponent } from '../../components/server-status-widget/server-status-widget.component';
+import { PresetToastComponent } from '../../components/preset-toast/preset-toast.component';
 import { ThemePresetService } from '../../services/theme-preset.service';
-
-const PRESET_OPTIONS_STORAGE = 'home-preset-options';
-
-/** Kategorien für die Optionen (Reihenfolge der Anzeige) */
-const PRESET_CATEGORIES = [
-  { id: 'gamification', label: 'Gamification & Auswertung', order: 0 },
-  { id: 'participation', label: 'Teilnahme & Nicknames', order: 1 },
-  { id: 'flow', label: 'Ablauf & Zeit', order: 2 },
-  { id: 'team', label: 'Team', order: 3 },
-  { id: 'audio', label: 'Audio', order: 4 },
-] as const;
-
-type CategoryId = (typeof PRESET_CATEGORIES)[number]['id'];
-
-/** Alle Preset-Optionen mit Kategorie, Icon und Label */
-const PRESET_OPTION_IDS = [
-  { id: 'showLeaderboard', label: 'Rangliste (Punkte & Platzierung)', icon: 'leaderboard', categoryId: 'gamification' as CategoryId },
-  { id: 'enableRewardEffects', label: 'Effekte bei richtiger Antwort', icon: 'auto_awesome', categoryId: 'gamification' as CategoryId },
-  { id: 'enableMotivationMessages', label: 'Anfeuerungstexte nach Antwort', icon: 'campaign', categoryId: 'gamification' as CategoryId },
-  { id: 'enableEmojiReactions', label: 'Emoji-Reaktionen zulassen', icon: 'emoji_emotions', categoryId: 'gamification' as CategoryId },
-  { id: 'bonusTokenCount', label: 'Bonus-Token für Top-Plätze', icon: 'military_tech', categoryId: 'gamification' as CategoryId },
-  { id: 'allowCustomNicknames', label: 'Eigene Namen (statt vorgegebene Liste)', icon: 'edit', categoryId: 'participation' as CategoryId },
-  { id: 'anonymousMode', label: 'Anonym (keine Namen sichtbar)', icon: 'visibility_off', categoryId: 'participation' as CategoryId },
-  { id: 'nicknameTheme', label: 'Vorgegebene Namen (z. B. Thema)', icon: 'palette', categoryId: 'participation' as CategoryId },
-  { id: 'defaultTimer', label: 'Zeitlimit pro Frage (Countdown)', icon: 'timer', categoryId: 'flow' as CategoryId },
-  { id: 'readingPhaseEnabled', label: 'Zuerst lesen, dann antworten', icon: 'menu_book', categoryId: 'flow' as CategoryId },
-  { id: 'teamMode', label: 'In Teams spielen', icon: 'groups', categoryId: 'team' as CategoryId },
-  { id: 'teamCount', label: 'Anzahl Teams (2–8)', icon: 'numbers', categoryId: 'team' as CategoryId },
-  { id: 'teamAssignment', label: 'Teams automatisch/manuell zuweisen', icon: 'shuffle', categoryId: 'team' as CategoryId },
-  { id: 'enableSoundEffects', label: 'Sound bei Aktionen', icon: 'volume_up', categoryId: 'audio' as CategoryId },
-  { id: 'backgroundMusic', label: 'Hintergrundmusik in Lobby', icon: 'music_note', categoryId: 'audio' as CategoryId },
-] as const;
-
-type PresetOptionState = Record<string, boolean>;
-
-function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState {
-  const base: PresetOptionState = {};
-  for (const o of PRESET_OPTION_IDS) {
-    base[o.id] = false;
-  }
-  if (preset === 'serious') {
-    base['anonymousMode'] = true;
-    base['readingPhaseEnabled'] = true;
-    base['defaultTimer'] = false; // offen
-  } else {
-    base['showLeaderboard'] = true;
-    base['allowCustomNicknames'] = true;
-    base['defaultTimer'] = true;
-    base['enableSoundEffects'] = true;
-    base['enableRewardEffects'] = true;
-    base['enableMotivationMessages'] = true;
-    base['enableEmojiReactions'] = true;
-    base['readingPhaseEnabled'] = false;
-  }
-  return base;
-}
 
 @Component({
   selector: 'app-home',
@@ -88,68 +32,14 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
     MatMenu,
     MatMenuItem,
     MatMenuTrigger,
-    MatChip,
-    MatChipSet,
     MatIcon,
     ServerStatusWidgetComponent,
+    PresetToastComponent,
   ],
   template: `
     <div class="l-page">
       @if (presetToastVisible()) {
-        <div class="preset-toast-backdrop" (click)="dismissPresetToast()">
-          <div class="preset-toast" (click)="$event.stopPropagation()">
-          <div class="preset-toast__scroll">
-            <div class="preset-toast__head">
-              <div class="preset-toast__head-text">
-                <p class="preset-toast__title">
-                  <mat-icon class="preset-toast__title-icon">{{ presetToastIcon() }}</mat-icon>
-                  {{ presetToastTitle() }}
-                </p>
-                <p class="preset-toast__preset-hint">{{ presetToastPresetHint() }}</p>
-                <button type="button" class="preset-toast__switch-preset" (click)="switchPresetInToast()">
-                  Zu {{ themePreset.preset() === 'serious' ? 'Spielerisch' : 'Seriös' }} wechseln
-                </button>
-              </div>
-              <button matIconButton type="button" class="preset-toast__close" aria-label="Hinweis schließen" (click)="dismissPresetToast()">
-                <mat-icon>close</mat-icon>
-              </button>
-            </div>
-            <p class="preset-toast__subtitle">Jede Option: <strong>an</strong> = aktiv, <strong>aus</strong> = deaktiviert. Klick wechselt, Speichern übernimmt.</p>
-            <div class="preset-toast__categories">
-              @for (group of presetOptionsByCategory(); track group.categoryId) {
-                <div class="preset-toast__category">
-                  <p class="preset-toast__category-label">{{ group.categoryLabel }}</p>
-                  <mat-chip-set class="preset-toast__chips">
-                    @for (opt of group.options; track opt.id) {
-                      <mat-chip
-                        [highlighted]="presetOptionEffective(opt.id)"
-                        (click)="togglePresetOption(opt.id)"
-                        [class.preset-toast__chip--disabled]="isPresetOptionDisabled(opt.id)"
-                        role="button"
-                        [attr.tabindex]="isPresetOptionDisabled(opt.id) ? -1 : 0"
-                        [attr.aria-pressed]="presetOptionEffective(opt.id)"
-                        [attr.aria-disabled]="isPresetOptionDisabled(opt.id)"
-                        [attr.aria-label]="opt.label + (presetOptionEffective(opt.id) ? ' an' : ' aus') + (isPresetOptionDisabled(opt.id) ? ', deaktiviert' : '')"
-                        class="preset-toast__chip"
-                      >
-                        <mat-icon class="preset-toast__chip-icon">{{ opt.icon }}</mat-icon>
-                        {{ opt.label }} {{ presetOptionEffective(opt.id) ? 'an' : 'aus' }}
-                      </mat-chip>
-                    }
-                  </mat-chip-set>
-                </div>
-              }
-            </div>
-          </div>
-          <div class="preset-toast__actions">
-            <button mat-button type="button" (click)="resetPresetOptions()">Zurücksetzen</button>
-            <button mat-flat-button type="button" color="primary" (click)="savePresetAndCloseToast()">
-              <mat-icon>save</mat-icon>
-              Speichern
-            </button>
-          </div>
-          </div>
-        </div>
+        <app-preset-toast (closed)="presetToastVisible.set(false)" />
       }
 
       <header #homeHeader class="home-header" role="banner">
@@ -279,7 +169,7 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
 
       <main class="home-main">
         <p class="home-hero">Live-Quiz, Q&A und Abstimmung – mit wenigen Klicks</p>
-        <p class="home-trust-badges">100 % DSGVO-konform · Open Source · kostenlos</p>
+        <p class="home-trust-badges">100 % DSGVO-konform · Open Source · kostenlos</p>
 
         <mat-card appearance="raised" id="participant-entry" class="home-card">
           <mat-card-header>
@@ -440,153 +330,6 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
     </div>
   `,
   styles: [`
-    .preset-toast-backdrop {
-      position: fixed;
-      inset: 0;
-      z-index: 70;
-      background: transparent;
-    }
-
-    .preset-toast {
-      position: fixed;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      user-select: none;
-      z-index: 71;
-      width: min(96vw, 42rem);
-      max-height: min(90vh, 40rem);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      border-radius: var(--mat-sys-corner-large);
-      border: 1px solid var(--mat-sys-outline-variant);
-      background: var(--mat-sys-surface-container);
-      padding: 0.75rem;
-      box-shadow: var(--mat-sys-level3);
-    }
-
-    .preset-toast__scroll {
-      flex: 1;
-      min-height: 0;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .preset-toast__head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 0.5rem;
-    }
-
-    .preset-toast__head-text {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .preset-toast__title {
-      margin: 0;
-      font: var(--mat-sys-title-large);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .preset-toast__title-icon {
-      flex-shrink: 0;
-      width: 1.75rem;
-      height: 1.75rem;
-      font-size: 1.75rem;
-    }
-
-    .preset-toast__preset-hint {
-      margin: 0.25rem 0 0 0;
-      font: var(--mat-sys-body-small);
-      color: var(--mat-sys-on-surface-variant);
-    }
-
-    .preset-toast__switch-preset {
-      margin-top: 0.5rem;
-      padding: 0;
-      border: none;
-      background: none;
-      font: var(--mat-sys-body-small);
-      color: var(--mat-sys-on-surface);
-      text-decoration: underline;
-      text-underline-offset: 2px;
-      cursor: pointer;
-    }
-
-    .preset-toast__switch-preset:hover {
-      color: var(--mat-sys-primary);
-    }
-
-    .preset-toast__close {
-      flex-shrink: 0;
-      margin: -0.25rem -0.25rem 0 0;
-    }
-
-    .preset-toast__subtitle,
-    .preset-toast__hint {
-      margin: 1.25rem 0 0;
-      font: var(--mat-sys-body-small);
-      color: var(--mat-sys-on-surface-variant);
-    }
-
-    .preset-toast__categories {
-      margin-top: 1.25rem;
-    }
-
-    .preset-toast__category {
-      margin-top: 0.75rem;
-      padding-top: 0.75rem;
-      border-top: 1px solid var(--mat-sys-outline-variant);
-    }
-
-    .preset-toast__category:first-child {
-      margin-top: 0;
-      padding-top: 0;
-      border-top: none;
-    }
-
-    .preset-toast__category-label {
-      margin: 0 0 0.35rem 0;
-      font: var(--mat-sys-title-small);
-      color: var(--mat-sys-on-surface-variant);
-    }
-
-    .preset-toast__chips {
-      margin-top: 0.25rem;
-    }
-
-    .preset-toast__chips mat-chip {
-      cursor: pointer;
-    }
-
-    .preset-toast__chip-icon {
-      width: 1.125rem;
-      height: 1.125rem;
-      margin-right: 0.35rem;
-      font-size: 1.125rem;
-      vertical-align: middle;
-    }
-
-    .preset-toast__chips mat-chip.preset-toast__chip--disabled {
-      cursor: default;
-      opacity: 0.6;
-    }
-
-    .preset-toast__actions {
-      flex-shrink: 0;
-      margin-top: 1rem;
-      padding-top: 0.5rem;
-      border-top: 1px solid var(--mat-sys-outline-variant);
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.5rem;
-    }
-
     .home-header {
       position: sticky;
       top: 0;
@@ -612,11 +355,7 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
         grid-template-columns: 1fr 1fr 1fr 1fr;
         gap: 1rem;
       }
-
-      .home-brand {
-        justify-self: start;
-      }
-
+      .home-brand { justify-self: start; }
       .home-controls {
         grid-column: 2 / -1;
         display: flex;
@@ -645,12 +384,9 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
       font-family: inherit;
     }
 
-
     .mobile-only { display: inline-flex; }
     .desktop-only { display: none; }
-    @media (max-width: 599px) {
-      .desktop-only { display: none !important; }
-    }
+    @media (max-width: 599px) { .desktop-only { display: none !important; } }
     @media (min-width: 600px) {
       .mobile-only { display: none; }
       .desktop-only { display: inline-flex; }
@@ -662,32 +398,15 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
       gap: 0.5rem;
     }
 
-    .home-icon-toggles {
-      border: none;
-      background: transparent;
-    }
-
-    .home-icon-toggles .mat-button-toggle {
-      border: none !important;
-      background: transparent;
-    }
-
+    .home-icon-toggles { border: none; background: transparent; }
+    .home-icon-toggles .mat-button-toggle { border: none !important; background: transparent; }
     .home-icon-toggles .mat-button-toggle-checked {
       border: none !important;
       background: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
     }
-
-    .home-icon-toggles .mat-button-toggle-checked .mat-icon {
-      color: var(--mat-sys-primary);
-    }
-
-    .home-icon-toggles--full {
-      width: 100%;
-    }
-
-    .home-icon-toggles--full .mat-button-toggle {
-      flex: 1;
-    }
+    .home-icon-toggles .mat-button-toggle-checked .mat-icon { color: var(--mat-sys-primary); }
+    .home-icon-toggles--full { width: 100%; }
+    .home-icon-toggles--full .mat-button-toggle { flex: 1; }
 
     .home-controls-mobile {
       margin-top: 1rem;
@@ -696,13 +415,8 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
       align-items: flex-end;
     }
 
-    .home-preset-toggle--full {
-      width: 100%;
-    }
-
-    .home-preset-toggle--full mat-button-toggle {
-      flex: 1;
-    }
+    .home-preset-toggle--full { width: 100%; }
+    .home-preset-toggle--full mat-button-toggle { flex: 1; }
 
     .home-hero {
       margin: 0 0 0.5rem;
@@ -718,43 +432,18 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
       text-align: center;
     }
 
-    .home-main {
-      display: grid;
-      gap: 1rem;
-    }
+    .home-main { display: grid; gap: 1rem; }
 
     @media (min-width: 600px) {
-      .home-main {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .home-hero,
-      .home-trust-badges {
-        grid-column: 1 / -1;
-      }
+      .home-main { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .home-hero, .home-trust-badges { grid-column: 1 / -1; }
     }
 
-    .home-card {
-      padding: 0.25rem;
-      box-shadow: var(--mat-sys-level2);
-    }
-
-    .home-card--create mat-card-content {
-      padding-top: 0;
-      padding-bottom: 0.5rem;
-    }
-
-    .home-card--create .home-card__meta {
-      gap: 0.5rem;
-    }
-
-    .home-card--create .home-card__copy {
-      margin: 0;
-    }
-
-    .home-card--create mat-card-actions {
-      padding-top: 0.5rem;
-    }
+    .home-card { padding: 0.25rem; box-shadow: var(--mat-sys-level2); }
+    .home-card--create mat-card-content { padding-top: 0; padding-bottom: 0.5rem; }
+    .home-card--create .home-card__meta { gap: 0.5rem; }
+    .home-card--create .home-card__copy { margin: 0; }
+    .home-card--create mat-card-actions { padding-top: 0.5rem; }
 
     .home-card__icon {
       vertical-align: middle;
@@ -764,9 +453,7 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
       height: 1.125rem;
     }
 
-    .home-card__title {
-      font: var(--mat-sys-display-small);
-    }
+    .home-card__title { font: var(--mat-sys-display-small); }
 
     .home-card__meta {
       display: flex;
@@ -776,13 +463,8 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
       flex-wrap: wrap;
     }
 
-    .home-card__meta a {
-      flex-shrink: 0;
-    }
-
-    .home-help-btn {
-      border: none;
-    }
+    .home-card__meta a { flex-shrink: 0; }
+    .home-help-btn { border: none; }
 
     .home-card__copy {
       margin: 0;
@@ -790,35 +472,14 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
       color: var(--mat-sys-on-surface-variant);
     }
 
-    mat-card-actions.l-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .home-cta {
-      width: 100%;
-    }
+    mat-card-actions.l-stack { display: flex; flex-direction: column; gap: 0.5rem; }
+    .home-cta { width: 100%; }
 
     @media (min-width: 600px) {
-      mat-card-actions.l-stack {
-        flex-direction: row;
-        flex-wrap: wrap;
-      }
-
-      .home-cta {
-        width: auto;
-        flex: 1 1 0;
-      }
-
-      .home-card--create mat-card-actions {
-        flex-direction: column;
-      }
-
-      .home-card--create mat-card-actions .home-cta {
-        width: 100%;
-        flex: none;
-      }
+      mat-card-actions.l-stack { flex-direction: row; flex-wrap: wrap; }
+      .home-cta { width: auto; flex: 1 1 0; }
+      .home-card--create mat-card-actions { flex-direction: column; }
+      .home-card--create mat-card-actions .home-cta { width: 100%; flex: none; }
     }
 
     .home-recent-label {
@@ -827,12 +488,7 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
       color: var(--mat-sys-on-surface-variant);
     }
 
-    .home-recent-codes {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 0.25rem;
-    }
+    .home-recent-codes { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.25rem; }
 
     .home-recent-code {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -841,16 +497,8 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
       border: none;
     }
 
-    .home-code-help {
-      margin: 0;
-      font: var(--mat-sys-body-small);
-      color: var(--mat-sys-on-surface-variant);
-    }
-
-    .home-code-field {
-      width: 100%;
-      margin-top: 0.75rem;
-    }
+    .home-code-help { margin: 0; font: var(--mat-sys-body-small); color: var(--mat-sys-on-surface-variant); }
+    .home-code-field { width: 100%; margin-top: 0.75rem; }
 
     .home-code-field input {
       text-align: left;
@@ -870,144 +518,45 @@ function getPresetDefaults(preset: 'serious' | 'spielerisch'): PresetOptionState
     }
 
     @media (min-width: 600px) {
-      .home-code-field input {
-        font-size: 1.2rem;
-        letter-spacing: 0.35em;
-      }
+      .home-code-field input { font-size: 1.2rem; letter-spacing: 0.35em; }
     }
 
-    .home-error {
-      margin: 0;
-      color: var(--mat-sys-error);
-      font: var(--mat-sys-body-small);
-    }
+    .home-error { margin: 0; color: var(--mat-sys-error); font: var(--mat-sys-body-small); }
 
-    .home-spin {
-      animation: home-spin 1s linear infinite;
-    }
+    .home-spin { animation: home-spin 1s linear infinite; }
+    @keyframes home-spin { to { transform: rotate(360deg); } }
 
-    @keyframes home-spin {
-      to { transform: rotate(360deg); }
-    }
+    .home-grid mat-card { box-shadow: var(--mat-sys-level2); }
+    .home-grid { margin-top: 1rem; display: grid; gap: 0.75rem; }
+    @media (min-width: 600px) { .home-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (min-width: 1200px) { .home-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
-    .home-grid mat-card {
-      box-shadow: var(--mat-sys-level2);
-    }
-
-    .home-grid {
-      margin-top: 1rem;
-      display: grid;
-      gap: 0.75rem;
-    }
-
-    @media (min-width: 600px) {
-      .home-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (min-width: 1200px) {
-      .home-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-    }
-
-    .home-retry-btn {
-      margin-top: 0.5rem;
-    }
-
-    .home-subcard__body {
-      margin: 0;
-      font: var(--mat-sys-body-small);
-      color: var(--mat-sys-on-surface-variant);
-    }
-
-    .home-subcard__links {
-      margin-top: 0.5rem;
-    }
-
-    .home-subcard__demo {
-      margin-top: 0;
-      padding-top: 0;
-    }
-
-    .home-subcard__demo-btn {
-      justify-content: flex-start;
-    }
-
-    .home-subcard__link {
-      justify-content: flex-start;
-    }
-
-    .home-subcard__link-icon {
-      margin-right: 0.35rem;
-    }
-
-    .home-subcard--status mat-card-content {
-      margin-top: 0.75rem;
-    }
-
-    .home-subcard--status .home-subcard__body {
-      margin-bottom: 0.5rem;
-    }
+    .home-retry-btn { margin-top: 0.5rem; }
+    .home-subcard__body { margin: 0; font: var(--mat-sys-body-small); color: var(--mat-sys-on-surface-variant); }
+    .home-subcard__links { margin-top: 0.5rem; }
+    .home-subcard__demo { margin-top: 0; padding-top: 0; }
+    .home-subcard__demo-btn { justify-content: flex-start; }
+    .home-subcard__link { justify-content: flex-start; }
+    .home-subcard__link-icon { margin-right: 0.35rem; }
+    .home-subcard--status mat-card-content { margin-top: 0.75rem; }
+    .home-subcard--status .home-subcard__body { margin-bottom: 0.5rem; }
 
     :host-context(html.preset-playful) {
       .home-header {
-        background: linear-gradient(
-          135deg,
-          var(--mat-sys-surface-container),
-          var(--mat-sys-tertiary-container)
-        );
+        background: linear-gradient(135deg, var(--mat-sys-surface-container), var(--mat-sys-tertiary-container));
         border: 1px solid color-mix(in srgb, var(--mat-sys-primary) 40%, transparent);
         box-shadow: var(--app-shadow-accent);
       }
-
-      .home-brand__icon {
-        border-radius: 0.5rem;
-        overflow: visible;
-      }
-
-      .home-card__icon,
-      .home-preset-icon--playful,
-      .home-subcard__link-icon {
-        color: var(--mat-sys-primary);
-      }
-
-      a[matButton="outlined"] .home-cta__icon {
-        color: var(--mat-sys-primary);
-      }
-
-      .home-preset-icon--playful {
-        font-size: 1.25rem;
-        width: 1.25rem;
-        height: 1.25rem;
-      }
-
-      .home-card__icon {
-        transform: scale(1.15);
-      }
-
-      .preset-toast {
-        border-radius: 1.5rem;
-        border-color: var(--mat-sys-primary);
-      }
-
-      .home-card--create mat-card-actions .home-cta:first-child {
-        box-shadow: var(--mat-sys-level1), var(--app-shadow-cta-glow);
-      }
-      .home-card--create mat-card-actions .home-cta:first-child:hover {
-        box-shadow: var(--mat-sys-level2), var(--app-shadow-cta-glow);
-      }
-
-      .home-grid mat-card,
-      .home-card {
-        box-shadow: var(--mat-sys-level2), var(--app-shadow-card-playful);
-      }
-
+      .home-brand__icon { border-radius: 0.5rem; overflow: visible; }
+      .home-card__icon, .home-preset-icon--playful, .home-subcard__link-icon { color: var(--mat-sys-primary); }
+      a[matButton="outlined"] .home-cta__icon { color: var(--mat-sys-primary); }
+      .home-preset-icon--playful { font-size: 1.25rem; width: 1.25rem; height: 1.25rem; }
+      .home-card__icon { transform: scale(1.15); }
+      .home-card--create mat-card-actions .home-cta:first-child { box-shadow: var(--mat-sys-level1), var(--app-shadow-cta-glow); }
+      .home-card--create mat-card-actions .home-cta:first-child:hover { box-shadow: var(--mat-sys-level2), var(--app-shadow-cta-glow); }
+      .home-grid mat-card, .home-card { box-shadow: var(--mat-sys-level2), var(--app-shadow-card-playful); }
       @media (prefers-reduced-motion: no-preference) {
-        .home-main {
-          perspective: 1200px;
-        }
+        .home-main { perspective: 1200px; }
         .home-card {
           transition: transform 0.25s ease, box-shadow 0.25s ease;
           transform-origin: center center;
@@ -1045,27 +594,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   language = signal<'de' | 'en' | 'fr' | 'it' | 'es'>('de');
   controlsMenuOpen = signal(false);
   presetToastVisible = signal(false);
-  presetToastTitle = signal('');
-  presetToastPresetHint = signal('');
-  presetToastIcon = signal<string>('school');
-  /** Zustand jeder Option (an = true, aus = false); wird beim Speichern in localStorage geschrieben */
-  presetOptionState = signal<PresetOptionState>({});
-  readonly presetOptionList = PRESET_OPTION_IDS;
-  /** Nach Kategorien gruppiert; innerhalb jeder Kategorie ausgewählte (an) zuerst */
-  presetOptionsByCategory = computed(() => {
-    const state = this.presetOptionState();
-    const byCat = new Map<CategoryId, typeof PRESET_OPTION_IDS[number][]>();
-    for (const opt of this.presetOptionList) {
-      const list = byCat.get(opt.categoryId) ?? [];
-      list.push(opt);
-      byCat.set(opt.categoryId, list);
-    }
-    return PRESET_CATEGORIES.map((cat) => {
-      const options = byCat.get(cat.id) ?? [];
-      const sorted = [...options].sort((a, b) => (state[b.id] ? 1 : 0) - (state[a.id] ? 1 : 0));
-      return { categoryId: cat.id, categoryLabel: cat.label, options: sorted };
-    }).filter((g) => g.options.length > 0);
-  });
+
   isValidSessionCode = computed(() => /^[A-Z0-9]{6}$/.test(this.sessionCode()));
   readonly demoSessionCode = 'DEMO01';
 
@@ -1078,7 +607,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     if (storedLang && ['de', 'en', 'fr', 'it', 'es'].includes(storedLang)) {
       this.language.set(storedLang as 'de' | 'en' | 'fr' | 'it' | 'es');
     }
-
     this.loadRecentSessionCodes();
     await this.checkApiConnection();
   }
@@ -1127,16 +655,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     await this.joinSession();
   }
 
-  dismissPresetToast(): void {
-    this.presetToastVisible.set(false);
-  }
-
-  /** Im geöffneten Toast zum anderen Preset wechseln (ein Klick, Toast bleibt offen). */
-  switchPresetInToast(): void {
-    const other = this.themePreset.preset() === 'serious' ? 'spielerisch' : 'serious';
-    this.setPreset(other);
-  }
-
   setLanguage(code: 'de' | 'en' | 'fr' | 'it' | 'es'): void {
     this.language.set(code);
     localStorage.setItem('home-language', code);
@@ -1153,7 +671,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       if (this.themePreset.preset() !== nextPreset) {
         this.themePreset.setPreset(nextPreset);
       }
-      this.showPresetToast(nextPreset);
+      this.presetToastVisible.set(true);
     }
     if (closeMenu) this.closeControlsMenu();
   }
@@ -1222,99 +740,5 @@ export class HomeComponent implements OnInit, AfterViewInit {
     } finally {
       this.isJoining.set(false);
     }
-  }
-
-  /** Optionen, die nur wirksam sind, wenn die übergeordnete Option an ist (z. B. Team-Anzahl nur bei Team-Modus) */
-  private static readonly OPTION_REQUIRES_PARENT_ON: Record<string, string> = {
-    teamCount: 'teamMode',
-    teamAssignment: 'teamMode',
-  };
-  /** Optionen, die unwirksam sind, wenn die übergeordnete Option an ist (z. B. Nicknames bei Anonym) */
-  private static readonly OPTION_DISABLED_WHEN_PARENT_ON: Record<string, string> = {
-    allowCustomNicknames: 'anonymousMode',
-    nicknameTheme: 'anonymousMode',
-  };
-
-  /** True, wenn die Option ausgegraut und nicht klickbar ist */
-  isPresetOptionDisabled(id: string): boolean {
-    const parentOn = HomeComponent.OPTION_REQUIRES_PARENT_ON[id];
-    if (parentOn) return !this.presetOptionState()[parentOn];
-    const parentOff = HomeComponent.OPTION_DISABLED_WHEN_PARENT_ON[id];
-    if (parentOff) return !!this.presetOptionState()[parentOff];
-    return false;
-  }
-
-  /** Anzeige-Wert: bei deaktivierten abhängigen Optionen immer „aus“ */
-  presetOptionEffective(id: string): boolean {
-    if (this.isPresetOptionDisabled(id)) return false;
-    return !!this.presetOptionState()[id];
-  }
-
-  togglePresetOption(id: string): void {
-    if (this.isPresetOptionDisabled(id)) return;
-    const state = { ...this.presetOptionState() };
-    state[id] = !state[id];
-    if (id === 'teamMode' && !state[id]) {
-      state['teamCount'] = false;
-      state['teamAssignment'] = false;
-    }
-    if (id === 'anonymousMode' && state[id]) {
-      state['allowCustomNicknames'] = false;
-      state['nicknameTheme'] = false;
-    }
-    this.presetOptionState.set(state);
-  }
-
-  resetPresetOptions(): void {
-    const preset = this.themePreset.preset();
-    this.presetOptionState.set(getPresetDefaults(preset));
-  }
-
-  savePresetAndCloseToast(): void {
-    try {
-      localStorage.setItem(PRESET_OPTIONS_STORAGE, JSON.stringify(this.presetOptionState()));
-    } catch {
-      // Quota oder nicht verfügbar
-    }
-    this.themePreset.setPreset(this.themePreset.preset());
-    this.presetToastVisible.set(false);
-  }
-
-  private showPresetToast(preset: 'serious' | 'spielerisch'): void {
-    this.presetToastTitle.set(preset === 'serious' ? 'Preset: Seriös' : 'Preset: Spielerisch');
-    this.presetToastIcon.set(preset === 'serious' ? 'school' : 'celebration');
-    this.presetToastPresetHint.set(
-      preset === 'serious'
-        ? 'Druckfrei, anonym, Fokus auf Inhalt.'
-        : 'Rangliste, Sound & Effekte, Motivation & Wettbewerb.'
-    );
-    let state: PresetOptionState;
-    try {
-      const raw = localStorage.getItem(PRESET_OPTIONS_STORAGE);
-      const parsed = raw ? (JSON.parse(raw) as PresetOptionState) : null;
-      if (parsed && typeof parsed === 'object') {
-        const defaults = getPresetDefaults(preset);
-        state = { ...defaults };
-        for (const o of PRESET_OPTION_IDS) {
-          if (o.id in parsed && typeof (parsed as Record<string, unknown>)[o.id] === 'boolean') {
-            state[o.id] = (parsed as Record<string, boolean>)[o.id];
-          }
-        }
-      } else {
-        state = getPresetDefaults(preset);
-      }
-    } catch {
-      state = getPresetDefaults(preset);
-    }
-    if (state['teamMode'] === false) {
-      state['teamCount'] = false;
-      state['teamAssignment'] = false;
-    }
-    if (state['anonymousMode'] === true) {
-      state['allowCustomNicknames'] = false;
-      state['nicknameTheme'] = false;
-    }
-    this.presetOptionState.set(state);
-    this.presetToastVisible.set(true);
   }
 }
