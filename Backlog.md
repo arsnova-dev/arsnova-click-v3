@@ -37,6 +37,7 @@
 | 1    | 1.12  | SC-Schnellformate                             | 🟡   | ⬜ Offen  |
 | 1    | 1.13  | Quiz-Preview & Schnellkorrektur               | 🟡   | ⬜ Offen  |
 | 1    | 1.14  | Word Cloud (interaktiv + Export)              | 🟡   | ⬜ Offen  |
+| 1    | 1.15  | Preset-Konfiguration exportieren & importieren | 🟢   | ⬜ Offen  |
 | 2    | 2.1a  | Session-ID & Quiz-Upload                      | 🔴   | ⬜ Offen  |
 | 2    | 2.1b  | QR-Code                                       | 🟢   | ⬜ Offen  |
 | 2    | 2.2   | Lobby-Ansicht                                 | 🔴   | ⬜ Offen  |
@@ -79,7 +80,7 @@
 
 > **Legende Status:** ⬜ Offen · 🔨 In Arbeit · ✅ Fertig (DoD erfüllt) · ❌ Blockiert
 >
-> **Statistik:** 🔴 Must: 23 · 🟡 Should: 24 · 🟢 Could: 13 = **60 Storys gesamt**
+> **Statistik:** 🔴 Must: 23 · 🟡 Should: 24 · 🟢 Could: 14 = **61 Storys gesamt**
 
 ---
 
@@ -370,6 +371,15 @@ Eine Story gilt als **fertig**, wenn **alle** folgenden Kriterien erfüllt sind:
       - **Bild/PNG (optional):** Screenshot der Word-Cloud oder der Ergebnis-Visualisierung für eine Frage.
     - Export ist nur für den Dozenten zugänglich (kein Studenten-Zugriff); Daten nur aggregiert bzw. pseudonym (Token-Liste), DSGVO-konform.
     - Abhängigkeiten: Story 4.5 (Freitext-Auswertung), Story 2.5 (Beamer), Story 4.4 (Ergebnis-Visualisierung).
+- **Story 1.15 (Preset-Konfiguration exportieren & importieren):** 🟢 Als Dozent möchte ich meine Preset-Konfiguration (Seriös/Spielerisch inkl. aller Optionen) als Datei exportieren und auf einem anderen Gerät/Browser importieren können, damit ich meine Einstellungen geräteübergreifend nutzen kann — ohne Account und ohne serverseitige Speicherung.
+  - **Motivation:** Presets werden im `localStorage` des Browsers gespeichert und sind damit an ein Gerät/einen Browser gebunden. Für Dozenten, die zwischen Laptop und Tablet wechseln, geht die individuelle Konfiguration verloren. Diese Story bietet eine einfache, Zero-Knowledge-konforme Lösung.
+  - **Akzeptanzkriterien:**
+    - In der Preset-Toast-UI gibt es zwei neue Buttons: **„Exportieren"** (Download-Icon) und **„Importieren"** (Upload-Icon).
+    - **Export:** Erzeugt eine `.json`-Datei mit allen Preset-Daten beider Presets (Seriös + Spielerisch): Optionszustand, Namensmodus, Nickname-Theme, Teamanzahl, aktives Preset, Theme (Dark/Light/System). Dateiname: `arsnova-presets_{datum}.json`.
+    - **Import:** Öffnet einen Datei-Dialog für `.json`-Dateien. Die Datei wird gegen ein Zod-Schema validiert; bei Fehlern wird eine verständliche Meldung angezeigt. Nach erfolgreichem Import werden `localStorage`-Keys aktualisiert und die UI reagiert sofort.
+    - Export und Import erfolgen rein clientseitig (kein Server-Roundtrip) — Zero-Knowledge-Prinzip bleibt gewahrt.
+    - Das Export-Format enthält eine Schema-Version (`presetExportVersion`), um spätere Migrationen zu ermöglichen.
+  - **Abgrenzung zu Story 1.6b:** Story 1.6b synchronisiert Presets automatisch über Yjs (erfordert aktive Sync-Verbindung). Story 1.15 ist eine manuelle, dateibasierte Lösung, die ohne Netzwerk funktioniert und auch über Browsergrenzen (Chrome → Firefox) hinweg nutzbar ist.
 
 ---
 
